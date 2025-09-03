@@ -66,3 +66,30 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  /* Header font utilities using Satoshi */
+  .font-header {
+    font-family: var(--font-satoshi);
+  }
+  
+  .font-header-light {
+    font-family: var(--font-satoshi);
+    font-weight: 300;
+  }
+  
+  .font-header-medium {
+    font-family: var(--font-satoshi);
+    font-weight: 500;
+  }
+  
+  .font-header-bold {
+    font-family: var(--font-satoshi);
+    font-weight: 700;
+  }
+  
+  .font-header-black {
+    font-family: var(--font-satoshi);
+    font-weight: 900;
+  }
+}
