@@ -210,8 +210,8 @@ export default function StudentEventsPage() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-primary">{"Campus Events"}</h1>
-              <p className="text-muted-foreground">{"Discover amazing events happening on campus"}</p>
+              <h1 className="text-2xl font-bold font-mono text-primary">{"Campus Events"}</h1>
+              <p className="text-muted-foreground font-mono">{"Discover amazing events happening on campus"}</p>
             </div>
             <div className="flex items-center gap-4">
               <Badge variant="secondary" className="hidden sm:flex">
@@ -229,7 +229,7 @@ export default function StudentEventsPage() {
           <aside className="lg:w-64 space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-lg font-mono flex items-center gap-2">
                   <Filter className="w-5 h-5" />
                   Filters
                 </CardTitle>
@@ -248,7 +248,7 @@ export default function StudentEventsPage() {
 
                 {/* Category Filter */}
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Category</label>
+                  <label className="text-sm font-medium font-mono mb-2 block">Category</label>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger>
                       <SelectValue />
@@ -274,20 +274,20 @@ export default function StudentEventsPage() {
             {/* Quick Stats */}
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">{"Quick Stats"}</CardTitle>
+                <CardTitle className="text-lg font-mono">{"Quick Stats"}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Events</span>
-                  <span className="font-semibold">{events.length}</span>
+                  <span className="text-muted-foreground font-mono">Total Events</span>
+                  <span className="font-semibold font-mono">{events.length}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">This Week</span>
-                  <span className="font-semibold">4</span>
+                  <span className="text-muted-foreground font-mono">This Week</span>
+                  <span className="font-semibold font-mono">4</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Total Attendees</span>
-                  <span className="font-semibold">{events.reduce((sum, event) => sum + event.attendees, 0)}</span>
+                  <span className="text-muted-foreground font-mono">Total Attendees</span>
+                  <span className="font-semibold font-mono">{events.reduce((sum, event) => sum + event.attendees, 0)}</span>
                 </div>
               </CardContent>
             </Card>
@@ -296,12 +296,12 @@ export default function StudentEventsPage() {
           {/* Main Content */}
           <main className="flex-1">
             <div className="mb-6">
-              <h2 className="text-xl font-semibold mb-2">
+              <h2 className="text-xl font-semibold font-mono mb-2">
                 {selectedCategory === "all"
                   ? "All Events"
                   : categories.find((c) => c.value === selectedCategory)?.label}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="text-muted-foreground font-mono">
                 {filteredEvents.length} event{filteredEvents.length !== 1 ? "s" : ""} found
               </p>
             </div>
