@@ -8,11 +8,11 @@ export function Hero() {
       {/* Main Hero Section */}
       <div className="flex flex-col items-center gap-8 text-center">
         <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center">
-          <span className="text-3xl font-header-bold text-primary">S</span>
+          <span className="text-3xl font-bold text-primary">S</span>
         </div>
         
         <div className="space-y-4">
-          <h1 className="text-5xl lg:text-6xl font-header-bold leading-tight">
+                                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
             Find Your Next
             <span className="text-primary block">Career Event</span>
           </h1>
@@ -34,6 +34,11 @@ export function Hero() {
               Sign In
             </Link>
           </Button>
+          <Button asChild variant="ghost" size="lg" className="h-14 px-8 text-lg">
+            <Link href="/dashboard">
+              Browse Events
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -43,7 +48,7 @@ export function Hero() {
           <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
             <BookOpen className="w-6 h-6 text-blue-600" />
           </div>
-          <h3 className="font-header-medium text-sm">Workshops</h3>
+                                <h3 className="font-medium text-sm">Workshops</h3>
           <p className="text-xs text-muted-foreground">Skill-building sessions</p>
         </div>
 
@@ -51,7 +56,7 @@ export function Hero() {
           <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
             <Users className="w-6 h-6 text-green-600" />
           </div>
-          <h3 className="font-header-medium text-sm">Social Events</h3>
+                                <h3 className="font-medium text-sm">Social Events</h3>
           <p className="text-xs text-muted-foreground">Networking & community</p>
         </div>
 
@@ -59,7 +64,7 @@ export function Hero() {
           <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
             <TrendingUp className="w-6 h-6 text-purple-600" />
           </div>
-          <h3 className="font-header-medium text-sm">Hackathons</h3>
+                                <h3 className="font-medium text-sm">Hackathons</h3>
           <p className="text-xs text-muted-foreground">Innovation challenges</p>
         </div>
 
@@ -67,7 +72,7 @@ export function Hero() {
           <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
             <Briefcase className="w-6 h-6 text-orange-600" />
           </div>
-          <h3 className="font-header-medium text-sm">Career Fairs</h3>
+                                <h3 className="font-medium text-sm">Career Fairs</h3>
           <p className="text-xs text-muted-foreground">Job opportunities</p>
         </div>
       </div>

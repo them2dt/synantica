@@ -24,9 +24,9 @@ export function AuthLayout({ children, subtitle }: AuthLayoutProps) {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl font-header-bold text-primary">S</span>
+              <span className="text-2xl font-bold text-primary">S</span>
             </div>
-            <h1 className="text-3xl font-header-bold text-foreground mb-2">
+                                    <h1 className="text-3xl font-bold text-foreground mb-2">
               Welcome back!
             </h1>
             <p className="text-muted-foreground">

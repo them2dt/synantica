@@ -32,7 +32,7 @@ export function StatsSection() {
     <section className="py-20 bg-primary/5">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-header-bold mb-4">
+                                <h2 className="text-3xl lg:text-4xl font-bold mb-4">
             Join Thousands of Students Advancing Their Careers
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -51,10 +51,10 @@ export function StatsSection() {
                 <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Icon className="w-8 h-8 text-primary" />
                 </div>
-                <div className="text-3xl lg:text-4xl font-header-bold text-primary mb-2">
+                <div className="text-3xl lg:text-4xl font-bold text-primary mb-2">
                   {stat.number}
                 </div>
-                <h3 className="text-lg font-header-medium mb-2">
+                <h3 className="text-lg font-medium mb-2">
                   {stat.label}
                 </h3>
                 <p className="text-sm text-muted-foreground">

@@ -50,7 +50,7 @@ export function FeaturesSection() {
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-header-bold mb-4">
+                                <h2 className="text-3xl lg:text-4xl font-bold mb-4">
             Everything You Need to Advance Your Career
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
@@ -69,7 +69,7 @@ export function FeaturesSection() {
                 <div className={`w-12 h-12 ${feature.bgColor} rounded-lg flex items-center justify-center mb-4`}>
                   <Icon className={`w-6 h-6 ${feature.color}`} />
                 </div>
-                <h3 className="text-lg font-header-medium mb-3">
+                <h3 className="text-lg font-medium mb-3">
                   {feature.title}
                 </h3>
                 <p className="text-muted-foreground leading-relaxed">

@@ -8,10 +8,10 @@ export function CTASection() {
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <div className="w-20 h-20 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-8">
-            <span className="text-3xl font-header-bold text-primary">S</span>
+            <span className="text-3xl font-bold text-primary">S</span>
           </div>
           
-          <h2 className="text-3xl lg:text-5xl font-header-bold mb-6">
+                                <h2 className="text-3xl lg:text-5xl font-bold mb-6">
             Ready to Accelerate Your Career?
           </h2>
           
