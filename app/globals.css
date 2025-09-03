@@ -76,7 +76,7 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist-mono);
+  --font-sans: var(--font-satoshi);
   --font-mono: var(--font-geist-mono);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -121,6 +121,39 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-mono;
+  }
+}
+
+@layer utilities {
+  /* Header font utilities using Satoshi */
+  .font-header {
+    font-family: var(--font-satoshi);
+  }
+  
+  .font-header-light {
+    font-family: var(--font-satoshi);
+    font-weight: 300;
+  }
+  
+  .font-header-medium {
+    font-family: var(--font-satoshi);
+    font-weight: 500;
+  }
+  
+  .font-header-bold {
+    font-family: var(--font-satoshi);
+    font-weight: 700;
+  }
+  
+  .font-header-black {
+    font-family: var(--font-satoshi);
+    font-weight: 900;
+  }
+  
+  /* Content font utilities using Geist Mono Light */
+  .font-content {
+    font-family: var(--font-geist-mono);
+    font-weight: 300;
   }
 }
