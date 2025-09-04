@@ -72,6 +72,13 @@ export interface Event {
   prizes?: string[]
   externalLinks?: string[]
   
+  // Resources and links
+  supportPdfs?: Array<{ name: string; url: string }>
+  organizationHomepage?: string
+  youtubeVideos?: string[]
+  registrationUrl?: string
+  alumniContactEmail?: string
+  
   // Analytics
   viewCount?: number
   registrationCount?: number
