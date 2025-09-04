@@ -25,6 +25,8 @@ interface DashboardLayoutProps {
   onSubjectChange?: (value: string) => void
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
+  sortBy?: string
+  onSortChange?: (value: string) => void
 }
 
 /**
@@ -45,6 +47,8 @@ export function DashboardLayout({
   onSubjectChange,
   isListView,
   onViewChange,
+  sortBy,
+  onSortChange,
 }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -80,8 +84,10 @@ export function DashboardLayout({
               onDateChange={onDateChange}
               selectedSubject={selectedSubject}
               onSubjectChange={onSubjectChange}
-              isListView={isListView}
-              onViewChange={onViewChange}
+                          isListView={isListView}
+            onViewChange={onViewChange}
+            sortBy={sortBy}
+            onSortChange={onSortChange}
             />
           </div>
 
