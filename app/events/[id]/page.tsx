@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/footer';
+import { Event } from '@/types/event';
 
 /**
  * Example event detail page demonstrating dynamic OG image generation
@@ -13,21 +14,24 @@ import { Footer } from '@/components/layout/footer';
  */
 
 // Mock event data - in a real app, this would come from your database
-const MOCK_EVENT = {
+const MOCK_EVENT: Event = {
   id: '1',
   title: 'HackTech 2024',
   description: 'Join us for 48 hours of coding, innovation, and prizes! Build the next big thing with fellow developers and win amazing rewards.',
-  category: 'Hackathon',
-  date: 'March 15, 2024',
-  time: '6:00 PM',
+  category: 'hackathon',
+  date: '2024-03-15',
+  time: '18:00',
   location: 'Computer Science Building, Room 101',
-  attendees: 150,
-  maxAttendees: 200,
-  image: '/placeholder.svg',
   tags: ['Tech', 'Coding', 'Innovation'],
   organizer: 'Tech Society',
   requirements: ['Laptop', 'Basic programming knowledge'],
-  prizes: ['$5,000 First Place', '$3,000 Second Place', '$2,000 Third Place']
+  prizes: ['$5,000 First Place', '$3,000 Second Place', '$2,000 Third Place'],
+  // Required properties from Event interface
+  status: 'published' as any,
+  registrationRequired: true,
+  isFree: true,
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z'
 };
 
 /**
@@ -87,10 +91,6 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
               <Badge variant="default" className="capitalize">
                 {event.category}
               </Badge>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Users className="w-4 h-4" />
-                {event.attendees}/{event.maxAttendees} attendees
-              </div>
             </div>
             
             <CardTitle className="text-4xl mb-4">

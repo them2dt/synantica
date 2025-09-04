@@ -83,8 +83,8 @@ export function FiltersTopBar({
     { value: 'date-desc', label: 'Date (Latest First)' },
     { value: 'title-asc', label: 'Title (A-Z)' },
     { value: 'title-desc', label: 'Title (Z-A)' },
-    { value: 'attendees-desc', label: 'Most Popular' },
-    { value: 'attendees-asc', label: 'Least Popular' }
+    { value: 'created-desc', label: 'Newest First' },
+    { value: 'created-asc', label: 'Oldest First' }
   ]
 
   const getActiveFiltersCount = () => {

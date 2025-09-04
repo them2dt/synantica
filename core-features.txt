@@ -1,0 +1,10 @@
+core features:
+
+- students get an overview over the upcoming events.
+- students can join events, via 3rd-party-link.
+- students can share an event, through links.
+- student can access event-related-resources through Google-drive-links.
+- students can search and filter events (by category, date, subject).
+- students can view detailed event information.
+- students can register/login to save preferences.
+- students can switch between light/dark theme.
