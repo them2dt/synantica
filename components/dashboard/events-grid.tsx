@@ -12,12 +12,13 @@ interface EventsGridProps {
   selectedCategory: string
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   onEventClick: (event: Event) => void
+  isListView?: boolean
 }
 
 /**
  * Events grid component displaying filtered events
  */
-export function EventsGrid({ events, selectedCategory, categories, onEventClick }: EventsGridProps) {
+export function EventsGrid({ events, selectedCategory, categories, onEventClick, isListView = false }: EventsGridProps) {
   const categoryLabel = selectedCategory === "all" 
     ? "All Events" 
     : categories.find((c) => c.value === selectedCategory)?.label || "All Events"
@@ -33,13 +34,14 @@ export function EventsGrid({ events, selectedCategory, categories, onEventClick 
         </p>
       </div>
 
-      {/* Events Grid */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {/* Events Grid/List */}
+      <div className={isListView ? "space-y-4" : "grid gap-6 md:grid-cols-2 xl:grid-cols-3"}>
         {events.map((event) => (
           <EventCard
             key={event.id}
             event={event}
             onLearnMore={onEventClick}
+            variant={isListView ? "list" : "grid"}
           />
         ))}
       </div>
