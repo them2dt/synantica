@@ -15,7 +15,6 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { useUser } from '@/lib/auth/user-context'
 
 /**
  * Props for the UserMenu component
@@ -35,7 +34,6 @@ export function UserMenu({ className }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const { user: currentUser } = useUser()
 
   useEffect(() => {
     const getUser = async () => {
