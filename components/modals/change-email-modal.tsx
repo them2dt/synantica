@@ -92,7 +92,7 @@ export function ChangeEmailModal({ isOpen, onClose, currentEmail }: ChangeEmailM
         <DialogHeader>
           <DialogTitle>Change Email Address</DialogTitle>
           <DialogDescription>
-            Enter your new email address. You'll receive a confirmation email to verify the change.
+            Enter your new email address. You&apos;ll receive a confirmation email to verify the change.
           </DialogDescription>
         </DialogHeader>
 

@@ -2,10 +2,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle, Download, ExternalLink, Share2, Mail } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Users, Download, ExternalLink, Share2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/footer';
-import { Event } from '@/types/event';
+import { Event, EventStatus } from '@/types/event';
 
 /**
  * Example event detail page demonstrating dynamic OG image generation
@@ -36,7 +36,7 @@ const MOCK_EVENT: Event = {
   registrationUrl: 'https://eventbrite.com/hacktech-2024',
   alumniContactEmail: 'visioncatalyzer@gmail.com',
   // Required properties from Event interface
-  status: 'published' as any,
+  status: EventStatus.PUBLISHED,
   registrationRequired: true,
   isFree: true,
   createdAt: '2024-01-01T00:00:00Z',
@@ -49,11 +49,15 @@ const MOCK_EVENT: Event = {
  * Displays comprehensive information about a specific event
  */
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  // Note: params.id would be used for dynamic event fetching in a real implementation
   // In a real app, you would fetch the event data based on params.id
   // const { id } = await params;
   // const event = await fetchEvent(id);
   // For now, we'll use mock data but log the ID for reference
   const event = MOCK_EVENT; // Replace with actual data fetching
+  
+  // Suppress unused parameter warning for now
+  void params;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

@@ -28,7 +28,7 @@ interface DeleteAccountModalProps {
 /**
  * Modal component for confirming account deletion
  */
-export function DeleteAccountModal({ isOpen, onClose, userEmail }: DeleteAccountModalProps) {
+export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps) {
   const [confirmationText, setConfirmationText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)

@@ -4,7 +4,7 @@
  */
 
 export { DashboardLayout } from './dashboard-layout'
-export { FiltersSidebar } from './filters-sidebar'
-export { QuickStats } from './quick-stats'
-export { EventCard, type Event } from './event-card'
+export { FiltersTopBar } from './filters-top-bar'
+export { EventCard } from './event-card'
 export { EventsGrid } from './events-grid'
+export { EventsTable } from './events-table'

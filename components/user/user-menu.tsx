@@ -31,7 +31,7 @@ interface UserMenuProps {
  * User menu dropdown component
  * Provides access to profile, settings, and logout functionality
  */
-export function UserMenu({ className, showEmail = true }: UserMenuProps) {
+export function UserMenu({ className }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
