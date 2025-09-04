@@ -1,21 +1,57 @@
-import { createClient } from '@/lib/supabase/server'
+'use client'
+
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { redirect } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { User, Mail, Calendar, Settings, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import { ChangePasswordModal } from '@/components/modals/change-password-modal'
+import { ChangeEmailModal } from '@/components/modals/change-email-modal'
+import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
+import { Footer } from '@/components/layout/footer'
 
 /**
  * User profile page
  * Displays user account information and profile details
  */
-export default async function ProfilePage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+export default function ProfilePage() {
+  const [user, setUser] = useState<{ email?: string; id?: string; created_at?: string; last_sign_in_at?: string; email_confirmed_at?: string; phone?: string } | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [changePasswordOpen, setChangePasswordOpen] = useState(false)
+  const [changeEmailOpen, setChangeEmailOpen] = useState(false)
+  const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
+
+  useEffect(() => {
+    const getUser = async () => {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (!user) {
+        redirect('/auth/login')
+      }
+      
+      setUser(user)
+      setLoading(false)
+    }
+    getUser()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-muted-foreground">Loading profile...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!user) {
-    redirect('/auth/login')
+    return null
   }
 
   const formatDate = (dateString: string) => {
@@ -29,8 +65,9 @@ export default async function ProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">
           <Button variant="ghost" size="sm" asChild>
@@ -77,12 +114,8 @@ export default async function ProfilePage() {
                   <p className="text-sm">{user.email}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-muted-foreground">User ID</label>
-                  <p className="text-xs font-mono">{user.id}</p>
-                </div>
-                <div>
                   <label className="text-sm font-medium text-muted-foreground">Account Created</label>
-                  <p className="text-sm">{formatDate(user.created_at)}</p>
+                  <p className="text-sm">{user.created_at ? formatDate(user.created_at) : 'Unknown'}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Last Sign In</label>
@@ -103,29 +136,39 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Profile Settings */}
+          {/* Account Management */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                Profile Settings
+                Account Management
               </CardTitle>
               <CardDescription>
-                Customize your profile and account preferences
+                Manage your account settings and security
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <Button asChild className="w-full">
-                  <Link href="/settings">
-                    <Settings className="w-4 h-4 mr-2" />
-                    Account Settings
-                  </Link>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setChangeEmailOpen(true)}
+                >
+                  Change Email
                 </Button>
-                <Button asChild variant="outline" className="w-full">
-                  <Link href="/auth/update-password">
-                    Change Password
-                  </Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  onClick={() => setChangePasswordOpen(true)}
+                >
+                  Change Password
+                </Button>
+                <Button 
+                  variant="destructive" 
+                  className="w-full"
+                  onClick={() => setDeleteAccountOpen(true)}
+                >
+                  Delete Account
                 </Button>
               </div>
             </CardContent>
@@ -160,7 +203,29 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
         </div>
+        </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
+
+      {/* Modals */}
+      <ChangePasswordModal
+        isOpen={changePasswordOpen}
+        onClose={() => setChangePasswordOpen(false)}
+      />
+      
+      <ChangeEmailModal
+        isOpen={changeEmailOpen}
+        onClose={() => setChangeEmailOpen(false)}
+        currentEmail={user.email || ''}
+      />
+      
+      <DeleteAccountModal
+        isOpen={deleteAccountOpen}
+        onClose={() => setDeleteAccountOpen(false)}
+        userEmail={user.email || ''}
+      />
     </div>
   )
 }
