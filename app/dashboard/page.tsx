@@ -47,16 +47,37 @@ export default function DashboardPage() {
   const [selectedDate, setSelectedDate] = useState('all')
   const [selectedSubject, setSelectedSubject] = useState('all')
   const [isListView, setIsListView] = useState(false)
+  const [sortBy, setSortBy] = useState('date-asc')
 
   // Filter events based on search term and category
   const filteredEvents = MOCK_EVENTS.filter(event => {
-                    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                     event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                                     event.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    const matchesSearch = event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         event.tags.some((tag: string) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     
     const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory
     
     return matchesSearch && matchesCategory
+  })
+
+  // Sort events based on selected sort option
+  const sortedEvents = [...filteredEvents].sort((a, b) => {
+    switch (sortBy) {
+      case 'date-asc':
+        return new Date(a.date).getTime() - new Date(b.date).getTime()
+      case 'date-desc':
+        return new Date(b.date).getTime() - new Date(a.date).getTime()
+      case 'title-asc':
+        return a.title.localeCompare(b.title)
+      case 'title-desc':
+        return b.title.localeCompare(a.title)
+      case 'attendees-desc':
+        return b.attendees - a.attendees
+      case 'attendees-asc':
+        return a.attendees - b.attendees
+      default:
+        return 0
+    }
   })
 
   // Calculate statistics
@@ -81,9 +102,11 @@ export default function DashboardPage() {
       onSubjectChange={setSelectedSubject}
       isListView={isListView}
       onViewChange={setIsListView}
+      sortBy={sortBy}
+      onSortChange={setSortBy}
     >
       <EventsGrid
-        events={filteredEvents}
+        events={sortedEvents}
         selectedCategory={selectedCategory}
         categories={EVENT_CATEGORIES}
         onEventClick={handleEventClick}

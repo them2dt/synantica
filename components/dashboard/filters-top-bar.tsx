@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter, ArrowUpDown, Grid3X3, List } from 'lucide-react'
+import { Search, Filter, ArrowUpDown, Grid3X3, List, ChevronDown } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  DropdownMenuItem,
 } from '@/components/ui/dropdown-menu'
 
 /**
@@ -28,6 +29,8 @@ interface FiltersTopBarProps {
   onSubjectChange?: (value: string) => void
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
+  sortBy?: string
+  onSortChange?: (value: string) => void
 }
 
 /**
@@ -45,9 +48,12 @@ export function FiltersTopBar({
   selectedSubject = 'all',
   onSubjectChange = () => {},
   isListView = false,
-  onViewChange = () => {}
+  onViewChange = () => {},
+  sortBy = 'date-asc',
+  onSortChange = () => {}
 }: FiltersTopBarProps) {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false)
 
   const dateOptions = [
     { value: 'all', label: 'All Dates' },
@@ -70,6 +76,15 @@ export function FiltersTopBar({
     { value: 'artificial-intelligence', label: 'Artificial Intelligence' },
     { value: 'cybersecurity', label: 'Cybersecurity' },
     { value: 'web-development', label: 'Web Development' }
+  ]
+
+  const sortOptions = [
+    { value: 'date-asc', label: 'Date (Earliest First)' },
+    { value: 'date-desc', label: 'Date (Latest First)' },
+    { value: 'title-asc', label: 'Title (A-Z)' },
+    { value: 'title-desc', label: 'Title (Z-A)' },
+    { value: 'attendees-desc', label: 'Most Popular' },
+    { value: 'attendees-asc', label: 'Least Popular' }
   ]
 
   const getActiveFiltersCount = () => {
@@ -166,10 +181,28 @@ export function FiltersTopBar({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Sort Button */}
-      <Button variant="outline" size="icon">
-        <ArrowUpDown className="w-4 h-4" />
-      </Button>
+      {/* Sort Dropdown */}
+      <DropdownMenu open={isSortDropdownOpen} onOpenChange={setIsSortDropdownOpen}>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" size="icon">
+            <ArrowUpDown className="w-4 h-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          {sortOptions.map((option) => (
+            <DropdownMenuItem
+              key={option.value}
+              onClick={() => {
+                onSortChange(option.value)
+                setIsSortDropdownOpen(false)
+              }}
+              className={sortBy === option.value ? 'bg-accent' : ''}
+            >
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       {/* View Switch */}
       <div className="flex items-center gap-2">
