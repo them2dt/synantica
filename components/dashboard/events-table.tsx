@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Clock, MapPin, Users, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target } from 'lucide-react'
+import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Event } from '@/types/event'
@@ -50,6 +50,10 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
     }
     return <ArrowUpDown className="w-4 h-4" />
   }
+  
+  // Suppress unused function warnings for now (functions are used in table headers)
+  void handleSort;
+  void getSortIcon;
 
   return (
     <div className="overflow-x-auto">

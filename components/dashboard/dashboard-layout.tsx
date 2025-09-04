@@ -1,8 +1,8 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { Users } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
+// import { Users } from 'lucide-react' // Unused for now
+// import { Badge } from '@/components/ui/badge' // Unused for now
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 
@@ -38,7 +38,7 @@ export function DashboardLayout({
   selectedCategory,
   onCategoryChange,
   categories,
-  totalEvents,
+  totalEvents, // For future use in header stats
   selectedDate,
   onDateChange,
   selectedSubject,
@@ -48,6 +48,9 @@ export function DashboardLayout({
   sortBy,
   onSortChange,
 }: DashboardLayoutProps) {
+  // Suppress unused parameter warning for now
+  void totalEvents;
+  
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">

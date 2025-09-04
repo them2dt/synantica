@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Calendar, Users, TrendingUp, BookOpen, Briefcase } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
 import { EventsGrid } from '@/components/dashboard/events-grid'
-import { Event } from '@/types/event'
+import { Event, EventStatus } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 
 // Mock data - all events use the same data for testing routing
@@ -20,7 +20,7 @@ const MOCK_EVENT: Event = {
   location: 'Computer Science Building',
   tags: ['Tech', 'Coding', 'Innovation'],
   // Required properties from new Event interface
-  status: 'published' as any,
+  status: EventStatus.PUBLISHED,
   registrationRequired: true,
   isFree: true,
   organizer: 'Tech Society',

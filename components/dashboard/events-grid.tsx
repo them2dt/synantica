@@ -22,6 +22,10 @@ interface EventsGridProps {
  * Events grid component displaying filtered events
  */
 export function EventsGrid({ events, selectedCategory, categories, onEventClick, isListView = false, sortBy = 'date-asc', onSortChange = () => {} }: EventsGridProps) {
+  // selectedCategory and categories are used for future filtering enhancements
+  // Suppress unused parameter warnings for now
+  void selectedCategory;
+  void categories;
 
   return (
     <div className="space-y-6">
