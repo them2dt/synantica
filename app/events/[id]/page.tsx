@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle } from 'lucide-react';
+import { EditEventButton } from '@/components/events/edit-event-button';
 import Link from 'next/link';
 
 /**
@@ -191,12 +192,7 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           <Button variant="outline" size="lg" className="px-8">
             Share Event
           </Button>
-          {/* TODO: Only show edit button if user is the event organizer */}
-          <Button variant="outline" size="lg" className="px-8" asChild>
-            <Link href={`/events/${id}/edit`}>
-              Edit Event
-            </Link>
-          </Button>
+          <EditEventButton eventId={id} className="px-8" />
         </div>
       </div>
     </div>

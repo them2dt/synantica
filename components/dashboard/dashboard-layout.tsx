@@ -5,6 +5,7 @@ import { Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Logo } from '@/components/ui/logo'
 import { UserMenu } from '@/components/user/user-menu'
+import { RoleIndicator } from '@/components/user/role-indicator'
 import { FiltersSidebar } from './filters-sidebar'
 import { QuickStats } from './quick-stats'
 
@@ -52,6 +53,7 @@ export function DashboardLayout({
                 <Users className="w-3 h-3 mr-1" />
                 {totalAttendees}
               </Badge>
+              <RoleIndicator />
               <UserMenu />
             </div>
           </div>

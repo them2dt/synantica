@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react'
+import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
   DropdownMenu, 
@@ -15,6 +15,7 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useUser } from '@/lib/auth/user-context'
 
 /**
  * Props for the UserMenu component
@@ -34,6 +35,7 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
+  const { user: currentUser } = useUser()
 
   useEffect(() => {
     const getUser = async () => {
@@ -99,6 +101,18 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
           <Settings className="w-4 h-4 mr-2" />
           Settings
         </DropdownMenuItem>
+        
+        {/* Admin-only menu items */}
+        {currentUser?.role === 'admin' && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuLabel>Admin</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => router.push('/admin/users')}>
+              <Shield className="w-4 h-4 mr-2" />
+              User Management
+            </DropdownMenuItem>
+          </>
+        )}
         
         <DropdownMenuSeparator />
         

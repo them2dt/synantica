@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { generateMetadataWithOG } from '@/lib/og-image';
 import { CreateEventForm } from '@/components/events/create-event-form';
+import { RoleGuard } from '@/components/auth/role-guard';
 
 /**
  * Metadata for the event creation page
@@ -18,7 +19,9 @@ export default function CreateEventPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <CreateEventForm />
+        <RoleGuard permission="canCreateEvents">
+          <CreateEventForm />
+        </RoleGuard>
       </div>
     </div>
   );

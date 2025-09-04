@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { usePermission } from '@/lib/auth/user-context'
 import Link from 'next/link'
 
 /**
@@ -28,6 +29,8 @@ export function FiltersSidebar({
   onCategoryChange,
   categories
 }: FiltersSidebarProps) {
+  const canCreateEvents = usePermission('canCreateEvents')
+
   return (
     <Card>
       <CardHeader>
@@ -37,13 +40,15 @@ export function FiltersSidebar({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Create Event Button */}
-        <Link href="/events/create">
-          <Button className="w-full gap-2">
-            <Plus className="w-4 h-4" />
-            Create Event
-          </Button>
-        </Link>
+        {/* Create Event Button - Only for Admins */}
+        {canCreateEvents && (
+          <Link href="/events/create">
+            <Button className="w-full gap-2">
+              <Plus className="w-4 h-4" />
+              Create Event
+            </Button>
+          </Link>
+        )}
 
         {/* Search */}
         <div className="relative">

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { generateMetadataWithOG } from '@/lib/og-image';
 import { EditEventForm } from '@/components/events/edit-event-form';
+import { RoleGuard } from '@/components/auth/role-guard';
 
 /**
  * Mock event data - in a real app, this would come from your database
@@ -59,7 +60,9 @@ export default async function EditEventPage({ params }: { params: Promise<{ id: 
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-8">
-        <EditEventForm eventId={id} initialEvent={event} />
+        <RoleGuard permission="canEditEvents">
+          <EditEventForm eventId={id} initialEvent={event} />
+        </RoleGuard>
       </div>
     </div>
   );
