@@ -1,9 +1,11 @@
 'use client'
 
-import { Search, Filter } from 'lucide-react'
+import { Search, Filter, Plus } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import Link from 'next/link'
 
 /**
  * Props for the filters sidebar component
@@ -35,6 +37,14 @@ export function FiltersSidebar({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Create Event Button */}
+        <Link href="/events/create">
+          <Button className="w-full gap-2">
+            <Plus className="w-4 h-4" />
+            Create Event
+          </Button>
+        </Link>
+
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />

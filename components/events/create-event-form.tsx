@@ -1,0 +1,352 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Textarea } from '@/components/ui/textarea'
+import { Badge } from '@/components/ui/badge'
+import { Calendar, Clock, MapPin, Users, X, Plus } from 'lucide-react'
+
+/**
+ * Event creation form component
+ * Handles creating new events with comprehensive validation
+ */
+export function CreateEventForm() {
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [tags, setTags] = useState<string[]>([])
+  const [newTag, setNewTag] = useState('')
+
+  // Form state
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category: '',
+    date: '',
+    time: '',
+    location: '',
+    maxAttendees: '',
+    requirements: '',
+    prizes: '',
+    organizer: '',
+    image: ''
+  })
+
+  // Event categories
+  const categories = [
+    { value: 'hackathon', label: 'Hackathon' },
+    { value: 'workshop', label: 'Workshop' },
+    { value: 'social', label: 'Social Event' },
+    { value: 'career', label: 'Career Fair' },
+    { value: 'academic', label: 'Academic' },
+    { value: 'wellness', label: 'Wellness' },
+    { value: 'sports', label: 'Sports' },
+    { value: 'cultural', label: 'Cultural' },
+    { value: 'other', label: 'Other' }
+  ]
+
+  /**
+   * Handle form input changes
+   */
+  const handleInputChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }))
+  }
+
+  /**
+   * Add a new tag to the event
+   */
+  const addTag = () => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      setTags(prev => [...prev, newTag.trim()])
+      setNewTag('')
+    }
+  }
+
+  /**
+   * Remove a tag from the event
+   */
+  const removeTag = (tagToRemove: string) => {
+    setTags(prev => prev.filter(tag => tag !== tagToRemove))
+  }
+
+  /**
+   * Handle form submission
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      // Validate required fields
+      const requiredFields = ['title', 'description', 'category', 'date', 'time', 'location', 'maxAttendees']
+      const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData])
+      
+      if (missingFields.length > 0) {
+        alert(`Please fill in all required fields: ${missingFields.join(', ')}`)
+        return
+      }
+
+      // Create event object
+      const eventData = {
+        ...formData,
+        tags,
+        maxAttendees: parseInt(formData.maxAttendees),
+        requirements: formData.requirements.split('\n').filter(req => req.trim()),
+        prizes: formData.prizes.split('\n').filter(prize => prize.trim()),
+        attendees: 0,
+        created_at: new Date().toISOString(),
+        status: 'active'
+      }
+
+      // TODO: Replace with actual API call
+      console.log('Creating event:', eventData)
+      
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Redirect to dashboard or event detail page
+      router.push('/dashboard')
+      
+    } catch (error) {
+      console.error('Error creating event:', error)
+      alert('Failed to create event. Please try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
+  return (
+    <Card className="max-w-4xl mx-auto">
+      <CardHeader>
+        <CardTitle className="text-2xl">Create New Event</CardTitle>
+        <CardDescription>
+          Fill out the form below to create a new event for students to discover and attend.
+        </CardDescription>
+      </CardHeader>
+      
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Basic Information</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="title">Event Title *</Label>
+                <Input
+                  id="title"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  placeholder="Enter event title"
+                  required
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="category">Category *</Label>
+                <Select value={formData.category} onValueChange={(value) => handleInputChange('category', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem key={category.value} value={category.value}>
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="description">Description *</Label>
+              <Textarea
+                id="description"
+                value={formData.description}
+                onChange={(e) => handleInputChange('description', e.target.value)}
+                placeholder="Describe your event in detail..."
+                rows={4}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="organizer">Organizer *</Label>
+              <Input
+                id="organizer"
+                value={formData.organizer}
+                onChange={(e) => handleInputChange('organizer', e.target.value)}
+                placeholder="Your name or organization"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Event Details */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Event Details</h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="date">Date *</Label>
+                <div className="relative">
+                  <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="date"
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => handleInputChange('date', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="time">Time *</Label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="time"
+                    type="time"
+                    value={formData.time}
+                    onChange={(e) => handleInputChange('time', e.target.value)}
+                    className="pl-10"
+                    required
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">Location *</Label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="location"
+                  value={formData.location}
+                  onChange={(e) => handleInputChange('location', e.target.value)}
+                  placeholder="Event location or venue"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="maxAttendees">Maximum Attendees *</Label>
+              <div className="relative">
+                <Users className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                <Input
+                  id="maxAttendees"
+                  type="number"
+                  min="1"
+                  value={formData.maxAttendees}
+                  onChange={(e) => handleInputChange('maxAttendees', e.target.value)}
+                  placeholder="Maximum number of attendees"
+                  className="pl-10"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Information */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Additional Information</h3>
+            
+            <div className="space-y-2">
+              <Label htmlFor="requirements">Requirements (one per line)</Label>
+              <Textarea
+                id="requirements"
+                value={formData.requirements}
+                onChange={(e) => handleInputChange('requirements', e.target.value)}
+                placeholder="Laptop&#10;Basic programming knowledge&#10;Team of 2-4 people"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="prizes">Prizes (one per line)</Label>
+              <Textarea
+                id="prizes"
+                value={formData.prizes}
+                onChange={(e) => handleInputChange('prizes', e.target.value)}
+                placeholder="$5,000 First Place&#10;$3,000 Second Place&#10;$2,000 Third Place"
+                rows={3}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="image">Event Image URL</Label>
+              <Input
+                id="image"
+                type="url"
+                value={formData.image}
+                onChange={(e) => handleInputChange('image', e.target.value)}
+                placeholder="https://example.com/event-image.jpg"
+              />
+            </div>
+          </div>
+
+          {/* Tags */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Tags</h3>
+            
+            <div className="flex gap-2">
+              <Input
+                value={newTag}
+                onChange={(e) => setNewTag(e.target.value)}
+                placeholder="Add a tag"
+                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+              />
+              <Button type="button" onClick={addTag} variant="outline">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+            
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {tags.map((tag) => (
+                  <Badge key={tag} variant="secondary" className="gap-1">
+                    {tag}
+                    <button
+                      type="button"
+                      onClick={() => removeTag(tag)}
+                      className="ml-1 hover:text-destructive"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  </Badge>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Submit Buttons */}
+          <div className="flex gap-4 pt-6">
+            <Button type="submit" disabled={isSubmitting} className="flex-1">
+              {isSubmitting ? 'Creating Event...' : 'Create Event'}
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => router.push('/dashboard')}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}

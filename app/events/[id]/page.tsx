@@ -183,11 +183,19 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
 
         {/* Action Buttons */}
         <div className="flex justify-center gap-4">
-          <Button size="lg" className="px-8">
-            Register for Event
+          <Button size="lg" className="px-8" asChild>
+            <Link href={`/events/${id}/register`}>
+              Register for Event
+            </Link>
           </Button>
           <Button variant="outline" size="lg" className="px-8">
             Share Event
+          </Button>
+          {/* TODO: Only show edit button if user is the event organizer */}
+          <Button variant="outline" size="lg" className="px-8" asChild>
+            <Link href={`/events/${id}/edit`}>
+              Edit Event
+            </Link>
           </Button>
         </div>
       </div>
