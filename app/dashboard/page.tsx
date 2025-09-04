@@ -14,6 +14,7 @@ const MOCK_EVENT: Event = {
   title: 'HackTech 2024',
   description: 'Join us for 48 hours of coding, innovation, and prizes! Build the next big thing with fellow developers and win amazing rewards.',
   category: 'hackathon',
+  subject: 'Computer Science',
   date: '2024-03-15',
   time: '18:00',
   location: 'Computer Science Building',

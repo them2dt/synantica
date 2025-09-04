@@ -36,6 +36,7 @@ export interface Event {
   // Categorization
   category: string
   tags: string[]
+  subject: string
   
   // Date and time
   date: string
@@ -154,6 +155,7 @@ export interface EventFormData {
   title: string
   description: string
   shortDescription?: string
+  subject: string
   category: string
   tags: string[]
   date: string
