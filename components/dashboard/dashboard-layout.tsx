@@ -1,13 +1,10 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { Users } from 'lucide-react'
-import { Badge } from '@/components/ui/badge'
-import { Logo } from '@/components/ui/logo'
-import { UserMenu } from '@/components/user/user-menu'
-import { RoleIndicator } from '@/components/user/role-indicator'
-import { FiltersSidebar } from './filters-sidebar'
-import { QuickStats } from './quick-stats'
+// import { Users } from 'lucide-react' // Unused for now
+// import { Badge } from '@/components/ui/badge' // Unused for now
+import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
+import { Footer } from '@/components/layout/footer'
 
 /**
  * Props for the dashboard layout component
@@ -20,8 +17,14 @@ interface DashboardLayoutProps {
   onCategoryChange: (value: string) => void
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   totalEvents: number
-  thisWeekEvents: number
-  totalAttendees: number
+  selectedDate?: string
+  onDateChange?: (value: string) => void
+  selectedSubject?: string
+  onSubjectChange?: (value: string) => void
+  isListView?: boolean
+  onViewChange?: (isList: boolean) => void
+  sortBy?: string
+  onSortChange?: (value: string) => void
 }
 
 /**
@@ -35,55 +38,51 @@ export function DashboardLayout({
   selectedCategory,
   onCategoryChange,
   categories,
-  totalEvents,
-  thisWeekEvents,
-  totalAttendees,
+  totalEvents, // For future use in header stats
+  selectedDate,
+  onDateChange,
+  selectedSubject,
+  onSubjectChange,
+  isListView,
+  onViewChange,
+  sortBy,
+  onSortChange,
 }: DashboardLayoutProps) {
+  // Suppress unused parameter warning for now
+  void totalEvents;
+  
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Logo size="lg" showIcon={false} />
-            </div>
-            <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="hidden sm:flex">
-                <Users className="w-3 h-3 mr-1" />
-                {totalAttendees}
-              </Badge>
-              <RoleIndicator />
-              <UserMenu />
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Sidebar */}
-          <aside className="lg:w-64 space-y-6">
-            <FiltersSidebar
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1">
+        <div className="container mx-auto px-4 py-8">
+          {/* Filters Top Bar */}
+          <div className="mb-8">
+            <FiltersTopBar
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}
               selectedCategory={selectedCategory}
               onCategoryChange={onCategoryChange}
               categories={categories}
+              selectedDate={selectedDate}
+              onDateChange={onDateChange}
+              selectedSubject={selectedSubject}
+              onSubjectChange={onSubjectChange}
+                          isListView={isListView}
+            onViewChange={onViewChange}
+            sortBy={sortBy}
+            onSortChange={onSortChange}
             />
-            <QuickStats
-              totalEvents={totalEvents}
-              thisWeekEvents={thisWeekEvents}
-              totalAttendees={totalAttendees}
-            />
-          </aside>
+          </div>
 
           {/* Main Content Area */}
-          <main className="flex-1">
+          <main>
             {children}
           </main>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

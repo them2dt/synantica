@@ -1,8 +1,9 @@
 'use client'
 
-import { EventCard, type Event } from './event-card'
-
-export type { Event }
+import { EventCard } from './event-card'
+import { EventsTable } from './events-table'
+import { Event } from '@/types/event'
+import { CategoryWithIcon } from '@/types/category'
 
 /**
  * Props for the events grid component
@@ -10,39 +11,44 @@ export type { Event }
 interface EventsGridProps {
   events: Event[]
   selectedCategory: string
-  categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
+  categories: CategoryWithIcon[]
   onEventClick: (event: Event) => void
+  isListView?: boolean
+  sortBy?: string
+  onSortChange?: (value: string) => void
 }
 
 /**
  * Events grid component displaying filtered events
  */
-export function EventsGrid({ events, selectedCategory, categories, onEventClick }: EventsGridProps) {
-  const categoryLabel = selectedCategory === "all" 
-    ? "All Events" 
-    : categories.find((c) => c.value === selectedCategory)?.label || "All Events"
+export function EventsGrid({ events, selectedCategory, categories, onEventClick, isListView = false, sortBy = 'date-asc', onSortChange = () => {} }: EventsGridProps) {
+  // selectedCategory and categories are used for future filtering enhancements
+  // Suppress unused parameter warnings for now
+  void selectedCategory;
+  void categories;
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-xl font-medium mb-2">
-          {categoryLabel}
-        </h2>
-        <p className="text-muted-foreground">
-          {events.length} event{events.length !== 1 ? "s" : ""} found
-        </p>
-      </div>
-
-      {/* Events Grid */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {events.map((event) => (
-          <EventCard
-            key={event.id}
-            event={event}
-            onLearnMore={onEventClick}
-          />
-        ))}
-      </div>
+      {/* Events Grid/List */}
+      {isListView ? (
+        <EventsTable
+          events={events}
+          onEventClick={onEventClick}
+          sortBy={sortBy}
+          onSortChange={onSortChange}
+        />
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {events.map((event) => (
+            <EventCard
+              key={event.id}
+              event={event}
+              onLearnMore={onEventClick}
+              variant="grid"
+            />
+          ))}
+        </div>
+      )}
 
       {events.length === 0 && (
         <div className="text-center py-12">

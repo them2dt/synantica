@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { satoshi } from "@/lib/fonts/satoshi";
 import { generateMetadataWithOG } from "@/lib/og-image";
-import { UserProvider } from "@/lib/auth/user-context";
+import { Navigation } from "@/components/layout/navigation";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -31,9 +31,8 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <UserProvider>
-            {children}
-          </UserProvider>
+          <Navigation sticky />
+          {children}
         </ThemeProvider>
       </body>
     </html>

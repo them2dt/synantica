@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Settings, LogOut, ChevronDown, Shield } from 'lucide-react'
+import { User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
   DropdownMenu, 
@@ -31,7 +31,7 @@ interface UserMenuProps {
  * User menu dropdown component
  * Provides access to profile, settings, and logout functionality
  */
-export function UserMenu({ className, showEmail = true }: UserMenuProps) {
+export function UserMenu({ className }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -56,7 +56,6 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
         <div className="w-20 h-4 bg-muted rounded animate-pulse" />
       </div>
     )
@@ -66,25 +65,11 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
     return null
   }
 
-  const userInitials = user.email?.charAt(0).toUpperCase() || 'U'
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={className}>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-primary">
-                {userInitials}
-              </span>
-            </div>
-            {showEmail && (
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium">{user.email}</p>
-              </div>
-            )}
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </div>
+        <Button variant="ghost" size="icon" className={className}>
+          <User className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       
@@ -97,22 +82,6 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
           Profile
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={() => router.push('/settings')}>
-          <Settings className="w-4 h-4 mr-2" />
-          Settings
-        </DropdownMenuItem>
-        
-        {/* Admin-only menu items */}
-        {currentUser?.role === 'admin' && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Admin</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => router.push('/admin/users')}>
-              <Shield className="w-4 h-4 mr-2" />
-              User Management
-            </DropdownMenuItem>
-          </>
-        )}
         
         <DropdownMenuSeparator />
         
