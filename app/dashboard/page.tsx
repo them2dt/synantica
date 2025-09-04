@@ -44,6 +44,9 @@ export default function DashboardPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
+  const [selectedDate, setSelectedDate] = useState('all')
+  const [selectedSubject, setSelectedSubject] = useState('all')
+  const [isListView, setIsListView] = useState(false)
 
   // Filter events based on search term and category
   const filteredEvents = MOCK_EVENTS.filter(event => {
@@ -57,14 +60,6 @@ export default function DashboardPage() {
   })
 
   // Calculate statistics
-  const totalEvents = MOCK_EVENTS.length
-  const thisWeekEvents = MOCK_EVENTS.filter(event => {
-    const eventDate = new Date(event.date)
-    const now = new Date()
-    const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
-    return eventDate >= now && eventDate <= weekFromNow
-  }).length
-  
   const totalAttendees = MOCK_EVENTS.reduce((sum, event) => sum + event.attendees, 0)
 
   const handleEventClick = (event: Event) => {
@@ -79,9 +74,13 @@ export default function DashboardPage() {
       selectedCategory={selectedCategory}
       onCategoryChange={setSelectedCategory}
       categories={EVENT_CATEGORIES}
-      totalEvents={totalEvents}
-      thisWeekEvents={thisWeekEvents}
       totalAttendees={totalAttendees}
+      selectedDate={selectedDate}
+      onDateChange={setSelectedDate}
+      selectedSubject={selectedSubject}
+      onSubjectChange={setSelectedSubject}
+      isListView={isListView}
+      onViewChange={setIsListView}
     >
       <EventsGrid
         events={filteredEvents}

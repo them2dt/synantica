@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle } from 'lucide-react';
 import Link from 'next/link';
+import { Footer } from '@/components/layout/footer';
 
 /**
  * Example event detail page demonstrating dynamic OG image generation
@@ -66,8 +67,9 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
   const event = MOCK_EVENT; // Replace with actual data fetching
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="min-h-screen bg-background flex flex-col">
+      <div className="flex-1">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Back Button */}
         <div className="mb-6">
           <Link href="/dashboard">
@@ -190,7 +192,11 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
             Share Event
           </Button>
         </div>
+        </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

@@ -5,8 +5,8 @@ import { Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { Logo } from '@/components/ui/logo'
 import { UserMenu } from '@/components/user/user-menu'
-import { FiltersSidebar } from './filters-sidebar'
-import { QuickStats } from './quick-stats'
+import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
+import { Footer } from '@/components/layout/footer'
 
 /**
  * Props for the dashboard layout component
@@ -18,9 +18,13 @@ interface DashboardLayoutProps {
   selectedCategory: string
   onCategoryChange: (value: string) => void
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
-  totalEvents: number
-  thisWeekEvents: number
   totalAttendees: number
+  selectedDate?: string
+  onDateChange?: (value: string) => void
+  selectedSubject?: string
+  onSubjectChange?: (value: string) => void
+  isListView?: boolean
+  onViewChange?: (isList: boolean) => void
 }
 
 /**
@@ -34,12 +38,16 @@ export function DashboardLayout({
   selectedCategory,
   onCategoryChange,
   categories,
-  totalEvents,
-  thisWeekEvents,
   totalAttendees,
+  selectedDate,
+  onDateChange,
+  selectedSubject,
+  onSubjectChange,
+  isListView,
+  onViewChange,
 }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       {/* Header */}
       <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
@@ -58,30 +66,34 @@ export function DashboardLayout({
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Sidebar */}
-          <aside className="lg:w-64 space-y-6">
-            <FiltersSidebar
+      <div className="flex-1">
+        <div className="container mx-auto px-4 py-8">
+          {/* Filters Top Bar */}
+          <div className="mb-8">
+            <FiltersTopBar
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}
               selectedCategory={selectedCategory}
               onCategoryChange={onCategoryChange}
               categories={categories}
+              selectedDate={selectedDate}
+              onDateChange={onDateChange}
+              selectedSubject={selectedSubject}
+              onSubjectChange={onSubjectChange}
+              isListView={isListView}
+              onViewChange={onViewChange}
             />
-            <QuickStats
-              totalEvents={totalEvents}
-              thisWeekEvents={thisWeekEvents}
-              totalAttendees={totalAttendees}
-            />
-          </aside>
+          </div>
 
           {/* Main Content Area */}
-          <main className="flex-1">
+          <main>
             {children}
           </main>
         </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

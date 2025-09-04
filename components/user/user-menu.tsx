@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, Settings, LogOut, ChevronDown } from 'lucide-react'
+import { User, LogOut, ChevronDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
   DropdownMenu, 
@@ -87,10 +87,6 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
           Profile
         </DropdownMenuItem>
         
-        <DropdownMenuItem onClick={() => router.push('/settings')}>
-          <Settings className="w-4 h-4 mr-2" />
-          Settings
-        </DropdownMenuItem>
         
         <DropdownMenuSeparator />
         
