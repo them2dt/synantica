@@ -18,7 +18,7 @@ interface DashboardLayoutProps {
   selectedCategory: string
   onCategoryChange: (value: string) => void
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
-  totalAttendees: number
+  totalEvents: number
   selectedDate?: string
   onDateChange?: (value: string) => void
   selectedSubject?: string
@@ -40,7 +40,7 @@ export function DashboardLayout({
   selectedCategory,
   onCategoryChange,
   categories,
-  totalAttendees,
+  totalEvents,
   selectedDate,
   onDateChange,
   selectedSubject,
@@ -60,11 +60,6 @@ export function DashboardLayout({
               <Logo size="lg" showIcon={false} />
             </div>
             <div className="flex items-center gap-4">
-              <Badge variant="secondary" className="hidden sm:flex">
-                <Users className="w-3 h-3 mr-1" />
-                {totalAttendees}
-              </Badge>
-              <RoleIndicator />
               <UserMenu />
             </div>
           </div>

@@ -4,7 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Calendar, Users, TrendingUp, BookOpen, Briefcase } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
-import { EventsGrid, Event } from '@/components/dashboard/events-grid'
+import { EventsGrid } from '@/components/dashboard/events-grid'
+import { Event } from '@/types/event'
+import { CategoryWithIcon } from '@/types/category'
 
 // Mock data - all events use the same data for testing routing
 const MOCK_EVENT: Event = {
@@ -15,22 +17,23 @@ const MOCK_EVENT: Event = {
   date: '2024-03-15',
   time: '18:00',
   location: 'Computer Science Building',
-  attendees: 150,
-  maxAttendees: 200,
-  image: '/placeholder.svg',
-  tags: ['Tech', 'Coding', 'Innovation']
+  tags: ['Tech', 'Coding', 'Innovation'],
+  // Required properties from new Event interface
+  status: 'published' as any,
+  registrationRequired: true,
+  isFree: true,
+  organizer: 'Tech Society',
+  createdAt: '2024-01-01T00:00:00Z',
+  updatedAt: '2024-01-01T00:00:00Z'
 }
 
 // Generate multiple events with the same data but different IDs for testing
 const MOCK_EVENTS: Event[] = Array.from({ length: 6 }, (_, index) => ({
   ...MOCK_EVENT,
   id: (index + 1).toString(),
-  // Add slight variations to make them look different
-  attendees: MOCK_EVENT.attendees + (index * 10),
-  maxAttendees: MOCK_EVENT.maxAttendees + (index * 5),
 }))
 
-const EVENT_CATEGORIES = [
+const EVENT_CATEGORIES: CategoryWithIcon[] = [
   { value: 'all', label: 'All Events', icon: Calendar },
   { value: 'hackathon', label: 'Hackathons', icon: TrendingUp },
   { value: 'workshop', label: 'Workshops', icon: BookOpen },
@@ -71,17 +74,17 @@ export default function DashboardPage() {
         return a.title.localeCompare(b.title)
       case 'title-desc':
         return b.title.localeCompare(a.title)
-      case 'attendees-desc':
-        return b.attendees - a.attendees
-      case 'attendees-asc':
-        return a.attendees - b.attendees
+      case 'created-desc':
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      case 'created-asc':
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
       default:
         return 0
     }
   })
 
   // Calculate statistics
-  const totalAttendees = MOCK_EVENTS.reduce((sum, event) => sum + event.attendees, 0)
+  const totalEvents = MOCK_EVENTS.length
 
   const handleEventClick = (event: Event) => {
     // Navigate to the event detail page
@@ -95,7 +98,7 @@ export default function DashboardPage() {
       selectedCategory={selectedCategory}
       onCategoryChange={setSelectedCategory}
       categories={EVENT_CATEGORIES}
-      totalAttendees={totalAttendees}
+      totalEvents={totalEvents}
       selectedDate={selectedDate}
       onDateChange={setSelectedDate}
       selectedSubject={selectedSubject}
@@ -111,6 +114,8 @@ export default function DashboardPage() {
         categories={EVENT_CATEGORIES}
         onEventClick={handleEventClick}
         isListView={isListView}
+        sortBy={sortBy}
+        onSortChange={setSortBy}
       />
     </DashboardLayout>
   )
