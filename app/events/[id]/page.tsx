@@ -1,9 +1,8 @@
-import { Metadata } from 'next';
-import { generateMetadataWithOG } from '@/lib/og-image';
+'use client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Calendar, Clock, MapPin, Users, Trophy, CheckCircle, Download, ExternalLink, Share2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/footer';
 import { Event } from '@/types/event';
@@ -27,6 +26,15 @@ const MOCK_EVENT: Event = {
   organizer: 'Tech Society',
   requirements: ['Laptop', 'Basic programming knowledge'],
   prizes: ['$5,000 First Place', '$3,000 Second Place', '$2,000 Third Place'],
+  // Resources and links
+  supportPdfs: [
+    { name: 'Event Guidelines', url: 'https://drive.google.com/file/guidelines.pdf' },
+    { name: 'Preparation Checklist', url: 'https://drive.google.com/file/checklist.pdf' }
+  ],
+  organizationHomepage: 'https://techsociety.edu',
+  youtubeVideos: ['https://youtube.com/watch?v=previous-hackathon'],
+  registrationUrl: 'https://eventbrite.com/hacktech-2024',
+  alumniContactEmail: 'visioncatalyzer@gmail.com',
   // Required properties from Event interface
   status: 'published' as any,
   registrationRequired: true,
@@ -35,40 +43,16 @@ const MOCK_EVENT: Event = {
   updatedAt: '2024-01-01T00:00:00Z'
 };
 
-/**
- * Generate dynamic metadata with event-specific OG image
- * This creates a custom social preview image for each event
- */
-export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
-  // In a real app, you would fetch the event data based on params.id
-  const { id } = await params;
-  // const event = await fetchEvent(id);
-  // For now, we'll use mock data but log the ID for reference
-  console.log('Generating metadata for event ID:', id);
-  const event = MOCK_EVENT; // Replace with actual data fetching
-  
-  return generateMetadataWithOG(
-    event.title,
-    event.description,
-    'event',
-    {
-      eventDate: event.date,
-      location: event.location,
-      category: event.category,
-    }
-  );
-}
 
 /**
  * Event detail page component
  * Displays comprehensive information about a specific event
  */
-export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // In a real app, you would fetch the event data based on params.id
-  const { id } = await params;
+  // const { id } = await params;
   // const event = await fetchEvent(id);
   // For now, we'll use mock data but log the ID for reference
-  console.log('Rendering event detail page for ID:', id);
   const event = MOCK_EVENT; // Replace with actual data fetching
 
   return (
@@ -125,53 +109,70 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </CardContent>
         </Card>
 
-        {/* Event Details Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          {/* Requirements */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5" />
-                Requirements
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {event.requirements.map((req, index) => (
-                  <li key={index} className="flex items-center gap-2 text-muted-foreground">
-                    <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    {req}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
 
-          {/* Prizes */}
-          <Card>
+        {/* Resources */}
+        {(event.supportPdfs && event.supportPdfs.length > 0) || event.organizationHomepage || event.youtubeVideos ? (
+          <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Trophy className="w-5 h-5" />
-                Prizes
+                <Download className="w-5 h-5" />
+                Resources
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="space-y-3">
-                {event.prizes.map((prize, index) => (
-                  <li key={index} className="flex items-center gap-2 text-muted-foreground">
-                    <Trophy className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-                    {prize}
-                  </li>
+              <div className="space-y-3">
+                {/* Support PDFs */}
+                {event.supportPdfs && event.supportPdfs.map((pdf, index) => (
+                  <a
+                    key={index}
+                    href={pdf.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <Download className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">{pdf.name}</span>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
+                  </a>
                 ))}
-              </ul>
+                
+                {/* Organization Homepage */}
+                {event.organizationHomepage && (
+                  <a
+                    href={event.organizationHomepage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">Organization Homepage</span>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
+                  </a>
+                )}
+                
+                {/* YouTube Videos */}
+                {event.youtubeVideos && event.youtubeVideos.map((video, index) => (
+                  <a
+                    key={index}
+                    href={video}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    <span className="text-sm font-medium">YouTube Video {index + 1}</span>
+                    <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
+                  </a>
+                ))}
+              </div>
             </CardContent>
           </Card>
-        </div>
+        ) : null}
 
         {/* Tags */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Event Tags</CardTitle>
+            <CardTitle>Tags</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
@@ -184,14 +185,58 @@ export default async function EventDetailPage({ params }: { params: Promise<{ id
           </CardContent>
         </Card>
 
+        {/* Ask Alumni Section */}
+        {event.alumniContactEmail && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Mail className="w-5 h-5" />
+                Ask Alumni
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                Want to ask our alumni about their experience and tips to succeed? Send us your questions!
+              </p>
+              <a href={`mailto:${event.alumniContactEmail}?subject=Question about ${event.title}`}>
+                <Button variant="outline" className="gap-2">
+                  <Mail className="w-4 h-4" />
+                  Contact Alumni
+                </Button>
+              </a>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Action Buttons */}
-        <div className="flex justify-center gap-4">
-          <Button size="lg" className="px-8">
-            Register for Event
-          </Button>
-          <Button variant="outline" size="lg" className="px-8">
-            Share Event
-          </Button>
+        <div className="bg-muted/30 rounded-lg p-6 mb-8">
+          <div className="flex justify-center gap-4">
+            {event.registrationUrl ? (
+              <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer">
+                <Button size="lg" className="px-8">
+                  Register for Event
+                </Button>
+              </a>
+            ) : (
+              <Button size="lg" className="px-8">
+                Register for Event
+              </Button>
+            )}
+            <Button variant="outline" size="lg" className="px-8" onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: event.title,
+                  text: event.description,
+                  url: window.location.href
+                });
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+              }
+            }}>
+              <Share2 className="w-4 h-4 mr-2" />
+              Share Event
+            </Button>
+          </div>
         </div>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { ReactNode } from 'react'
+import Link from 'next/link'
 import { Logo } from '@/components/ui/logo'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { AuthButton } from '@/components/auth-button'
@@ -49,18 +50,35 @@ export function Navigation({
       <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
         <div className="flex gap-5 items-center font-semibold">
           {showLogo && (
-            <Logo size={logoSize} />
+            <Link href="/" className="hover:opacity-80 transition-opacity">
+              <Logo size={logoSize} />
+            </Link>
           )}
           {children}
         </div>
         
         <div className="flex items-center gap-4">
+          {/* Dashboard Link */}
+          <Link 
+            href="/dashboard" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Dashboard
+          </Link>
+          
+          {/* Separator */}
+          
           {!hasEnvVars && showAuth ? (
             <EnvVarWarning />
           ) : showAuth ? (
             <>
               <UserMenu showEmail={false} />
+              
+              {/* Separator */}
+              
               <AuthButton />
+              
+              {/* Separator */}
             </>
           ) : null}
           

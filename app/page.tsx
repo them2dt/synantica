@@ -2,13 +2,12 @@ import { Hero } from "@/components/hero";
 import { FeaturesSection } from "@/components/features-section";
 import { StatsSection } from "@/components/stats-section";
 import { CTASection } from "@/components/cta-section";
-import { Navigation, Footer } from "@/components/layout";
+import { Footer } from "@/components/layout";
 
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center">
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
-        <Navigation />
         <div className="flex-1 w-full">
           <Hero />
           <FeaturesSection />

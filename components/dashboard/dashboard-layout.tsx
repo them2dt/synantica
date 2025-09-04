@@ -3,8 +3,6 @@
 import { ReactNode } from 'react'
 import { Users } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { Logo } from '@/components/ui/logo'
-import { UserMenu } from '@/components/user/user-menu'
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 
@@ -52,20 +50,6 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <Logo size="lg" showIcon={false} />
-            </div>
-            <div className="flex items-center gap-4">
-              <UserMenu />
-            </div>
-          </div>
-        </div>
-      </header>
-
       <div className="flex-1">
         <div className="container mx-auto px-4 py-8">
           {/* Filters Top Bar */}

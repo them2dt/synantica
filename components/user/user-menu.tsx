@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { User, LogOut, ChevronDown } from 'lucide-react'
+import { User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
   DropdownMenu, 
@@ -66,15 +66,8 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className={className}>
-          <div className="flex items-center gap-2">
-            {showEmail && (
-              <div className="hidden sm:block text-left">
-                <p className="text-sm font-medium">{user.email}</p>
-              </div>
-            )}
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </div>
+        <Button variant="ghost" size="icon" className={className}>
+          <User className="w-4 h-4" />
         </Button>
       </DropdownMenuTrigger>
       
