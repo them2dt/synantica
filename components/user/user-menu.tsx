@@ -54,7 +54,6 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
   if (loading) {
     return (
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-muted rounded-full animate-pulse" />
         <div className="w-20 h-4 bg-muted rounded animate-pulse" />
       </div>
     )
@@ -64,18 +63,11 @@ export function UserMenu({ className, showEmail = true }: UserMenuProps) {
     return null
   }
 
-  const userInitials = user.email?.charAt(0).toUpperCase() || 'U'
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className={className}>
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium text-primary">
-                {userInitials}
-              </span>
-            </div>
             {showEmail && (
               <div className="hidden sm:block text-left">
                 <p className="text-sm font-medium">{user.email}</p>
