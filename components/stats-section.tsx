@@ -36,7 +36,7 @@ export function StatsSection() {
             Join Thousands of Students Advancing Their Careers
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Synentica has helped students discover opportunities, build networks, and accelerate their professional growth.
+            Synantica has helped students discover opportunities, build networks, and accelerate their professional growth.
           </p>
         </div>
 

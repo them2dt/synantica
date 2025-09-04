@@ -29,7 +29,7 @@ export function Footer({
   className,
   showThemeSwitcher = true,
   children,
-  copyright = "© 2024 Synentica. All rights reserved.",
+  copyright = "© 2024 Synantica. All rights reserved.",
   links = [
     { href: "#", label: "Privacy Policy" },
     { href: "#", label: "Terms of Service" }

@@ -9,7 +9,7 @@ const defaultUrl = process.env.VERCEL_URL
 
 export const metadata: Metadata = {
   metadataBase: new URL(defaultUrl),
-  title: "Synentica - Find Your Next Career Event",
+  title: "Synantica - Find Your Next Career Event",
   description: "Discover workshops, hackathons, career fairs, and networking events that will accelerate your professional growth and connect you with opportunities.",
 };
 

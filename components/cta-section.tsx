@@ -17,7 +17,7 @@ export function CTASection() {
           
           <p className="text-xl lg:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
             Join thousands of students who are already discovering opportunities, 
-            building networks, and advancing their careers through Synentica.
+            building networks, and advancing their careers through Synantica.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

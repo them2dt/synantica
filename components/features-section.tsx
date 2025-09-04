@@ -54,7 +54,7 @@ export function FeaturesSection() {
             Everything You Need to Advance Your Career
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Synentica connects you with the events and opportunities that matter most for your professional development.
+            Synantica connects you with the events and opportunities that matter most for your professional development.
           </p>
         </div>
 

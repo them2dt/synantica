@@ -17,8 +17,8 @@ interface LogoProps {
 }
 
 /**
- * Reusable Logo component for Synentica branding
- * Displays the "S" icon and "Synentica" text with consistent styling
+ * Reusable Logo component for Synantica branding
+ * Displays the "S" icon and "Synantica" text with consistent styling
  */
 export function Logo({ 
   size = 'md', 
@@ -72,7 +72,7 @@ export function Logo({
       )}
       {showText && (
         <span className={cn('font-bold text-primary', currentSize.text)}>
-          Synentica
+          Synantica
         </span>
       )}
     </div>
