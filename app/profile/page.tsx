@@ -78,7 +78,7 @@ export default async function ProfilePage() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">User ID</label>
-                  <p className="text-sm font-mono text-xs">{user.id}</p>
+                  <p className="text-xs font-mono">{user.id}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Account Created</label>

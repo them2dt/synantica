@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { generateMetadataWithOG, generateEventOGImageUrl } from '@/lib/og-image';
 
 /**
@@ -51,11 +52,12 @@ export default function TestOGPage() {
                 </code>
               </div>
               <div className="mt-4">
-                <img 
+                <Image 
                   src={defaultOGUrl} 
                   alt="Default OG Image" 
+                  width={600}
+                  height={315}
                   className="max-w-full h-auto rounded-lg border"
-                  style={{ maxWidth: '600px' }}
                 />
               </div>
             </div>
@@ -74,11 +76,12 @@ export default function TestOGPage() {
                 </code>
               </div>
               <div className="mt-4">
-                <img 
+                <Image 
                   src={eventOGUrl} 
                   alt="Event OG Image" 
+                  width={600}
+                  height={315}
                   className="max-w-full h-auto rounded-lg border"
-                  style={{ maxWidth: '600px' }}
                 />
               </div>
             </div>
@@ -90,7 +93,7 @@ export default function TestOGPage() {
               </h3>
               <div className="text-blue-800 space-y-2">
                 <p><strong>For general pages:</strong> Use <code>generateMetadataWithOG()</code> in your page metadata</p>
-                <p><strong>For event pages:</strong> Use <code>generateMetadataWithOG()</code> with type 'event' and additional parameters</p>
+                <p><strong>For event pages:</strong> Use <code>generateMetadataWithOG()</code> with type &apos;event&apos; and additional parameters</p>
                 <p><strong>Direct URL:</strong> You can also use the API directly at <code>/api/og</code> with query parameters</p>
               </div>
             </div>

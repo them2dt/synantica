@@ -28,8 +28,12 @@ const MOCK_EVENT = {
  * Generate dynamic metadata with event-specific OG image
  * This creates a custom social preview image for each event
  */
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
   // In a real app, you would fetch the event data based on params.id
+  const { id } = await params;
+  // const event = await fetchEvent(id);
+  // For now, we'll use mock data but log the ID for reference
+  console.log('Generating metadata for event ID:', id);
   const event = MOCK_EVENT; // Replace with actual data fetching
   
   return generateMetadataWithOG(
@@ -48,8 +52,12 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
  * Event detail page component
  * Displays comprehensive information about a specific event
  */
-export default function EventDetailPage({ params }: { params: { id: string } }) {
+export default async function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // In a real app, you would fetch the event data based on params.id
+  const { id } = await params;
+  // const event = await fetchEvent(id);
+  // For now, we'll use mock data but log the ID for reference
+  console.log('Rendering event detail page for ID:', id);
   const event = MOCK_EVENT; // Replace with actual data fetching
 
   return (
