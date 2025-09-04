@@ -1,4 +1,5 @@
 import { Instagram } from 'lucide-react'
+import { ThemeSwitcher } from '@/components/theme-switcher'
 
 /**
  * Simple universal footer component
@@ -14,22 +15,27 @@ export function Footer() {
             Synantica
           </div>
 
-          {/* Instagram Link */}
-          <a 
-            href="https://instagram.com/synantica" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <Instagram className="w-4 h-4" />
-            <span className="text-sm">@synantica</span>
-          </a>
+          {/* Center Section - Instagram Link and Theme Switcher */}
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://instagram.com/synantica" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-muted-foreground hover:text-foreground transition-colors"
+              title="@synantica"
+            >
+              <Instagram className="w-4 h-4" />
+            </a>
+            
+            {/* Theme Switcher */}
+            <ThemeSwitcher />
+          </div>
 
           {/* Copyright and Made with */}
           <div className="flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground">
             <span>© {new Date().getFullYear()} Synantica</span>
             <span className="hidden sm:inline">•</span>
-            <span>Made with ❤️ for students</span>
+            <span>Developed by Maruthan and Gabriele</span>
           </div>
         </div>
       </div>

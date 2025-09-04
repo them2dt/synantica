@@ -110,6 +110,7 @@ export default function DashboardPage() {
         selectedCategory={selectedCategory}
         categories={EVENT_CATEGORIES}
         onEventClick={handleEventClick}
+        isListView={isListView}
       />
     </DashboardLayout>
   )
