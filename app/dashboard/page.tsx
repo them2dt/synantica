@@ -15,7 +15,8 @@ const MOCK_EVENT: Event = {
   description: 'Join us for 48 hours of coding, innovation, and prizes! Build the next big thing with fellow developers and win amazing rewards.',
   category: 'hackathons',
   field: 'computer-science',
-  ageRange: '18-25',
+  minAge: 18,
+  maxAge: 25,
   region: 'zurich',
   date: '2024-03-15',
   time: '18:00',
@@ -49,7 +50,7 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedDate, setSelectedDate] = useState('all')
-  const [selectedAge, setSelectedAge] = useState('all')
+  const [selectedAgeRange, setSelectedAgeRange] = useState<[number, number]>([0, 99])
   const [selectedRegion, setSelectedRegion] = useState('all')
   const [selectedField, setSelectedField] = useState('all')
   const [isListView, setIsListView] = useState(false)
@@ -104,8 +105,8 @@ export default function DashboardPage() {
       totalEvents={totalEvents}
       selectedDate={selectedDate}
       onDateChange={setSelectedDate}
-      selectedAge={selectedAge}
-      onAgeChange={setSelectedAge}
+      selectedAgeRange={selectedAgeRange}
+      onAgeRangeChange={setSelectedAgeRange}
       selectedRegion={selectedRegion}
       onRegionChange={setSelectedRegion}
       selectedField={selectedField}

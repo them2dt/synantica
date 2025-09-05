@@ -4,6 +4,7 @@ import { Search, Grid3X3, List } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Switch } from '@/components/ui/switch'
+import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
 
 /**
  * Props for the filters top bar component
@@ -16,8 +17,8 @@ interface FiltersTopBarProps {
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   selectedDate?: string
   onDateChange?: (value: string) => void
-  selectedAge?: string
-  onAgeChange?: (value: string) => void
+  selectedAgeRange?: [number, number]
+  onAgeRangeChange?: (value: [number, number]) => void
   selectedRegion?: string
   onRegionChange?: (value: string) => void
   selectedField?: string
@@ -40,8 +41,8 @@ export function FiltersTopBar({
   categories,
   selectedDate = 'all',
   onDateChange = () => {},
-  selectedAge = 'all',
-  onAgeChange = () => {},
+  selectedAgeRange = [0, 99],
+  onAgeRangeChange = () => {},
   selectedRegion = 'all',
   onRegionChange = () => {},
   selectedField = 'all',
@@ -62,14 +63,6 @@ export function FiltersTopBar({
     { value: 'next-month', label: 'Next Month' }
   ]
 
-  const ageOptions = [
-    { value: 'all', label: 'All Ages' },
-    { value: '16-18', label: '16-18' },
-    { value: '18-21', label: '18-21' },
-    { value: '21-25', label: '21-25' },
-    { value: '25-30', label: '25-30' },
-    { value: '30+', label: '30+' }
-  ]
 
   const regionOptions = [
     { value: 'all', label: 'All Regions' },
@@ -127,7 +120,7 @@ export function FiltersTopBar({
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
           {/* Sorter - First */}
           <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className="w-48">
+            <SelectTrigger className="w-48 [&>svg]:hidden">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
@@ -181,19 +174,15 @@ export function FiltersTopBar({
 
             {/* Second Row of New Filters */}
             <div className="flex flex-col sm:flex-row gap-3">
-              {/* Age Filter */}
-              <Select value={selectedAge} onValueChange={onAgeChange}>
-                <SelectTrigger className="w-32">
-                  <SelectValue placeholder="Age" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ageOptions.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              {/* Age Range Filter */}
+              <CompactAgeFilterDropdown
+                value={selectedAgeRange}
+                onChange={onAgeRangeChange}
+                min={0}
+                max={99}
+                placeholder="Age"
+                className="w-32"
+              />
 
               {/* Region Filter */}
               <Select value={selectedRegion} onValueChange={onRegionChange}>

@@ -120,7 +120,8 @@ CREATE TABLE events (
     -- Categorization
     category_id UUID REFERENCES event_categories(id) ON DELETE SET NULL,
     field VARCHAR(100) NOT NULL,
-    age_range VARCHAR(20),
+    min_age INTEGER,
+    max_age INTEGER,
     region VARCHAR(100) NOT NULL,
     
     -- Date and time
@@ -248,7 +249,8 @@ CREATE INDEX idx_events_date ON events(date);
 CREATE INDEX idx_events_is_featured ON events(is_featured);
 CREATE INDEX idx_events_is_verified ON events(is_verified);
 CREATE INDEX idx_events_field ON events(field);
-CREATE INDEX idx_events_age_range ON events(age_range);
+CREATE INDEX idx_events_min_age ON events(min_age);
+CREATE INDEX idx_events_max_age ON events(max_age);
 CREATE INDEX idx_events_region ON events(region);
 CREATE INDEX idx_events_created_at ON events(created_at);
 CREATE INDEX idx_events_published_at ON events(published_at);

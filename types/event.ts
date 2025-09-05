@@ -37,7 +37,8 @@ export interface Event {
   category: string
   tags: string[]
   field: string
-  ageRange?: string
+  minAge?: number
+  maxAge?: number
   region: string
   
   // Date and time
@@ -149,7 +150,8 @@ export interface EventFilters {
   category?: string
   date?: string
   field?: string
-  ageRange?: string
+  minAge?: number
+  maxAge?: number
   region?: string
   location?: string
   isFree?: boolean
@@ -183,7 +185,8 @@ export interface EventFormData {
   field: string
   category: string
   tags: string[]
-  ageRange?: string
+  minAge?: number
+  maxAge?: number
   region: string
   date: string
   time: string

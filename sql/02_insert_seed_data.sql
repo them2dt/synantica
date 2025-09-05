@@ -107,7 +107,7 @@ BEGIN
     
     -- Insert sample events
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, end_date, end_time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, prizes, support_pdfs, organization_homepage,
@@ -121,7 +121,8 @@ BEGIN
         '48-hour coding competition with prizes',
         hackathon_category_id,
         'computer-science',
-        '18-25',
+        18,
+        25,
         'zurich',
         '2024-03-15',
         '18:00:00',
@@ -146,7 +147,7 @@ BEGIN
     ) RETURNING id INTO event1_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -159,7 +160,8 @@ BEGIN
         'Beginner-friendly ML workshop',
         workshop_category_id,
         'computer-science',
-        '18-25',
+        18,
+        25,
         'zurich',
         '2024-03-20',
         '14:00:00',
@@ -178,7 +180,7 @@ BEGIN
     ) RETURNING id INTO event2_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, organization_homepage, registration_url,
@@ -191,7 +193,8 @@ BEGIN
         'Connect with tech companies and startups',
         networking_category_id,
         'business',
-        '18-30',
+        18,
+        30,
         'zurich',
         '2024-03-25',
         '10:00:00',
@@ -208,7 +211,7 @@ BEGIN
     ) RETURNING id INTO event3_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -221,7 +224,8 @@ BEGIN
         '3-day intensive web development course',
         workshop_category_id,
         'computer-science',
-        '18-30',
+        18,
+        30,
         'zurich',
         '2024-04-01',
         '09:00:00',
@@ -239,7 +243,7 @@ BEGIN
     ) RETURNING id INTO event4_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, organization_homepage, registration_url,
@@ -252,7 +256,8 @@ BEGIN
         'Pitch your startup idea to investors',
         seminar_category_id,
         'business',
-        '18-35',
+        18,
+        35,
         'zurich',
         '2024-04-05',
         '16:00:00',
@@ -269,7 +274,7 @@ BEGIN
     ) RETURNING id INTO event5_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, field, age_range, region,
+        id, title, description, short_description, category_id, field, min_age, max_age, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -282,7 +287,8 @@ BEGIN
         'Virtual networking for data scientists',
         networking_category_id,
         'computer-science',
-        '18-30',
+        18,
+        30,
         'international',
         '2024-04-10',
         '19:00:00',

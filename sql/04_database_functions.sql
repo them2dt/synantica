@@ -102,7 +102,8 @@ CREATE OR REPLACE FUNCTION search_events(
     search_query TEXT,
     category_filter VARCHAR(100) DEFAULT NULL,
     field_filter VARCHAR(100) DEFAULT NULL,
-    age_range_filter VARCHAR(20) DEFAULT NULL,
+    min_age_filter INTEGER DEFAULT NULL,
+    max_age_filter INTEGER DEFAULT NULL,
     region_filter VARCHAR(100) DEFAULT NULL,
     date_from DATE DEFAULT NULL,
     date_to DATE DEFAULT NULL,
@@ -116,7 +117,8 @@ RETURNS TABLE (
     description TEXT,
     category_name VARCHAR(100),
     field VARCHAR(100),
-    age_range VARCHAR(20),
+    min_age INTEGER,
+    max_age INTEGER,
     region VARCHAR(100),
     date DATE,
     time TIME,
@@ -134,7 +136,8 @@ BEGIN
         e.description,
         ec.name as category_name,
         e.field,
-        e.age_range,
+        e.min_age,
+        e.max_age,
         e.region,
         e.date,
         e.time,
@@ -171,7 +174,8 @@ BEGIN
     )
     AND (category_filter IS NULL OR ec.slug = category_filter)
     AND (field_filter IS NULL OR e.field = field_filter)
-    AND (age_range_filter IS NULL OR e.age_range = age_range_filter)
+    AND (min_age_filter IS NULL OR e.min_age >= min_age_filter)
+    AND (max_age_filter IS NULL OR e.max_age <= max_age_filter)
     AND (region_filter IS NULL OR e.region = region_filter)
     AND (date_from IS NULL OR e.date >= date_from)
     AND (date_to IS NULL OR e.date <= date_to)
@@ -229,7 +233,8 @@ RETURNS TABLE (
     title VARCHAR(255),
     category_name VARCHAR(100),
     field VARCHAR(100),
-    age_range VARCHAR(20),
+    min_age INTEGER,
+    max_age INTEGER,
     region VARCHAR(100),
     date DATE,
     time TIME,
@@ -244,7 +249,8 @@ BEGIN
         e.title,
         ec.name as category_name,
         e.field,
-        e.age_range,
+        e.min_age,
+        e.max_age,
         e.region,
         e.date,
         e.time,

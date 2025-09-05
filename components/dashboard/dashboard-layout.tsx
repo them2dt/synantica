@@ -19,8 +19,8 @@ interface DashboardLayoutProps {
   totalEvents: number
   selectedDate?: string
   onDateChange?: (value: string) => void
-  selectedAge?: string
-  onAgeChange?: (value: string) => void
+  selectedAgeRange?: [number, number]
+  onAgeRangeChange?: (value: [number, number]) => void
   selectedRegion?: string
   onRegionChange?: (value: string) => void
   selectedField?: string
@@ -45,8 +45,8 @@ export function DashboardLayout({
   totalEvents, // For future use in header stats
   selectedDate,
   onDateChange,
-  selectedAge,
-  onAgeChange,
+  selectedAgeRange,
+  onAgeRangeChange,
   selectedRegion,
   onRegionChange,
   selectedField,
@@ -73,8 +73,8 @@ export function DashboardLayout({
               categories={categories}
               selectedDate={selectedDate}
               onDateChange={onDateChange}
-              selectedAge={selectedAge}
-              onAgeChange={onAgeChange}
+              selectedAgeRange={selectedAgeRange}
+              onAgeRangeChange={onAgeRangeChange}
               selectedRegion={selectedRegion}
               onRegionChange={onRegionChange}
               selectedField={selectedField}
