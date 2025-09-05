@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 /**
  * Props for the Logo component
  */
 interface LogoProps {
   /** Size variant for the logo */
-  size?: 'sm' | 'md' | 'lg' | 'xl'
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl'
   /** Whether to show the icon */
   showIcon?: boolean
   /** Whether to show the text */
@@ -47,6 +48,21 @@ export function Logo({
       icon: 'w-16 h-16 text-3xl',
       text: 'text-3xl',
       container: 'gap-4'
+    },
+    xxl: {
+      icon: 'w-20 h-20 text-4xl',
+      text: 'text-4xl',
+      container: 'gap-5'
+    },
+    xxxl: {
+      icon: 'w-24 h-24 text-5xl',
+      text: 'text-5xl',
+      container: 'gap-6'
+    },
+    xxxxl: {
+      icon: 'w-28 h-28 text-6xl',
+      text: 'text-6xl',
+      container: 'gap-7'
     }
   }
 
@@ -64,14 +80,20 @@ export function Logo({
     >
       {showIcon && (
         <div className={cn(
-          'bg-primary/20 rounded-full flex items-center justify-center',
+          'flex items-center justify-center',
           currentSize.icon
         )}>
-          <span className="font-bold text-primary">S</span>
+          <Image
+            src="/icon.png"
+            alt="Synantica Logo"
+            width={currentSize.icon.includes('w-6') ? 24 : currentSize.icon.includes('w-8') ? 32 : currentSize.icon.includes('w-12') ? 48 : 64}
+            height={currentSize.icon.includes('h-6') ? 24 : currentSize.icon.includes('h-8') ? 32 : currentSize.icon.includes('h-12') ? 48 : 64}
+            className="object-contain"
+          />
         </div>
       )}
       {showText && (
-        <span className={cn('font-bold text-primary', currentSize.text)}>
+        <span className={cn('font-semibold text-primary font-heading', currentSize.text)}>
           Synantica
         </span>
       )}

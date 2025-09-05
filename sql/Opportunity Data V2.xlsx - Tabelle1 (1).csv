@@ -1,0 +1,56 @@
+name,type,age min,age max,region,field
+ISEF - International Science and Engineering Fair,contest,,18,USA,STEM
+EUCYS - EU Contest for Young Scientists,contest,,18,EU,"humanities, social sciences, STEM"
+SJf - National Contest,contest,,23,CH,"humanities, social sciences, STEM"
+TISF - Taiwan International Science Fair,contest,,23,Taiwan,"humanities, social sciences, STEM"
+Genius Olympiad,contest,,23,USA,"STEM, sustainability"
+Stockholm Junior Water Prize,contest,,23,Sweden,"STEM, sustainability"
+I-Fest2,contest,,23,Tunisia,STEM
+Exporecerca Jove - Barcelona Science Fair,contest,,23,Spain,"humanities, social sciences, STEM"
+Mostratec,event,,23,Brasil,STEM
+,,,,,
+,,,,,
+SMO - Swiss Mathematical  Olympiade,contest,,20,CH,maths
+IMO - International Mathematical Olympiad,contest,,20,international,maths
+EGMO - European Girls' Mathematical Olympiad,contest,,20,EU,maths
+,,,,,
+,,,,,
+SPhO - Swiss Physics Olympiad,contest,,20,CH,physics
+EuPhO - European Physics Olympiad,contest,,20,EU,physics
+IPhO - International Physics Olympiad,contest,,20,international,physics
+,,,,,
+SBO - Swiss Biology Olympiad,contest,,20,CH,biology
+IBO - International Biology Olympiad,contest,,20,international,biology
+,,,,,
+EOES - European Olympiad of Experimental Science,contest,,17,EU,"biology, chemistry, physics"
+,,,,,
+SOI - Swiss Olympiad in Informatics,contest,,20,CH,computer science
+IOI - International Olympiad in Informatics,contest,,20,CH,computer science
+,,,,,
+SChO - Swiss Chemistry Olympiad,contest,,20,CH,chemistry
+IChO - International Chemistry Olympiad,contest,,20,international,chemistry
+,,,,,
+SwissGeOlymp - Swiss Geography Olympiad,contest,,20,CH,geography
+iGeo,contest,,20,international,geography
+,,,,,
+Swiss Linguistics Olympiad,contest,,20,CH,linguistics
+IOL - International Linguistics Olympiad,contest,,20,international,linguistics
+,,,,,
+SAAO - Swiss Astronomy and Astrophysics Olympiad,contest,,20,CH,astronomy
+IOAA - International Olympiad on Astronomy and Astrophysics,contest,,20,international,astronomy
+,,,,,
+SEO - Swiss Economics Olympiad,contest,,20,CH,economics
+IEO - International Economics Olympiad,contest,,20,international,economics
+,,,,,
+SRO - Swiss Robotics Olympiad,contest,6,19,CH,robotics
+WRO - World Robot Olympiad,contest,,19,international,robotics
+,,,,,
+Philosophy Olympiad,contest,,20,CH,philosophy
+IPO - International Philosophy Olympiad,contest,,20,international,philosophy
+,,,,,
+ERC - European Rover Challenge,contest,18,,EU,"engineering, robotics"
+,,,,,
+START Hack,hackathon,18,29,SG,"CS, AI, entrepreneurship"
+NASA Space Apps Challenge,hackathon,,,CH,"STEM, sustainability"
+,,,,,
+CERN-Solvay student camp,workshop,16,,GE,STEM

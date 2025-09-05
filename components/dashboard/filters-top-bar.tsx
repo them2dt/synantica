@@ -1,18 +1,10 @@
 'use client'
 
-import { useState } from 'react'
-import { Search, Filter, ArrowUpDown, Grid3X3, List } from 'lucide-react'
+import { Search, Grid3X3, List } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from '@/components/ui/dropdown-menu'
+import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
 
 /**
  * Props for the filters top bar component
@@ -25,8 +17,12 @@ interface FiltersTopBarProps {
   categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   selectedDate?: string
   onDateChange?: (value: string) => void
-  selectedSubject?: string
-  onSubjectChange?: (value: string) => void
+  selectedAgeRange?: [number, number]
+  onAgeRangeChange?: (value: [number, number]) => void
+  selectedRegion?: string
+  onRegionChange?: (value: string) => void
+  selectedField?: string
+  onFieldChange?: (value: string) => void
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
   sortBy?: string
@@ -45,15 +41,17 @@ export function FiltersTopBar({
   categories,
   selectedDate = 'all',
   onDateChange = () => {},
-  selectedSubject = 'all',
-  onSubjectChange = () => {},
+  selectedAgeRange = [0, 99],
+  onAgeRangeChange = () => {},
+  selectedRegion = 'all',
+  onRegionChange = () => {},
+  selectedField = 'all',
+  onFieldChange = () => {},
   isListView = false,
   onViewChange = () => {},
   sortBy = 'date-asc',
   onSortChange = () => {}
 }: FiltersTopBarProps) {
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false)
-  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false)
 
   const dateOptions = [
     { value: 'all', label: 'All Dates' },
@@ -65,17 +63,32 @@ export function FiltersTopBar({
     { value: 'next-month', label: 'Next Month' }
   ]
 
-  const subjectOptions = [
-    { value: 'all', label: 'All Subjects' },
+
+  const regionOptions = [
+    { value: 'all', label: 'All Regions' },
+    { value: 'zurich', label: 'Zurich' },
+    { value: 'bern', label: 'Bern' },
+    { value: 'basel', label: 'Basel' },
+    { value: 'lausanne', label: 'Lausanne' },
+    { value: 'geneva', label: 'Geneva' },
+    { value: 'lucerne', label: 'Lucerne' },
+    { value: 'st-gallen', label: 'St. Gallen' },
+    { value: 'international', label: 'International' }
+  ]
+
+  const fieldOptions = [
+    { value: 'all', label: 'All Fields' },
     { value: 'computer-science', label: 'Computer Science' },
-    { value: 'business', label: 'Business' },
     { value: 'engineering', label: 'Engineering' },
-    { value: 'design', label: 'Design' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'data-science', label: 'Data Science' },
-    { value: 'artificial-intelligence', label: 'Artificial Intelligence' },
-    { value: 'cybersecurity', label: 'Cybersecurity' },
-    { value: 'web-development', label: 'Web Development' }
+    { value: 'mathematics', label: 'Mathematics' },
+    { value: 'philosophy', label: 'Philosophy' },
+    { value: 'physics', label: 'Physics' },
+    { value: 'chemistry', label: 'Chemistry' },
+    { value: 'biology', label: 'Biology' },
+    { value: 'medicine', label: 'Medicine' },
+    { value: 'business', label: 'Business' },
+    { value: 'economics', label: 'Economics' },
+    { value: 'psychology', label: 'Psychology' }
   ]
 
   const sortOptions = [
@@ -87,20 +100,11 @@ export function FiltersTopBar({
     { value: 'created-asc', label: 'Oldest First' }
   ]
 
-  const getActiveFiltersCount = () => {
-    let count = 0
-    if (selectedCategory !== 'all') count++
-    if (selectedDate !== 'all') count++
-    if (selectedSubject !== 'all') count++
-    return count
-  }
-
-  const activeFiltersCount = getActiveFiltersCount()
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-center">
-      {/* Search */}
-      <div className="relative flex-1 min-w-0">
+    <div className="space-y-6">
+      {/* Search Bar */}
+      <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
         <Input
           placeholder="Search events..."
@@ -110,25 +114,32 @@ export function FiltersTopBar({
         />
       </div>
 
-      {/* Filter Dropdown */}
-      <DropdownMenu open={isFilterDropdownOpen} onOpenChange={setIsFilterDropdownOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon" className="relative">
-            <Filter className="w-4 h-4" />
-            {activeFiltersCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {activeFiltersCount}
-              </span>
-            )}
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-80 p-4">
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label>Category</Label>
+      {/* Controls Row */}
+      <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+        {/* Left Side - Sorter and Filters */}
+        <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          {/* Sorter - First */}
+          <Select value={sortBy} onValueChange={onSortChange}>
+            <SelectTrigger className="w-48 [&>svg]:hidden">
+              <SelectValue placeholder="Sort by" />
+            </SelectTrigger>
+            <SelectContent>
+              {sortOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Filter Options - Split up like the image */}
+          <div className="flex flex-col lg:flex-row gap-3">
+            {/* First Row of Filters */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Category Filter */}
               <Select value={selectedCategory} onValueChange={onCategoryChange}>
-                <SelectTrigger>
-                  <SelectValue />
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Category" />
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map((category) => {
@@ -144,13 +155,11 @@ export function FiltersTopBar({
                   })}
                 </SelectContent>
               </Select>
-            </div>
 
-            <div className="space-y-2">
-              <Label>Date</Label>
+              {/* Date Filter */}
               <Select value={selectedDate} onValueChange={onDateChange}>
-                <SelectTrigger>
-                  <SelectValue />
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Date" />
                 </SelectTrigger>
                 <SelectContent>
                   {dateOptions.map((option) => (
@@ -160,16 +169,42 @@ export function FiltersTopBar({
                   ))}
                 </SelectContent>
               </Select>
+
             </div>
 
-            <div className="space-y-2">
-              <Label>Subject</Label>
-              <Select value={selectedSubject} onValueChange={onSubjectChange}>
-                <SelectTrigger>
-                  <SelectValue />
+            {/* Second Row of New Filters */}
+            <div className="flex flex-col sm:flex-row gap-3">
+              {/* Age Range Filter */}
+              <CompactAgeFilterDropdown
+                value={selectedAgeRange}
+                onChange={onAgeRangeChange}
+                min={0}
+                max={99}
+                placeholder="Age"
+                className="w-32"
+              />
+
+              {/* Region Filter */}
+              <Select value={selectedRegion} onValueChange={onRegionChange}>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Region" />
                 </SelectTrigger>
                 <SelectContent>
-                  {subjectOptions.map((option) => (
+                  {regionOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Field Filter */}
+              <Select value={selectedField} onValueChange={onFieldChange}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Field" />
+                </SelectTrigger>
+                <SelectContent>
+                  {fieldOptions.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       {option.label}
                     </SelectItem>
@@ -178,40 +213,17 @@ export function FiltersTopBar({
               </Select>
             </div>
           </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
+        </div>
 
-      {/* Sort Dropdown */}
-      <DropdownMenu open={isSortDropdownOpen} onOpenChange={setIsSortDropdownOpen}>
-        <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon">
-            <ArrowUpDown className="w-4 h-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {sortOptions.map((option) => (
-            <DropdownMenuItem
-              key={option.value}
-              onClick={() => {
-                onSortChange(option.value)
-                setIsSortDropdownOpen(false)
-              }}
-              className={sortBy === option.value ? 'bg-accent' : ''}
-            >
-              {option.label}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-
-      {/* View Switch */}
-      <div className="flex items-center gap-2">
-        <Grid3X3 className={`w-4 h-4 ${!isListView ? 'text-primary' : 'text-muted-foreground'}`} />
-        <Switch
-          checked={isListView}
-          onCheckedChange={onViewChange}
-        />
-        <List className={`w-4 h-4 ${isListView ? 'text-primary' : 'text-muted-foreground'}`} />
+        {/* Right Side - View Switch */}
+        <div className="flex items-center gap-2">
+          <Grid3X3 className={`w-4 h-4 ${!isListView ? 'text-accent' : 'text-muted-foreground'}`} />
+          <Switch
+            checked={isListView}
+            onCheckedChange={onViewChange}
+          />
+          <List className={`w-4 h-4 ${isListView ? 'text-accent' : 'text-muted-foreground'}`} />
+        </div>
       </div>
     </div>
   )

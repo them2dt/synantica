@@ -1,8 +1,11 @@
+'use client'
+
 import { ReactNode } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Logo } from '@/components/ui/logo'
 import { ThemeSwitcher } from '@/components/theme-switcher'
-import { AuthButton } from '@/components/auth-button'
+import { AuthButtonClient } from '@/components/auth-button-client'
 import { UserMenu } from '@/components/user/user-menu'
 import { EnvVarWarning } from '@/components/env-var-warning'
 import { hasEnvVars } from '@/lib/utils'
@@ -41,6 +44,15 @@ export function Navigation({
   logoSize = 'md',
   sticky = false
 }: NavigationProps) {
+  const pathname = usePathname()
+  
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return pathname === '/'
+    }
+    return pathname.startsWith(path)
+  }
+
   return (
     <nav className={cn(
       'w-full flex justify-center border-b border-b-foreground/10 h-16',
@@ -58,10 +70,28 @@ export function Navigation({
         </div>
         
         <div className="flex items-center gap-4">
+          {/* Home Link */}
+          <Link 
+            href="/" 
+            className={cn(
+              "text-sm font-medium transition-colors",
+              isActive('/') 
+                ? "text-accent font-semibold" 
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Home
+          </Link>
+          
           {/* Dashboard Link */}
           <Link 
             href="/dashboard" 
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className={cn(
+              "text-sm font-medium transition-colors",
+              isActive('/dashboard') 
+                ? "text-accent font-semibold" 
+                : "text-muted-foreground hover:text-foreground"
+            )}
           >
             Dashboard
           </Link>
@@ -76,7 +106,7 @@ export function Navigation({
               
               {/* Separator */}
               
-              <AuthButton />
+              <AuthButtonClient />
               
               {/* Separator */}
             </>

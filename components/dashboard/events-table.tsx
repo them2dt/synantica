@@ -62,49 +62,49 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
           <tr className="border-b">
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <Type className="w-4 h-4" />
+                <Type className="w-4 h-4 text-accent" />
                 <span>Event</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-4 h-4 text-accent" />
                 <span>Date</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 text-accent" />
                 <span>Time</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 text-accent" />
                 <span>Location</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <Tag className="w-4 h-4" />
+                <Tag className="w-4 h-4 text-accent" />
                 <span>Category</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <FileText className="w-4 h-4" />
-                <span>Subject</span>
+                <FileText className="w-4 h-4 text-accent" />
+                <span>Field</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
-                <Tag className="w-4 h-4" />
+                <Tag className="w-4 h-4 text-accent" />
                 <span>Tags</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground">
               <div className="flex items-center justify-start gap-2">
-                <Target className="w-4 h-4" />
+                <Target className="w-4 h-4 text-accent" />
                 <span>Action</span>
               </div>
             </th>
@@ -136,18 +136,15 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
 
               {/* Category */}
               <td className="p-3 border-r border-border">
-                <Badge
-                  variant={event.category === "hackathon" ? "default" : "secondary"}
-                  className="capitalize text-xs"
-                >
+                <div className="text-sm capitalize">
                   {event.category}
-                </Badge>
+                </div>
               </td>
 
-              {/* Subject */}
+              {/* Field */}
               <td className="p-3 border-r border-border">
                 <div className="text-sm">
-                  {event.subject}
+                  {event.field}
                 </div>
               </td>
 

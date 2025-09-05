@@ -101,7 +101,10 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION search_events(
     search_query TEXT,
     category_filter VARCHAR(100) DEFAULT NULL,
-    subject_filter VARCHAR(100) DEFAULT NULL,
+    field_filter VARCHAR(100) DEFAULT NULL,
+    min_age_filter INTEGER DEFAULT NULL,
+    max_age_filter INTEGER DEFAULT NULL,
+    region_filter VARCHAR(100) DEFAULT NULL,
     date_from DATE DEFAULT NULL,
     date_to DATE DEFAULT NULL,
     is_free_filter BOOLEAN DEFAULT NULL,
@@ -113,9 +116,12 @@ RETURNS TABLE (
     title VARCHAR(255),
     description TEXT,
     category_name VARCHAR(100),
-    subject VARCHAR(100),
+    field VARCHAR(100),
+    min_age INTEGER,
+    max_age INTEGER,
+    region VARCHAR(100),
     date DATE,
-    time TIME,
+    "time" TIME,
     location VARCHAR(255),
     is_free BOOLEAN,
     registration_count BIGINT,
@@ -129,7 +135,10 @@ BEGIN
         e.title,
         e.description,
         ec.name as category_name,
-        e.subject,
+        e.field,
+        e.min_age,
+        e.max_age,
+        e.region,
         e.date,
         e.time,
         e.location,
@@ -164,7 +173,10 @@ BEGIN
         to_tsvector('english', e.title || ' ' || e.description) @@ plainto_tsquery('english', search_query)
     )
     AND (category_filter IS NULL OR ec.slug = category_filter)
-    AND (subject_filter IS NULL OR e.subject = subject_filter)
+    AND (field_filter IS NULL OR e.field = field_filter)
+    AND (min_age_filter IS NULL OR e.min_age >= min_age_filter)
+    AND (max_age_filter IS NULL OR e.max_age <= max_age_filter)
+    AND (region_filter IS NULL OR e.region = region_filter)
     AND (date_from IS NULL OR e.date >= date_from)
     AND (date_to IS NULL OR e.date <= date_to)
     AND (is_free_filter IS NULL OR e.is_free = is_free_filter)
@@ -220,9 +232,12 @@ RETURNS TABLE (
     event_id UUID,
     title VARCHAR(255),
     category_name VARCHAR(100),
-    subject VARCHAR(100),
+    field VARCHAR(100),
+    min_age INTEGER,
+    max_age INTEGER,
+    region VARCHAR(100),
     date DATE,
-    time TIME,
+    "time" TIME,
     location VARCHAR(255),
     is_free BOOLEAN,
     recommendation_score REAL
@@ -233,7 +248,10 @@ BEGIN
         e.id as event_id,
         e.title,
         ec.name as category_name,
-        e.subject,
+        e.field,
+        e.min_age,
+        e.max_age,
+        e.region,
         e.date,
         e.time,
         e.location,

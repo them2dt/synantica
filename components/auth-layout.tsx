@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
+import { Logo } from '@/components/ui/logo'
 // No icon imports needed for the minimal design
 
 /**
@@ -23,10 +24,10 @@ export function AuthLayout({ children, subtitle }: AuthLayoutProps) {
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-2xl font-bold text-primary">S</span>
+            <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+              <Logo size="md" showText={false} />
             </div>
-                                    <h1 className="text-3xl font-bold text-foreground mb-2">
+                                    <h1 className="text-3xl font-semibold text-foreground mb-2 font-heading">
               Welcome back!
             </h1>
             <p className="text-muted-foreground">

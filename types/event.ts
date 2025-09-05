@@ -36,7 +36,10 @@ export interface Event {
   // Categorization
   category: string
   tags: string[]
-  subject: string
+  field: string
+  minAge?: number
+  maxAge?: number
+  region: string
   
   // Date and time
   date: string
@@ -44,15 +47,26 @@ export interface Event {
   endDate?: string
   endTime?: string
   
+  // Multi-day event support
+  isMultiDay?: boolean
+  duration?: number // Duration in days
+  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
+  recurringEndDate?: string
+  eventSchedule?: Array<{
+    date: string
+    startTime: string
+    endTime: string
+    title?: string
+    description?: string
+    location?: string
+  }>
+  
   // Location
   location: string
   venueDetails?: string
   isVirtual?: boolean
   virtualLink?: string
   
-  // Registration
-  registrationRequired: boolean
-  registrationDeadline?: string
   
   // Pricing
   isFree: boolean
@@ -76,12 +90,10 @@ export interface Event {
   supportPdfs?: Array<{ name: string; url: string }>
   organizationHomepage?: string
   youtubeVideos?: string[]
-  registrationUrl?: string
   alumniContactEmail?: string
   
   // Analytics
   viewCount?: number
-  registrationCount?: number
   
   // Timestamps
   createdAt: string
@@ -89,25 +101,6 @@ export interface Event {
   publishedAt?: string
 }
 
-/**
- * Event registration interface
- */
-export interface EventRegistration {
-  id: string
-  eventId: string
-  userId: string
-  registrationDate: string
-  status: 'registered' | 'cancelled' | 'attended' | 'no_show'
-  checkInTime?: string
-  checkOutTime?: string
-  dietaryRestrictions?: string
-  accessibilityNeeds?: string
-  emergencyContact?: string
-  notes?: string
-  paymentStatus?: 'pending' | 'paid' | 'refunded'
-  paymentAmount?: number
-  paymentReference?: string
-}
 
 /**
  * Event review interface
@@ -132,7 +125,10 @@ export interface EventFilters {
   search?: string
   category?: string
   date?: string
-  subject?: string
+  field?: string
+  minAge?: number
+  maxAge?: number
+  region?: string
   location?: string
   isFree?: boolean
   isVirtual?: boolean
@@ -162,13 +158,28 @@ export interface EventFormData {
   title: string
   description: string
   shortDescription?: string
-  subject: string
+  field: string
   category: string
   tags: string[]
+  minAge?: number
+  maxAge?: number
+  region: string
   date: string
   time: string
   endDate?: string
   endTime?: string
+  isMultiDay?: boolean
+  duration?: number
+  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
+  recurringEndDate?: string
+  eventSchedule?: Array<{
+    date: string
+    startTime: string
+    endTime: string
+    title?: string
+    description?: string
+    location?: string
+  }>
   location: string
   venueDetails?: string
   isVirtual?: boolean
