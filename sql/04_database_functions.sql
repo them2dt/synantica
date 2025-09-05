@@ -121,7 +121,7 @@ RETURNS TABLE (
     max_age INTEGER,
     region VARCHAR(100),
     date DATE,
-    time TIME,
+    "time" TIME,
     location VARCHAR(255),
     is_free BOOLEAN,
     registration_count BIGINT,
@@ -237,7 +237,7 @@ RETURNS TABLE (
     max_age INTEGER,
     region VARCHAR(100),
     date DATE,
-    time TIME,
+    "time" TIME,
     location VARCHAR(255),
     is_free BOOLEAN,
     recommendation_score REAL
