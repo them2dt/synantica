@@ -93,7 +93,7 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-2">
                 <FileText className="w-4 h-4 text-accent" />
-                <span>Subject</span>
+                <span>Field</span>
               </div>
             </th>
             <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
@@ -141,10 +141,10 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
                 </div>
               </td>
 
-              {/* Subject */}
+              {/* Field */}
               <td className="p-3 border-r border-border">
                 <div className="text-sm">
-                  {event.subject}
+                  {event.field}
                 </div>
               </td>
 

@@ -10,18 +10,20 @@
 -- =====================================================
 
 INSERT INTO event_categories (id, name, slug, description, icon, color, sort_order) VALUES
-    (uuid_generate_v4(), 'Hackathon', 'hackathon', 'Coding competitions and innovation challenges', 'TrendingUp', '#3B82F6', 1),
-    (uuid_generate_v4(), 'Workshop', 'workshop', 'Hands-on learning sessions and skill development', 'BookOpen', '#10B981', 2),
-    (uuid_generate_v4(), 'Seminar', 'seminar', 'Educational presentations and discussions', 'PresentationChart', '#8B5CF6', 3),
-    (uuid_generate_v4(), 'Conference', 'conference', 'Large-scale professional gatherings', 'Users', '#F59E0B', 4),
-    (uuid_generate_v4(), 'Networking', 'networking', 'Professional networking and career events', 'Briefcase', '#EF4444', 5),
-    (uuid_generate_v4(), 'Social', 'social', 'Casual social gatherings and community events', 'Heart', '#EC4899', 6),
-    (uuid_generate_v4(), 'Sports', 'sports', 'Athletic events and fitness activities', 'Activity', '#06B6D4', 7),
-    (uuid_generate_v4(), 'Cultural', 'cultural', 'Cultural events and artistic performances', 'Palette', '#84CC16', 8),
-    (uuid_generate_v4(), 'Academic', 'academic', 'Academic lectures and scholarly events', 'GraduationCap', '#6366F1', 9),
-    (uuid_generate_v4(), 'Career', 'career', 'Career development and job-related events', 'Briefcase', '#F97316', 10),
-    (uuid_generate_v4(), 'Volunteer', 'volunteer', 'Community service and volunteer opportunities', 'HandHeart', '#14B8A6', 11),
-    (uuid_generate_v4(), 'Other', 'other', 'Miscellaneous events and activities', 'MoreHorizontal', '#6B7280', 12);
+    (uuid_generate_v4(), 'Contests', 'contests', 'Competitions and contests with prizes', 'Trophy', '#FF327D', 1),
+    (uuid_generate_v4(), 'Hackathons', 'hackathons', 'Coding competitions and innovation challenges', 'TrendingUp', '#3B82F6', 2),
+    (uuid_generate_v4(), 'Events', 'events', 'General events and gatherings', 'Users', '#F59E0B', 3),
+    (uuid_generate_v4(), 'Workshops', 'workshops', 'Hands-on learning sessions and skill development', 'BookOpen', '#10B981', 4),
+    (uuid_generate_v4(), 'Seminars', 'seminars', 'Educational presentations and discussions', 'PresentationChart', '#8B5CF6', 5),
+    (uuid_generate_v4(), 'Conferences', 'conferences', 'Large-scale professional gatherings', 'Users', '#F59E0B', 6),
+    (uuid_generate_v4(), 'Networking', 'networking', 'Professional networking and career events', 'Briefcase', '#EF4444', 7),
+    (uuid_generate_v4(), 'Social', 'social', 'Casual social gatherings and community events', 'Heart', '#EC4899', 8),
+    (uuid_generate_v4(), 'Sports', 'sports', 'Athletic events and fitness activities', 'Activity', '#06B6D4', 9),
+    (uuid_generate_v4(), 'Cultural', 'cultural', 'Cultural events and artistic performances', 'Palette', '#84CC16', 10),
+    (uuid_generate_v4(), 'Academic', 'academic', 'Academic lectures and scholarly events', 'GraduationCap', '#6366F1', 11),
+    (uuid_generate_v4(), 'Career', 'career', 'Career development and job-related events', 'Briefcase', '#F97316', 12),
+    (uuid_generate_v4(), 'Volunteer', 'volunteer', 'Community service and volunteer opportunities', 'HandHeart', '#14B8A6', 13),
+    (uuid_generate_v4(), 'Other', 'other', 'Miscellaneous events and activities', 'MoreHorizontal', '#6B7280', 14);
 
 -- =====================================================
 -- TAGS
@@ -88,9 +90,9 @@ DECLARE
     event6_id UUID;
 BEGIN
     -- Get category IDs
-    SELECT id INTO hackathon_category_id FROM event_categories WHERE slug = 'hackathon';
-    SELECT id INTO workshop_category_id FROM event_categories WHERE slug = 'workshop';
-    SELECT id INTO seminar_category_id FROM event_categories WHERE slug = 'seminar';
+    SELECT id INTO hackathon_category_id FROM event_categories WHERE slug = 'hackathons';
+    SELECT id INTO workshop_category_id FROM event_categories WHERE slug = 'workshops';
+    SELECT id INTO seminar_category_id FROM event_categories WHERE slug = 'seminars';
     SELECT id INTO networking_category_id FROM event_categories WHERE slug = 'networking';
     
     -- Get tag IDs
@@ -105,7 +107,7 @@ BEGIN
     
     -- Insert sample events
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, end_date, end_time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, prizes, support_pdfs, organization_homepage,
@@ -118,7 +120,9 @@ BEGIN
         'Join us for 48 hours of coding, innovation, and prizes! Build the next big thing with fellow developers and win amazing rewards. This hackathon brings together students from all backgrounds to create innovative solutions to real-world problems.',
         '48-hour coding competition with prizes',
         hackathon_category_id,
-        'Computer Science',
+        'computer-science',
+        '18-25',
+        'zurich',
         '2024-03-15',
         '18:00:00',
         '2024-03-17',
@@ -142,7 +146,7 @@ BEGIN
     ) RETURNING id INTO event1_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -154,7 +158,9 @@ BEGIN
         'Learn the fundamentals of machine learning in this hands-on workshop. Perfect for beginners who want to understand AI concepts and build their first ML model.',
         'Beginner-friendly ML workshop',
         workshop_category_id,
-        'Artificial Intelligence',
+        'computer-science',
+        '18-25',
+        'zurich',
         '2024-03-20',
         '14:00:00',
         'Engineering Building, Lab 205',
@@ -172,7 +178,7 @@ BEGIN
     ) RETURNING id INTO event2_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, organization_homepage, registration_url,
@@ -184,7 +190,9 @@ BEGIN
         'Connect with top tech companies and startups. Network with recruiters, learn about internship opportunities, and discover your next career move in technology.',
         'Connect with tech companies and startups',
         networking_category_id,
-        'Career Development',
+        'business',
+        '18-30',
+        'zurich',
         '2024-03-25',
         '10:00:00',
         'Student Center, Main Hall',
@@ -200,7 +208,7 @@ BEGIN
     ) RETURNING id INTO event3_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -212,7 +220,9 @@ BEGIN
         'Intensive 3-day bootcamp covering modern web development technologies including React, Node.js, and databases. Build a complete web application from scratch.',
         '3-day intensive web development course',
         workshop_category_id,
-        'Web Development',
+        'computer-science',
+        '18-30',
+        'zurich',
         '2024-04-01',
         '09:00:00',
         'Computer Science Building, Lab 301',
@@ -229,7 +239,7 @@ BEGIN
     ) RETURNING id INTO event4_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, organization_homepage, registration_url,
@@ -241,7 +251,9 @@ BEGIN
         'Present your innovative business ideas to a panel of successful entrepreneurs and investors. Win funding and mentorship opportunities for your startup.',
         'Pitch your startup idea to investors',
         seminar_category_id,
-        'Entrepreneurship',
+        'business',
+        '18-35',
+        'zurich',
         '2024-04-05',
         '16:00:00',
         'Business School, Auditorium',
@@ -257,7 +269,7 @@ BEGIN
     ) RETURNING id INTO event5_id;
     
     INSERT INTO events (
-        id, title, description, short_description, category_id, subject,
+        id, title, description, short_description, category_id, field, age_range, region,
         date, time, location, is_virtual,
         registration_required, is_free, status, organizer_name,
         requirements, support_pdfs, organization_homepage,
@@ -269,7 +281,9 @@ BEGIN
         'Join our online community of data science enthusiasts. Share projects, discuss latest trends, and network with fellow data scientists from around the world.',
         'Virtual networking for data scientists',
         networking_category_id,
-        'Data Science',
+        'computer-science',
+        '18-30',
+        'international',
         '2024-04-10',
         '19:00:00',
         'Online - Zoom',

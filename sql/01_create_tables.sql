@@ -119,7 +119,9 @@ CREATE TABLE events (
     
     -- Categorization
     category_id UUID REFERENCES event_categories(id) ON DELETE SET NULL,
-    subject VARCHAR(100) NOT NULL,
+    field VARCHAR(100) NOT NULL,
+    age_range VARCHAR(20),
+    region VARCHAR(100) NOT NULL,
     
     -- Date and time
     date DATE NOT NULL,
@@ -245,7 +247,9 @@ CREATE INDEX idx_events_status ON events(status);
 CREATE INDEX idx_events_date ON events(date);
 CREATE INDEX idx_events_is_featured ON events(is_featured);
 CREATE INDEX idx_events_is_verified ON events(is_verified);
-CREATE INDEX idx_events_subject ON events(subject);
+CREATE INDEX idx_events_field ON events(field);
+CREATE INDEX idx_events_age_range ON events(age_range);
+CREATE INDEX idx_events_region ON events(region);
 CREATE INDEX idx_events_created_at ON events(created_at);
 CREATE INDEX idx_events_published_at ON events(published_at);
 

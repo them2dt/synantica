@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Logo } from "@/components/ui/logo";
 import Link from "next/link";
 
 export function CTASection() {

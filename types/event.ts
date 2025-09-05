@@ -36,7 +36,9 @@ export interface Event {
   // Categorization
   category: string
   tags: string[]
-  subject: string
+  field: string
+  ageRange?: string
+  region: string
   
   // Date and time
   date: string
@@ -146,7 +148,9 @@ export interface EventFilters {
   search?: string
   category?: string
   date?: string
-  subject?: string
+  field?: string
+  ageRange?: string
+  region?: string
   location?: string
   isFree?: boolean
   isVirtual?: boolean
@@ -176,9 +180,11 @@ export interface EventFormData {
   title: string
   description: string
   shortDescription?: string
-  subject: string
+  field: string
   category: string
   tags: string[]
+  ageRange?: string
+  region: string
   date: string
   time: string
   endDate?: string

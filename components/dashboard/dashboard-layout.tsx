@@ -19,8 +19,12 @@ interface DashboardLayoutProps {
   totalEvents: number
   selectedDate?: string
   onDateChange?: (value: string) => void
-  selectedSubject?: string
-  onSubjectChange?: (value: string) => void
+  selectedAge?: string
+  onAgeChange?: (value: string) => void
+  selectedRegion?: string
+  onRegionChange?: (value: string) => void
+  selectedField?: string
+  onFieldChange?: (value: string) => void
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
   sortBy?: string
@@ -41,8 +45,12 @@ export function DashboardLayout({
   totalEvents, // For future use in header stats
   selectedDate,
   onDateChange,
-  selectedSubject,
-  onSubjectChange,
+  selectedAge,
+  onAgeChange,
+  selectedRegion,
+  onRegionChange,
+  selectedField,
+  onFieldChange,
   isListView,
   onViewChange,
   sortBy,
@@ -65,12 +73,16 @@ export function DashboardLayout({
               categories={categories}
               selectedDate={selectedDate}
               onDateChange={onDateChange}
-              selectedSubject={selectedSubject}
-              onSubjectChange={onSubjectChange}
-                          isListView={isListView}
-            onViewChange={onViewChange}
-            sortBy={sortBy}
-            onSortChange={onSortChange}
+              selectedAge={selectedAge}
+              onAgeChange={onAgeChange}
+              selectedRegion={selectedRegion}
+              onRegionChange={onRegionChange}
+              selectedField={selectedField}
+              onFieldChange={onFieldChange}
+              isListView={isListView}
+              onViewChange={onViewChange}
+              sortBy={sortBy}
+              onSortChange={onSortChange}
             />
           </div>
 

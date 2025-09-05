@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Calendar, Users, TrendingUp, BookOpen, Briefcase } from 'lucide-react'
+import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
 import { EventsGrid } from '@/components/dashboard/events-grid'
 import { Event, EventStatus } from '@/types/event'
@@ -13,8 +13,10 @@ const MOCK_EVENT: Event = {
   id: '1',
   title: 'HackTech 2024',
   description: 'Join us for 48 hours of coding, innovation, and prizes! Build the next big thing with fellow developers and win amazing rewards.',
-  category: 'hackathon',
-  subject: 'Computer Science',
+  category: 'hackathons',
+  field: 'computer-science',
+  ageRange: '18-25',
+  region: 'zurich',
   date: '2024-03-15',
   time: '18:00',
   location: 'Computer Science Building',
@@ -36,12 +38,10 @@ const MOCK_EVENTS: Event[] = Array.from({ length: 6 }, (_, index) => ({
 
 const EVENT_CATEGORIES: CategoryWithIcon[] = [
   { value: 'all', label: 'All Events', icon: Calendar },
-  { value: 'hackathon', label: 'Hackathons', icon: TrendingUp },
-  { value: 'workshop', label: 'Workshops', icon: BookOpen },
-  { value: 'social', label: 'Social Events', icon: Users },
-  { value: 'career', label: 'Career Fairs', icon: Briefcase },
-  { value: 'academic', label: 'Academic', icon: BookOpen },
-  { value: 'wellness', label: 'Wellness', icon: Users }
+  { value: 'contests', label: 'Contests', icon: Trophy },
+  { value: 'hackathons', label: 'Hackathons', icon: TrendingUp },
+  { value: 'events', label: 'Events', icon: Users },
+  { value: 'workshops', label: 'Workshops', icon: BookOpen }
 ]
 
 export default function DashboardPage() {
@@ -49,7 +49,9 @@ export default function DashboardPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [selectedDate, setSelectedDate] = useState('all')
-  const [selectedSubject, setSelectedSubject] = useState('all')
+  const [selectedAge, setSelectedAge] = useState('all')
+  const [selectedRegion, setSelectedRegion] = useState('all')
+  const [selectedField, setSelectedField] = useState('all')
   const [isListView, setIsListView] = useState(false)
   const [sortBy, setSortBy] = useState('date-asc')
 
@@ -102,8 +104,12 @@ export default function DashboardPage() {
       totalEvents={totalEvents}
       selectedDate={selectedDate}
       onDateChange={setSelectedDate}
-      selectedSubject={selectedSubject}
-      onSubjectChange={setSelectedSubject}
+      selectedAge={selectedAge}
+      onAgeChange={setSelectedAge}
+      selectedRegion={selectedRegion}
+      onRegionChange={setSelectedRegion}
+      selectedField={selectedField}
+      onFieldChange={setSelectedField}
       isListView={isListView}
       onViewChange={setIsListView}
       sortBy={sortBy}
