@@ -67,9 +67,6 @@ export interface Event {
   isVirtual?: boolean
   virtualLink?: string
   
-  // Registration
-  registrationRequired: boolean
-  registrationDeadline?: string
   
   // Pricing
   isFree: boolean
@@ -93,12 +90,10 @@ export interface Event {
   supportPdfs?: Array<{ name: string; url: string }>
   organizationHomepage?: string
   youtubeVideos?: string[]
-  registrationUrl?: string
   alumniContactEmail?: string
   
   // Analytics
   viewCount?: number
-  registrationCount?: number
   
   // Timestamps
   createdAt: string
@@ -106,25 +101,6 @@ export interface Event {
   publishedAt?: string
 }
 
-/**
- * Event registration interface
- */
-export interface EventRegistration {
-  id: string
-  eventId: string
-  userId: string
-  registrationDate: string
-  status: 'registered' | 'cancelled' | 'attended' | 'no_show'
-  checkInTime?: string
-  checkOutTime?: string
-  dietaryRestrictions?: string
-  accessibilityNeeds?: string
-  emergencyContact?: string
-  notes?: string
-  paymentStatus?: 'pending' | 'paid' | 'refunded'
-  paymentAmount?: number
-  paymentReference?: string
-}
 
 /**
  * Event review interface

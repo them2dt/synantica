@@ -26,7 +26,6 @@ export interface EventFilters {
 
 export interface EventWithDetails extends Event {
   category_name: string
-  registration_count: number
   average_rating: number
   tags: string[]
   // Database-specific fields
@@ -34,7 +33,6 @@ export interface EventWithDetails extends Event {
   organization_homepage?: string
   youtube_videos?: string[]
   alumni_contact_email?: string
-  registration_url?: string
 }
 
 /**
@@ -59,7 +57,6 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
         time,
         location,
         is_free,
-        registration_count,
         event_categories(name)
       `)
       .eq('status', 'published')
@@ -126,7 +123,6 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
       location: row.location,
       isFree: row.is_free,
       status: 'published' as EventStatus,
-      registrationRequired: true,
       organizer: 'Unknown',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -134,7 +130,6 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
       
       // Additional fields from the database
       category_name: row.event_categories?.name || 'Other',
-      registration_count: row.registration_count || 0,
       average_rating: 0
     }))
 
@@ -192,7 +187,6 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
       location: data.location,
       isFree: data.is_free,
       status: data.status as EventStatus,
-      registrationRequired: data.registration_required,
       organizer: data.organizer_name,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
@@ -200,7 +194,6 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
       
       // Additional fields
       category_name: data.event_categories?.name || 'Other',
-      registration_count: data.registration_count || 0,
       average_rating: 0
     }
 
@@ -232,11 +225,10 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
         time,
         location,
         is_free,
-        registration_count,
         event_categories(name)
       `)
       .eq('status', 'published')
-      .order('registration_count', { ascending: false })
+      .order('view_count', { ascending: false })
       .limit(limit)
 
     if (error) {
@@ -260,7 +252,6 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
       location: row.location,
       isFree: row.is_free,
       status: 'published' as EventStatus,
-      registrationRequired: true,
       organizer: 'Unknown',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -268,7 +259,6 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
       
       // Additional fields
       category_name: row.event_categories?.name || 'Other',
-      registration_count: row.registration_count || 0,
       average_rating: 0
     }))
 

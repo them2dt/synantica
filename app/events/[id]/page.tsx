@@ -43,9 +43,6 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
     return (event as EventWithDetails)?.alumni_contact_email
   }
 
-  const getRegistrationUrl = () => {
-    return (event as EventWithDetails)?.registration_url
-  }
 
   // Show loading state
   if (loading) {
@@ -267,17 +264,6 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         {/* Action Buttons */}
         <div className="bg-muted/30 rounded-lg p-6 mb-8">
           <div className="flex justify-center gap-4">
-            {getRegistrationUrl() ? (
-              <a href={getRegistrationUrl()!} target="_blank" rel="noopener noreferrer">
-                <Button variant="black" size="lg" className="px-8">
-                  Register for Event
-                </Button>
-              </a>
-            ) : (
-              <Button variant="black" size="lg" className="px-8">
-                Register for Event
-              </Button>
-            )}
             <Button variant="outline" size="lg" className="px-8" onClick={() => {
               if (navigator.share) {
                 navigator.share({

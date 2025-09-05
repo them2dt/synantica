@@ -95,7 +95,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
             </div>
             <ul className="text-sm text-red-700 mt-2 space-y-1">
               <li>• Your account and profile</li>
-              <li>• All event registrations</li>
+              <li>• All event participation history</li>
               <li>• All event history</li>
               <li>• All personal data</li>
             </ul>

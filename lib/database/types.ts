@@ -36,10 +36,8 @@ export interface DatabaseEvent {
   support_pdfs?: Array<{ name: string; url: string }>
   organization_homepage?: string
   youtube_videos?: string[]
-  registration_url?: string
   alumni_contact_email?: string
   view_count: number
-  registration_count: number
   created_at: string
   updated_at: string
   published_at?: string
@@ -88,7 +86,6 @@ export interface SearchEventResult {
   time: string
   location: string
   is_free: boolean
-  registration_count: number
   average_rating: number
   relevance_score: number
 }
@@ -97,7 +94,6 @@ export interface PopularEventResult {
   event_id: string
   title: string
   category_name: string
-  registration_count: number
   view_count: number
   average_rating: number
 }
@@ -121,7 +117,6 @@ export interface EventRow {
   time: string
   location: string
   is_free: boolean
-  registration_count: number
   event_categories?: {
     name: string
   } | null
