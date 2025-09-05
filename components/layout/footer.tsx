@@ -22,7 +22,7 @@ export function Footer() {
               href="https://instagram.com/synantica" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-accent transition-colors"
               title="@synantica"
             >
               <Instagram className="w-4 h-4" />

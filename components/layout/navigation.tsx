@@ -76,7 +76,7 @@ export function Navigation({
             className={cn(
               "text-sm font-medium transition-colors",
               isActive('/') 
-                ? "text-foreground font-semibold" 
+                ? "text-accent font-semibold" 
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
@@ -89,7 +89,7 @@ export function Navigation({
             className={cn(
               "text-sm font-medium transition-colors",
               isActive('/dashboard') 
-                ? "text-foreground font-semibold" 
+                ? "text-accent font-semibold" 
                 : "text-muted-foreground hover:text-foreground"
             )}
           >

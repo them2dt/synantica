@@ -20,7 +20,7 @@ export function Hero() {
 
         {/* CTA Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
-          <Button asChild size="lg" className="h-14 px-8 text-lg">
+          <Button asChild size="lg" className="h-14 px-8 text-lg bg-accent text-accent-foreground hover:bg-accent/90 hover:text-white transition-colors">
             <Link href="/dashboard">
               Explore Opportunities
             </Link>
