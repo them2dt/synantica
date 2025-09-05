@@ -136,12 +136,9 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
 
               {/* Category */}
               <td className="p-3 border-r border-border">
-                <Badge
-                  variant={event.category === "hackathon" ? "default" : "secondary"}
-                  className="capitalize text-xs"
-                >
+                <div className="text-sm capitalize">
                   {event.category}
-                </Badge>
+                </div>
               </td>
 
               {/* Subject */}

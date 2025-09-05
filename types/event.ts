@@ -44,6 +44,20 @@ export interface Event {
   endDate?: string
   endTime?: string
   
+  // Multi-day event support
+  isMultiDay?: boolean
+  duration?: number // Duration in days
+  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
+  recurringEndDate?: string
+  eventSchedule?: Array<{
+    date: string
+    startTime: string
+    endTime: string
+    title?: string
+    description?: string
+    location?: string
+  }>
+  
   // Location
   location: string
   venueDetails?: string
@@ -169,6 +183,18 @@ export interface EventFormData {
   time: string
   endDate?: string
   endTime?: string
+  isMultiDay?: boolean
+  duration?: number
+  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
+  recurringEndDate?: string
+  eventSchedule?: Array<{
+    date: string
+    startTime: string
+    endTime: string
+    title?: string
+    description?: string
+    location?: string
+  }>
   location: string
   venueDetails?: string
   isVirtual?: boolean

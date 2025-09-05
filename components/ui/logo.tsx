@@ -93,7 +93,7 @@ export function Logo({
         </div>
       )}
       {showText && (
-        <span className={cn('font-bold text-primary', currentSize.text)}>
+        <span className={cn('font-semibold text-primary font-heading', currentSize.text)}>
           Synantica
         </span>
       )}
