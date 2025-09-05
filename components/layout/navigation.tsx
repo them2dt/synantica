@@ -58,6 +58,14 @@ export function Navigation({
         </div>
         
         <div className="flex items-center gap-4">
+          {/* Home Link */}
+          <Link 
+            href="/" 
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Home
+          </Link>
+          
           {/* Dashboard Link */}
           <Link 
             href="/dashboard" 

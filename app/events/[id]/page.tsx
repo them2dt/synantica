@@ -82,7 +82,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               </Badge>
             </div>
             
-            <CardTitle className="text-4xl mb-4">
+            <CardTitle className="text-4xl mb-4 font-heading font-semibold">
               {event.title}
             </CardTitle>
             
@@ -217,12 +217,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <div className="flex justify-center gap-4">
             {event.registrationUrl ? (
               <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer">
-                <Button size="lg" className="px-8">
+                <Button variant="black" size="lg" className="px-8">
                   Register for Event
                 </Button>
               </a>
             ) : (
-              <Button size="lg" className="px-8">
+              <Button variant="black" size="lg" className="px-8">
                 Register for Event
               </Button>
             )}

@@ -87,7 +87,7 @@ export default function ProfilePage() {
                   <User className="w-8 h-8 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl">Profile</CardTitle>
+                  <CardTitle className="text-2xl font-heading font-semibold">Profile</CardTitle>
                   <CardDescription>
                     Manage your account information and preferences
                   </CardDescription>

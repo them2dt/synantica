@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "next-themes";
 import { satoshi } from "@/lib/fonts/satoshi";
+import { clashDisplay } from "@/lib/fonts/clash-display";
 import { generateMetadataWithOG } from "@/lib/og-image";
 import { Navigation } from "@/components/layout/navigation";
 import "./globals.css";
@@ -24,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${satoshi.className} antialiased`}>
+      <body className={`${satoshi.variable} ${clashDisplay.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

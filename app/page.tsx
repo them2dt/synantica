@@ -10,8 +10,6 @@ export default function Home() {
       <div className="flex-1 w-full flex flex-col gap-20 items-center">
         <div className="flex-1 w-full">
           <Hero />
-          <FeaturesSection />
-          <StatsSection />
           <CTASection />
         </div>
 
