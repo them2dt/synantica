@@ -114,9 +114,9 @@ export function FiltersTopBar({
       <DropdownMenu open={isFilterDropdownOpen} onOpenChange={setIsFilterDropdownOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon" className="relative">
-            <Filter className="w-4 h-4" />
+            <Filter className={`w-4 h-4 ${activeFiltersCount > 0 ? 'text-accent' : ''}`} />
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-accent text-accent-foreground text-xs rounded-full w-5 h-5 flex items-center justify-center">
                 {activeFiltersCount}
               </span>
             )}
@@ -185,7 +185,7 @@ export function FiltersTopBar({
       <DropdownMenu open={isSortDropdownOpen} onOpenChange={setIsSortDropdownOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon">
-            <ArrowUpDown className="w-4 h-4" />
+            <ArrowUpDown className={`w-4 h-4 ${isSortDropdownOpen ? 'text-accent' : ''}`} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
@@ -206,12 +206,12 @@ export function FiltersTopBar({
 
       {/* View Switch */}
       <div className="flex items-center gap-2">
-        <Grid3X3 className={`w-4 h-4 ${!isListView ? 'text-primary' : 'text-muted-foreground'}`} />
+        <Grid3X3 className={`w-4 h-4 ${!isListView ? 'text-accent' : 'text-muted-foreground'}`} />
         <Switch
           checked={isListView}
           onCheckedChange={onViewChange}
         />
-        <List className={`w-4 h-4 ${isListView ? 'text-primary' : 'text-muted-foreground'}`} />
+        <List className={`w-4 h-4 ${isListView ? 'text-accent' : 'text-muted-foreground'}`} />
       </div>
     </div>
   )

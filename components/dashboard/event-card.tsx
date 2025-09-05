@@ -51,26 +51,26 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
               
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Calendar className="w-4 h-4" />
+                  <Calendar className="w-4 h-4 text-accent" />
                   {formatDate(event.date)}
-                  <Clock className="w-4 h-4 ml-2" />
+                  <Clock className="w-4 h-4 ml-2 text-accent" />
                   {event.time}
                 </div>
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <MapPin className="w-4 h-4" />
+                  <MapPin className="w-4 h-4 text-accent" />
                   {event.location}
                 </div>
 
 
                 <div className="flex flex-wrap gap-1">
                   {event.tags.slice(0, 3).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
+                    <Badge key={tag} variant="outline" className="text-xs border-accent">
                       {tag}
                     </Badge>
                   ))}
                   {event.tags.length > 3 && (
-                    <Badge variant="outline" className="text-xs">
+                    <Badge variant="outline" className="text-xs border-accent">
                       +{event.tags.length - 3}
                     </Badge>
                   )}
@@ -101,6 +101,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
           <Badge
             className="capitalize"
             variant={event.category === "hackathon" ? "default" : "secondary"}
+            style={event.category === "hackathon" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
           >
             {event.category}
           </Badge>
@@ -111,21 +112,21 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
 
       <CardContent className="space-y-3">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Calendar className="w-4 h-4" />
+          <Calendar className="w-4 h-4 text-accent" />
           {formatDate(event.date)}
-          <Clock className="w-4 h-4 ml-2" />
+          <Clock className="w-4 h-4 ml-2 text-accent" />
           {event.time}
         </div>
 
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPin className="w-4 h-4" />
+          <MapPin className="w-4 h-4 text-accent" />
           {event.location}
         </div>
 
 
         <div className="flex flex-wrap gap-1">
           {event.tags.map((tag) => (
-            <Badge key={tag} variant="outline" className="text-xs">
+            <Badge key={tag} variant="outline" className="text-xs border-accent">
               {tag}
             </Badge>
           ))}

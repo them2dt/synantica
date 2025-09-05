@@ -77,7 +77,11 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         <Card className="mb-8">
           <CardHeader>
             <div className="flex items-center justify-between mb-4">
-              <Badge variant="default" className="capitalize">
+              <Badge 
+                variant="default" 
+                className="capitalize"
+                style={event.category === "hackathon" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
+              >
                 {event.category}
               </Badge>
             </div>
@@ -94,19 +98,19 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <CardContent>
             <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
+                <Calendar className="w-4 h-4 text-accent" />
                 {event.date}
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4" />
+                <Clock className="w-4 h-4 text-accent" />
                 {event.time}
               </div>
               <div className="flex items-center gap-2">
-                <MapPin className="w-4 h-4" />
+                <MapPin className="w-4 h-4 text-accent" />
                 {event.location}
               </div>
               <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
+                <Users className="w-4 h-4 text-accent" />
                 Organized by {event.organizer}
               </div>
             </div>
@@ -119,7 +123,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Download className="w-5 h-5" />
+                <Download className="w-5 h-5 text-accent" />
                 Resources
               </CardTitle>
             </CardHeader>
@@ -134,7 +138,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
-                    <Download className="w-4 h-4 text-muted-foreground" />
+                    <Download className="w-4 h-4 text-accent" />
                     <span className="text-sm font-medium">{pdf.name}</span>
                     <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
                   </a>
@@ -148,7 +152,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    <ExternalLink className="w-4 h-4 text-accent" />
                     <span className="text-sm font-medium">Organization Homepage</span>
                     <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
                   </a>
@@ -163,7 +167,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                     rel="noopener noreferrer"
                     className="flex items-center gap-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors"
                   >
-                    <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    <ExternalLink className="w-4 h-4 text-accent" />
                     <span className="text-sm font-medium">YouTube Video {index + 1}</span>
                     <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
                   </a>
@@ -181,7 +185,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <CardContent>
             <div className="flex flex-wrap gap-2">
               {event.tags.map((tag, index) => (
-                <Badge key={index} variant="outline">
+                <Badge key={index} variant="outline" className="border-accent">
                   {tag}
                 </Badge>
               ))}
@@ -194,7 +198,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <Card className="mb-8">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Mail className="w-5 h-5" />
+                <Mail className="w-5 h-5 text-accent" />
                 Ask Alumni
               </CardTitle>
             </CardHeader>
@@ -204,7 +208,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               </p>
               <a href={`mailto:${event.alumniContactEmail}?subject=Question about ${event.title}`}>
                 <Button variant="outline" className="gap-2">
-                  <Mail className="w-4 h-4" />
+                  <Mail className="w-4 h-4 text-accent" />
                   Contact Alumni
                 </Button>
               </a>
