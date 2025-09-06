@@ -5,9 +5,16 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import { Eye, EyeOff, Check, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { 
+  validatePassword, 
+  getStrengthColor, 
+  getStrengthDescription
+} from "@/lib/utils/password-validation";
 
 export function SignUpForm({
   className,
@@ -18,13 +25,27 @@ export function SignUpForm({
   const [repeatPassword, setRepeatPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const router = useRouter();
+
+  // Password validation
+  const passwordValidation = validatePassword(password);
+  const isPasswordValid = passwordValidation.isValid;
+  const isRepeatPasswordValid = password === repeatPassword && repeatPassword.length > 0;
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     const supabase = createClient();
     setIsLoading(true);
     setError(null);
+
+    // Enhanced validation
+    if (!isPasswordValid) {
+      setError("Password does not meet security requirements");
+      setIsLoading(false);
+      return;
+    }
 
     if (password !== repeatPassword) {
       setError("Passwords do not match");
@@ -73,15 +94,74 @@ export function SignUpForm({
           <Label htmlFor="password" className="text-sm font-medium">
             Password
           </Label>
-          <Input
-            id="password"
-            type="password"
-            placeholder="Create a password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="h-12 border-gray-300"
-          />
+          <div className="relative">
+            <Input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              placeholder="Create a password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={cn(
+                "h-12 border-gray-300 pr-10",
+                password && !isPasswordValid && "border-red-300 focus:border-red-500"
+              )}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+          
+          {/* Password Strength Indicator */}
+          {password && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Password strength:</span>
+                <span className={cn("font-medium", getStrengthColor(passwordValidation.strength))}>
+                  {getStrengthDescription(passwordValidation.strength)}
+                </span>
+              </div>
+              <Progress 
+                value={passwordValidation.score} 
+                className="h-2"
+              />
+              
+              {/* Password Requirements */}
+              <div className="space-y-1 text-xs">
+                {passwordValidation.feedback.map((requirement, index) => (
+                  <div key={index} className="flex items-center gap-2">
+                    {passwordValidation.requirements.minLength && requirement.includes('characters') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : passwordValidation.requirements.hasUppercase && requirement.includes('uppercase') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : passwordValidation.requirements.hasLowercase && requirement.includes('lowercase') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : passwordValidation.requirements.hasNumbers && requirement.includes('numbers') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : passwordValidation.requirements.hasSpecialChars && requirement.includes('special') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : passwordValidation.requirements.noCommonPatterns && requirement.includes('common') ? (
+                      <Check className="h-3 w-3 text-green-500" />
+                    ) : (
+                      <X className="h-3 w-3 text-red-500" />
+                    )}
+                    <span className={requirement.includes('characters') && passwordValidation.requirements.minLength ? 'text-green-600' : 
+                                   requirement.includes('uppercase') && passwordValidation.requirements.hasUppercase ? 'text-green-600' :
+                                   requirement.includes('lowercase') && passwordValidation.requirements.hasLowercase ? 'text-green-600' :
+                                   requirement.includes('numbers') && passwordValidation.requirements.hasNumbers ? 'text-green-600' :
+                                   requirement.includes('special') && passwordValidation.requirements.hasSpecialChars ? 'text-green-600' :
+                                   requirement.includes('common') && passwordValidation.requirements.noCommonPatterns ? 'text-green-600' : 'text-red-600'}>
+                      {requirement}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Confirm Password Field */}
@@ -89,15 +169,44 @@ export function SignUpForm({
           <Label htmlFor="repeat-password" className="text-sm font-medium">
             Confirm Password
           </Label>
-          <Input
-            id="repeat-password"
-            type="password"
-            placeholder="Confirm your password"
-            required
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
-            className="h-12 border-gray-300"
-          />
+          <div className="relative">
+            <Input
+              id="repeat-password"
+              type={showRepeatPassword ? "text" : "password"}
+              placeholder="Confirm your password"
+              required
+              value={repeatPassword}
+              onChange={(e) => setRepeatPassword(e.target.value)}
+              className={cn(
+                "h-12 border-gray-300 pr-10",
+                repeatPassword && !isRepeatPasswordValid && "border-red-300 focus:border-red-500"
+              )}
+            />
+            <button
+              type="button"
+              onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            >
+              {showRepeatPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+            </button>
+          </div>
+          
+          {/* Password Match Indicator */}
+          {repeatPassword && (
+            <div className="flex items-center gap-2 text-sm">
+              {isRepeatPasswordValid ? (
+                <>
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="text-green-600">Passwords match</span>
+                </>
+              ) : (
+                <>
+                  <X className="h-4 w-4 text-red-500" />
+                  <span className="text-red-600">Passwords do not match</span>
+                </>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Error Message */}
@@ -111,7 +220,7 @@ export function SignUpForm({
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isLoading}
+          disabled={isLoading || !isPasswordValid || !isRepeatPasswordValid}
         >
           {isLoading ? "Creating account..." : "Create Account"}
         </Button>

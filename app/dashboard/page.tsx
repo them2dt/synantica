@@ -9,6 +9,9 @@ import { Event } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEvents, useEventCategories } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/lib/database/events-client'
+import { useDebounce } from '@/lib/hooks/use-debounce'
+import { ErrorBoundary } from '@/components/error-boundary'
+import { DashboardSkeleton } from '@/components/ui/skeleton'
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -21,10 +24,13 @@ export default function DashboardPage() {
   const [isListView, setIsListView] = useState(false)
   const [sortBy, setSortBy] = useState('date-asc')
 
+  // Debounce search term to prevent excessive API calls
+  const debouncedSearchTerm = useDebounce(searchTerm, 300)
+
   // Build filters for database query
   const filters: EventFilters = useMemo(() => {
     const baseFilters: EventFilters = {
-      search: searchTerm || undefined,
+      search: debouncedSearchTerm || undefined,
       category: selectedCategory === 'all' ? undefined : selectedCategory,
       field: selectedField === 'all' ? undefined : selectedField,
       region: selectedRegion === 'all' ? undefined : selectedRegion,
@@ -57,7 +63,7 @@ export default function DashboardPage() {
     }
 
     return baseFilters
-  }, [searchTerm, selectedCategory, selectedField, selectedRegion, selectedAgeRange, selectedDate])
+  }, [debouncedSearchTerm, selectedCategory, selectedField, selectedRegion, selectedAgeRange, selectedDate])
 
   // Fetch events from database
   const { events: dbEvents, loading, error } = useEvents(filters)
@@ -137,33 +143,30 @@ export default function DashboardPage() {
   // Show loading state
   if (loading || categoriesLoading) {
     return (
-      <DashboardLayout
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        categories={eventCategories}
-        totalEvents={0}
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
-        selectedAgeRange={selectedAgeRange}
-        onAgeRangeChange={setSelectedAgeRange}
-        selectedRegion={selectedRegion}
-        onRegionChange={setSelectedRegion}
-        selectedField={selectedField}
-        onFieldChange={setSelectedField}
-        isListView={isListView}
-        onViewChange={setIsListView}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-      >
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Loading events...</p>
-          </div>
-        </div>
-      </DashboardLayout>
+      <ErrorBoundary>
+        <DashboardLayout
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          selectedCategory={selectedCategory}
+          onCategoryChange={setSelectedCategory}
+          categories={eventCategories}
+          totalEvents={0}
+          selectedDate={selectedDate}
+          onDateChange={setSelectedDate}
+          selectedAgeRange={selectedAgeRange}
+          onAgeRangeChange={setSelectedAgeRange}
+          selectedRegion={selectedRegion}
+          onRegionChange={setSelectedRegion}
+          selectedField={selectedField}
+          onFieldChange={setSelectedField}
+          isListView={isListView}
+          onViewChange={setIsListView}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        >
+          <DashboardSkeleton />
+        </DashboardLayout>
+      </ErrorBoundary>
     )
   }
 
@@ -208,35 +211,37 @@ export default function DashboardPage() {
   }
 
   return (
-    <DashboardLayout
-      searchTerm={searchTerm}
-      onSearchChange={setSearchTerm}
-      selectedCategory={selectedCategory}
-      onCategoryChange={setSelectedCategory}
-      categories={eventCategories}
-      totalEvents={totalEvents}
-      selectedDate={selectedDate}
-      onDateChange={setSelectedDate}
-      selectedAgeRange={selectedAgeRange}
-      onAgeRangeChange={setSelectedAgeRange}
-      selectedRegion={selectedRegion}
-      onRegionChange={setSelectedRegion}
-      selectedField={selectedField}
-      onFieldChange={setSelectedField}
-      isListView={isListView}
-      onViewChange={setIsListView}
-      sortBy={sortBy}
-      onSortChange={setSortBy}
-    >
-      <EventsGrid
-        events={sortedEvents}
+    <ErrorBoundary>
+      <DashboardLayout
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
         selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
         categories={eventCategories}
-        onEventClick={handleEventClick}
+        totalEvents={totalEvents}
+        selectedDate={selectedDate}
+        onDateChange={setSelectedDate}
+        selectedAgeRange={selectedAgeRange}
+        onAgeRangeChange={setSelectedAgeRange}
+        selectedRegion={selectedRegion}
+        onRegionChange={setSelectedRegion}
+        selectedField={selectedField}
+        onFieldChange={setSelectedField}
         isListView={isListView}
+        onViewChange={setIsListView}
         sortBy={sortBy}
         onSortChange={setSortBy}
-      />
-    </DashboardLayout>
+      >
+        <EventsGrid
+          events={sortedEvents}
+          selectedCategory={selectedCategory}
+          categories={eventCategories}
+          onEventClick={handleEventClick}
+          isListView={isListView}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+        />
+      </DashboardLayout>
+    </ErrorBoundary>
   )
 }
