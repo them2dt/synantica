@@ -95,9 +95,12 @@ export function SignUpForm({
           <Input
             id="email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
+            autoCapitalize="none"
             placeholder="Enter your email"
             className={cn(
-              "h-12 border-gray-300",
+              "h-12 border-gray-300 text-base",
               errors.email && "border-red-300 focus:border-red-500"
             )}
             {...register("email")}
@@ -120,9 +123,10 @@ export function SignUpForm({
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
+              autoComplete="new-password"
               placeholder="Create a password"
               className={cn(
-                "h-12 border-gray-300 pr-10",
+                "h-12 border-gray-300 pr-10 text-base",
                 errors.password && "border-red-300 focus:border-red-500"
               )}
               {...register("password")}
@@ -201,9 +205,10 @@ export function SignUpForm({
             <Input
               id="confirmPassword"
               type={showRepeatPassword ? "text" : "password"}
+              autoComplete="new-password"
               placeholder="Confirm your password"
               className={cn(
-                "h-12 border-gray-300 pr-10",
+                "h-12 border-gray-300 pr-10 text-base",
                 errors.confirmPassword && "border-red-300 focus:border-red-500"
               )}
               {...register("confirmPassword")}

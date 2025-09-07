@@ -80,9 +80,12 @@ export function LoginForm({
           <Input
             id="email"
             type="email"
+            inputMode="email"
+            autoComplete="email"
+            autoCapitalize="none"
             placeholder="Enter your email"
             className={cn(
-              "h-12 border-gray-300",
+              "h-12 border-gray-300 text-base",
               errors.email && "border-red-300 focus:border-red-500"
             )}
             {...register("email")}
@@ -104,9 +107,10 @@ export function LoginForm({
           <Input
             id="password"
             type="password"
+            autoComplete="current-password"
             placeholder="Enter your password"
             className={cn(
-              "h-12 border-gray-300",
+              "h-12 border-gray-300 text-base",
               errors.password && "border-red-300 focus:border-red-500"
             )}
             {...register("password")}

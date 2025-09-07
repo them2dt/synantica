@@ -24,13 +24,15 @@ interface UserMenuProps {
   className?: string
   /** Whether to show the user email */
   showEmail?: boolean
+  /** Custom trigger element */
+  children?: React.ReactNode
 }
 
 /**
  * User menu dropdown component
  * Provides access to profile, settings, and logout functionality
  */
-export function UserMenu({ className }: UserMenuProps) {
+export function UserMenu({ className, children }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -66,9 +68,11 @@ export function UserMenu({ className }: UserMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className={className}>
-          <User className="w-4 h-4" />
-        </Button>
+        {children || (
+          <Button variant="ghost" size="icon" className={className}>
+            <User className="w-4 h-4" />
+          </Button>
+        )}
       </DropdownMenuTrigger>
       
       <DropdownMenuContent align="end" className="w-56">

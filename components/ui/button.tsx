@@ -22,10 +22,11 @@ const buttonVariants = cva(
         black: "bg-black text-white hover:bg-black/90",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-12 px-4 py-2", // Increased from h-9 for better mobile touch targets
+        sm: "h-10 rounded-md px-3 text-xs", // Increased from h-8 for better mobile touch targets
+        lg: "h-14 rounded-md px-8", // Increased from h-10 for better mobile touch targets
+        icon: "h-12 w-12", // Increased from h-9 w-9 for better mobile touch targets
+        "icon-sm": "h-10 w-10", // New mobile-friendly size
       },
     },
     defaultVariants: {
