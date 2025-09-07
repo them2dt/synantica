@@ -10,6 +10,10 @@ import { Eye, EyeOff, Check, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
+import { useToast } from "@/components/ui/toast";
 import { 
   validatePassword, 
   getStrengthColor, 
@@ -20,59 +24,69 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
   const router = useRouter();
+  const { error: toastError, success: toastSuccess } = useToast();
 
-  // Password validation
+  // React Hook Form setup with Zod validation
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  // Watch password for real-time validation
+  const password = watch("password");
   const passwordValidation = validatePassword(password);
-  const isPasswordValid = passwordValidation.isValid;
-  const isRepeatPasswordValid = password === repeatPassword && repeatPassword.length > 0;
 
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
+  /**
+   * Handle form submission with enhanced error handling
+   */
+  const onSubmit = async (data: SignUpFormData) => {
     const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
-
-    // Enhanced validation
-    if (!isPasswordValid) {
-      setError("Password does not meet security requirements");
-      setIsLoading(false);
-      return;
-    }
-
-    if (password !== repeatPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const { error } = await supabase.auth.signUp({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
         },
       });
-      if (error) throw error;
+
+      if (error) {
+        // Handle specific error types
+        if (error.message.includes("already registered")) {
+          toastError("Email already exists", "This email is already registered. Please try signing in instead.");
+        } else if (error.message.includes("weak password")) {
+          toastError("Password too weak", "Please choose a stronger password with more variety.");
+        } else {
+          toastError("Registration failed", error.message);
+        }
+        return;
+      }
+
+      // Success
+      toastSuccess("Account created!", "Please check your email to confirm your account.");
       router.push("/auth/sign-up-success");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+    } catch {
+      toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
   };
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <form onSubmit={handleSignUp} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
@@ -82,11 +96,19 @@ export function SignUpForm({
             id="email"
             type="email"
             placeholder="Enter your email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="h-12 border-gray-300"
+            className={cn(
+              "h-12 border-gray-300",
+              errors.email && "border-red-300 focus:border-red-500"
+            )}
+            {...register("email")}
+            aria-invalid={errors.email ? "true" : "false"}
+            aria-describedby={errors.email ? "email-error" : undefined}
           />
+          {errors.email && (
+            <p id="email-error" className="text-sm text-red-600" role="alert">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -99,22 +121,28 @@ export function SignUpForm({
               id="password"
               type={showPassword ? "text" : "password"}
               placeholder="Create a password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               className={cn(
                 "h-12 border-gray-300 pr-10",
-                password && !isPasswordValid && "border-red-300 focus:border-red-500"
+                errors.password && "border-red-300 focus:border-red-500"
               )}
+              {...register("password")}
+              aria-invalid={errors.password ? "true" : "false"}
+              aria-describedby={errors.password ? "password-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
+          {errors.password && (
+            <p id="password-error" className="text-sm text-red-600" role="alert">
+              {errors.password.message}
+            </p>
+          )}
           
           {/* Password Strength Indicator */}
           {password && (
@@ -166,63 +194,45 @@ export function SignUpForm({
 
         {/* Confirm Password Field */}
         <div className="space-y-2">
-          <Label htmlFor="repeat-password" className="text-sm font-medium">
+          <Label htmlFor="confirmPassword" className="text-sm font-medium">
             Confirm Password
           </Label>
           <div className="relative">
             <Input
-              id="repeat-password"
+              id="confirmPassword"
               type={showRepeatPassword ? "text" : "password"}
               placeholder="Confirm your password"
-              required
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
               className={cn(
                 "h-12 border-gray-300 pr-10",
-                repeatPassword && !isRepeatPasswordValid && "border-red-300 focus:border-red-500"
+                errors.confirmPassword && "border-red-300 focus:border-red-500"
               )}
+              {...register("confirmPassword")}
+              aria-invalid={errors.confirmPassword ? "true" : "false"}
+              aria-describedby={errors.confirmPassword ? "confirm-password-error" : undefined}
             />
             <button
               type="button"
               onClick={() => setShowRepeatPassword(!showRepeatPassword)}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              aria-label={showRepeatPassword ? "Hide confirm password" : "Show confirm password"}
             >
               {showRepeatPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          
-          {/* Password Match Indicator */}
-          {repeatPassword && (
-            <div className="flex items-center gap-2 text-sm">
-              {isRepeatPasswordValid ? (
-                <>
-                  <Check className="h-4 w-4 text-green-500" />
-                  <span className="text-green-600">Passwords match</span>
-                </>
-              ) : (
-                <>
-                  <X className="h-4 w-4 text-red-500" />
-                  <span className="text-red-600">Passwords do not match</span>
-                </>
-              )}
-            </div>
+          {errors.confirmPassword && (
+            <p id="confirm-password-error" className="text-sm text-red-600" role="alert">
+              {errors.confirmPassword.message}
+            </p>
           )}
         </div>
-
-        {/* Error Message */}
-        {error && (
-          <div className="p-3 rounded-md text-sm bg-red-50 text-red-700 border border-red-200">
-            {error}
-          </div>
-        )}
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isLoading || !isPasswordValid || !isRepeatPasswordValid}
+          disabled={isSubmitting || !isValid}
         >
-          {isLoading ? "Creating account..." : "Create Account"}
+          {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>
 
         {/* Mode Toggle */}

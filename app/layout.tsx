@@ -4,6 +4,7 @@ import { satoshi } from "@/lib/fonts/satoshi";
 import { clashDisplay } from "@/lib/fonts/clash-display";
 import { generateMetadataWithOG } from "@/lib/og-image";
 import { Navigation } from "@/components/layout/navigation";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const defaultUrl = process.env.VERCEL_URL
@@ -32,8 +33,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navigation sticky />
-          {children}
+          <ToastProvider>
+            <Navigation sticky />
+            {children}
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

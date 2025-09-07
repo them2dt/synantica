@@ -8,43 +8,70 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signInSchema, type SignInFormData } from "@/lib/validations/auth";
+import { useToast } from "@/components/ui/toast";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [keepSignedIn, setKeepSignedIn] = useState(true);
   const router = useRouter();
+  const { error: toastError, success: toastSuccess } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // React Hook Form setup with Zod validation
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting, isValid },
+  } = useForm({
+    resolver: zodResolver(signInSchema),
+    mode: "onChange",
+    defaultValues: {
+      email: "",
+      password: "",
+      keepSignedIn: true,
+    },
+  });
+
+  /**
+   * Handle form submission with enhanced error handling
+   */
+  const onSubmit = async (data: SignInFormData) => {
     const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+        email: data.email,
+        password: data.password,
       });
-      if (error) throw error;
-      // Redirect to dashboard after successful login
+
+      if (error) {
+        // Handle specific error types
+        if (error.message.includes("Invalid login credentials")) {
+          toastError("Invalid credentials", "Please check your email and password and try again.");
+        } else if (error.message.includes("Email not confirmed")) {
+          toastError("Email not confirmed", "Please check your email and click the confirmation link before signing in.");
+        } else if (error.message.includes("Too many requests")) {
+          toastError("Too many attempts", "Please wait a few minutes before trying again.");
+        } else {
+          toastError("Login failed", error.message);
+        }
+        return;
+      }
+
+      // Success
+      toastSuccess("Welcome back!", "You have been successfully signed in.");
       router.push("/dashboard");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+    } catch {
+      toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
 
   return (
     <div className={cn("w-full", className)} {...props}>
-      <form onSubmit={handleLogin} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email Field */}
         <div className="space-y-2">
           <Label htmlFor="email" className="text-sm font-medium">
@@ -54,11 +81,19 @@ export function LoginForm({
             id="email"
             type="email"
             placeholder="Enter your email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="h-12 border-gray-300"
+            className={cn(
+              "h-12 border-gray-300",
+              errors.email && "border-red-300 focus:border-red-500"
+            )}
+            {...register("email")}
+            aria-invalid={errors.email ? "true" : "false"}
+            aria-describedby={errors.email ? "email-error" : undefined}
           />
+          {errors.email && (
+            <p id="email-error" className="text-sm text-red-600" role="alert">
+              {errors.email.message}
+            </p>
+          )}
         </div>
 
         {/* Password Field */}
@@ -70,23 +105,30 @@ export function LoginForm({
             id="password"
             type="password"
             placeholder="Enter your password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="h-12 border-gray-300"
+            className={cn(
+              "h-12 border-gray-300",
+              errors.password && "border-red-300 focus:border-red-500"
+            )}
+            {...register("password")}
+            aria-invalid={errors.password ? "true" : "false"}
+            aria-describedby={errors.password ? "password-error" : undefined}
           />
+          {errors.password && (
+            <p id="password-error" className="text-sm text-red-600" role="alert">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
         {/* Remember Me & Forgot Password */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-                                    <Checkbox
-                          id="keep-signed-in"
-                          checked={keepSignedIn}
-                          onCheckedChange={(checked) => setKeepSignedIn(checked === true)}
-                        />
+            <Checkbox
+              id="keepSignedIn"
+              {...register("keepSignedIn")}
+            />
             <Label
-              htmlFor="keep-signed-in"
+              htmlFor="keepSignedIn"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Remember me
@@ -100,20 +142,13 @@ export function LoginForm({
           </Link>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="p-3 rounded-md text-sm bg-red-50 text-red-700 border border-red-200">
-            {error}
-          </div>
-        )}
-
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isLoading}
+          disabled={isSubmitting || !isValid}
         >
-          {isLoading ? "Logging in..." : "Log in"}
+          {isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
 
         {/* Mode Toggle */}
