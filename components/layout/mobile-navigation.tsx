@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, Home, LayoutDashboard, User, Sun } from 'lucide-react'
+import { Menu, Home, LayoutDashboard, User } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Logo } from '@/components/ui/logo'
@@ -157,7 +157,9 @@ export function MobileNavigation({
                         </div>
                       </UserMenu>
                     ) : (
-                      <AuthButtonClient fullWidth onClick={() => setOpen(false)} />
+                      <div className="flex gap-2 w-full">
+                        <AuthButtonClient fullWidth onClick={() => setOpen(false)} />
+                      </div>
                     )}
                   </div>
                 </div>
@@ -169,13 +171,7 @@ export function MobileNavigation({
                   <ThemeSwitcher>
                     <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg border hover:bg-background/70 transition-colors cursor-pointer w-full">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                          <Sun className="w-4 h-4 text-muted-foreground" />
-                        </div>
                         <span className="text-sm font-medium">Theme</span>
-                      </div>
-                      <div className="w-6 h-6 flex items-center justify-center">
-                        <Sun className="w-4 h-4 text-muted-foreground" />
                       </div>
                     </div>
                   </ThemeSwitcher>
@@ -242,13 +238,7 @@ export function MobileNavigationSimple() {
               <ThemeSwitcher>
                 <div className="flex items-center justify-between p-3 bg-background/50 rounded-lg border hover:bg-background/70 transition-colors cursor-pointer w-full">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-                      <Sun className="w-4 h-4 text-muted-foreground" />
-                    </div>
                     <span className="text-sm font-medium">Theme</span>
-                  </div>
-                  <div className="w-6 h-6 flex items-center justify-center">
-                    <Sun className="w-4 h-4 text-muted-foreground" />
                   </div>
                 </div>
               </ThemeSwitcher>

@@ -83,8 +83,9 @@ export function SignUpForm({
         },
       });
 
+      // Log the full response for debugging
       console.log("Sign-up response:", { data: authData, error });
-
+      
       if (error) {
         console.error("Sign-up error:", error);
         // Handle specific error types
@@ -98,22 +99,8 @@ export function SignUpForm({
         return;
       }
 
-      console.log("Sign-up successful, creating user profile...");
-
-      // Try to create user profile manually if the trigger didn't work
-      try {
-        if (authData.user?.id) {
-          await supabase.from('user_profiles').insert({
-            id: authData.user.id,
-            email: data.email,
-          }).select().single();
-
-          console.log("User profile created successfully");
-        }
-      } catch (profileError) {
-        console.warn("User profile creation failed (might already exist):", profileError);
-        // This is okay - the profile might already exist or the trigger created it
-      }
+      // Refresh the page to update server-side authentication state
+      router.refresh();
 
       console.log("Sign-up successful, redirecting to dashboard...");
       // Success - redirect directly to dashboard

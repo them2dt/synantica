@@ -21,7 +21,7 @@ export function LoginForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
-  const { error: toastError, success: toastSuccess } = useToast();
+  const { error: toastError } = useToast();
 
   // React Hook Form setup with Zod validation
   const {
@@ -64,29 +64,25 @@ export function LoginForm({
       console.log("Login response:", { data: authData, error });
 
       if (error) {
-        console.error("Login error:", error);
-        // Handle specific error types
+        console.error("Login error:", error.message);
         if (error.message.includes("Invalid login credentials")) {
-          toastError("Invalid credentials", "Please check your email and password and try again.");
-        } else if (error.message.includes("Too many requests")) {
-          toastError("Too many attempts", "Please wait a few minutes before trying again.");
+          toastError("Login Failed", "Invalid email or password. Please try again.");
         } else {
-          toastError("Login failed", error.message);
+          toastError("Login Failed", "Could not authenticate. Please try again later.");
         }
         return;
       }
 
-      console.log("Login successful, redirecting to dashboard...");
-      // Success
-      toastSuccess("Welcome back!", "You have been successfully signed in.");
+      console.log('Login successful, redirecting to dashboard...');
+      
+      // Refresh the page to update server-side authentication state
+      router.refresh();
 
-      // Add a small delay to ensure auth state is updated
       setTimeout(() => {
-        console.log("Executing router.push('/dashboard')...");
         router.push("/dashboard");
-      }, 500);
-    } catch (catchError) {
-      console.error("Login exception:", catchError);
+      }, 500); // 500ms delay to allow state to propagate
+    } catch (err) {
+      console.error("An unexpected error occurred:", err);
       toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
