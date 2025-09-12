@@ -2,16 +2,27 @@
 
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
+import dynamic from 'next/dynamic'
 import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
-import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
-import { EventsGrid } from '@/components/dashboard/events-grid'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventCategories, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/lib/database/events-client'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
-import { DashboardSkeleton } from '@/components/ui/skeleton'
+
+// Lazy load heavy components
+const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
+  loading: () => <div className="animate-pulse h-screen bg-muted"></div>
+})
+
+const EventsGrid = dynamic(() => import('@/components/dashboard/events-grid').then(mod => ({ default: mod.EventsGrid })), {
+  loading: () => <div className="animate-pulse h-64 bg-muted rounded-lg"></div>
+})
+
+const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(mod => ({ default: mod.DashboardSkeleton })), {
+  loading: () => <div className="animate-pulse h-64 bg-muted rounded-lg"></div>
+})
 
 export default function DashboardPage() {
   const router = useRouter()
