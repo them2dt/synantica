@@ -1,5 +1,3 @@
-import { Instagram } from 'lucide-react'
-import { ThemeSwitcher } from '@/components/theme-switcher'
 import { Logo } from '@/components/ui/logo'
 
 /**
