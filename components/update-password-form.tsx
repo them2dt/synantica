@@ -8,8 +8,8 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form-field'
 import { useToast } from '@/components/ui/toast'
-import { passwordUpdateSchema } from '@/lib/validations/auth'
-import type { PasswordUpdateFormValues } from '@/lib/validations/auth'
+import { commonSchemas, defaultFormValues } from '@/lib/validations/common'
+import type { ResetPasswordFormData } from '@/lib/validations/common'
 import { Loader2 } from 'lucide-react'
 
 export function UpdatePasswordForm() {
@@ -46,15 +46,12 @@ export function UpdatePasswordForm() {
     }
   }, [searchParams, router, supabase, toastError])
 
-  const form = useForm<PasswordUpdateFormValues>({
-    resolver: zodResolver(passwordUpdateSchema),
-    defaultValues: {
-      password: '',
-      confirmPassword: '',
-    },
+  const form = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(commonSchemas.resetPassword),
+    defaultValues: defaultFormValues.resetPassword,
   })
 
-  const onSubmit = async (data: PasswordUpdateFormValues) => {
+  const onSubmit = async (data: ResetPasswordFormData) => {
     setIsSubmitting(true)
     
     const { error } = await supabase.auth.updateUser({

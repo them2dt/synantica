@@ -1,8 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { createClient } from '@/lib/supabase/client'
-import { redirect } from 'next/navigation'
+import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -13,32 +11,17 @@ import { ChangeEmailModal } from '@/components/modals/change-email-modal'
 import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
 import { Footer } from '@/components/layout/footer'
 import { formatEventDate } from '@/lib/utils/date-formatting'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 /**
  * User profile page
  * Displays user account information and profile details
  */
 export default function ProfilePage() {
-  const [user, setUser] = useState<{ email?: string; id?: string; created_at?: string; last_sign_in_at?: string; email_confirmed_at?: string; phone?: string } | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth('/auth/login', true)
   const [changePasswordOpen, setChangePasswordOpen] = useState(false)
   const [changeEmailOpen, setChangeEmailOpen] = useState(false)
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
-
-  useEffect(() => {
-    const getUser = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      
-      if (!user) {
-        redirect('/auth/login')
-      }
-      
-      setUser(user)
-      setLoading(false)
-    }
-    getUser()
-  }, [])
 
   if (loading) {
     return (

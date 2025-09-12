@@ -9,11 +9,9 @@ import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form-field'
 import { useToast } from '@/components/ui/toast'
 
-const forgotPasswordSchema = z.object({
-  email: z.string().email({ message: "Please enter a valid email address." }),
-})
+import { commonSchemas, defaultFormValues } from '@/lib/validations/common'
 
-type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
+type ForgotPasswordFormValues = z.infer<typeof commonSchemas.forgotPassword>
 
 export function ForgotPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -22,10 +20,8 @@ export function ForgotPasswordForm() {
   const { error: toastError, success: toastSuccess } = useToast()
 
   const form = useForm<ForgotPasswordFormValues>({
-    resolver: zodResolver(forgotPasswordSchema),
-    defaultValues: {
-      email: '',
-    },
+    resolver: zodResolver(commonSchemas.forgotPassword),
+    defaultValues: defaultFormValues.forgotPassword,
   })
 
   const onSubmit = async (data: ForgotPasswordFormValues) => {

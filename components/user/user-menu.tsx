@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import { User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
@@ -12,8 +11,8 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
-import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/lib/hooks/use-auth'
 import { Skeleton } from '@/components/ui/loading'
 
 /**
@@ -35,29 +34,12 @@ interface UserMenuProps {
  * Provides access to profile, settings, and logout functionality
  */
 export function UserMenu({ className, children, onClick }: UserMenuProps) {
-  const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
-  const [loading, setLoading] = useState(true)
   const router = useRouter()
-
-  useEffect(() => {
-    const supabase = createClient()
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
+  const { user, loading, signOut } = useAuth()
 
   const handleLogout = async () => {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await signOut('/auth/login')
     onClick?.()
-    router.push('/auth/login')
   }
 
   if (loading) {

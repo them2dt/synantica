@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, Home, LayoutDashboard, User } from 'lucide-react'
@@ -12,8 +12,7 @@ import { UserMenu } from '@/components/user/user-menu'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { hasEnvVars } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import type { User as SupabaseUser } from '@supabase/supabase-js'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 /**
  * Props for the mobile navigation component
@@ -34,28 +33,8 @@ export function MobileNavigation({
   showThemeSwitcher = true 
 }: MobileNavigationProps) {
   const [open, setOpen] = useState(false)
-  const [user, setUser] = useState<SupabaseUser | null>(null)
-  const [loading, setLoading] = useState(true)
+  const { user, loading } = useAuth()
   const pathname = usePathname()
-
-  useEffect(() => {
-    const supabase = createClient()
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
-
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!session) {
-        setLoading(false)
-      }
-    })
-
-    return () => {
-      subscription.unsubscribe()
-    }
-  }, [])
   
   const isActive = (path: string) => {
     if (path === '/') {
