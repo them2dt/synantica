@@ -26,13 +26,15 @@ interface UserMenuProps {
   showEmail?: boolean
   /** Custom trigger element */
   children?: React.ReactNode
+  /** Callback when menu items are clicked */
+  onClick?: () => void
 }
 
 /**
  * User menu dropdown component
  * Provides access to profile, settings, and logout functionality
  */
-export function UserMenu({ className, children }: UserMenuProps) {
+export function UserMenu({ className, children, onClick }: UserMenuProps) {
   const [user, setUser] = useState<{ email?: string; id?: string } | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
@@ -50,6 +52,7 @@ export function UserMenu({ className, children }: UserMenuProps) {
   const handleLogout = async () => {
     const supabase = createClient()
     await supabase.auth.signOut()
+    onClick?.()
     router.push('/auth/login')
   }
 
@@ -79,7 +82,10 @@ export function UserMenu({ className, children }: UserMenuProps) {
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem onClick={() => router.push('/profile')}>
+        <DropdownMenuItem onClick={() => {
+          onClick?.()
+          router.push('/profile')
+        }}>
           <User className="w-4 h-4 mr-2" />
           Profile
         </DropdownMenuItem>

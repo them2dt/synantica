@@ -10,9 +10,11 @@ import { cn } from "@/lib/utils";
 interface AuthButtonClientProps {
   /** Whether to make buttons full width */
   fullWidth?: boolean
+  /** Callback when auth buttons are clicked */
+  onClick?: () => void
 }
 
-export function AuthButtonClient({ fullWidth = false }: AuthButtonClientProps = {}) {
+export function AuthButtonClient({ fullWidth = false, onClick }: AuthButtonClientProps = {}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -53,10 +55,10 @@ export function AuthButtonClient({ fullWidth = false }: AuthButtonClientProps = 
   ) : (
     <div className={cn("flex gap-2", fullWidth && "w-full")}>
       <Button asChild size="sm" variant="outline" className={fullWidth ? "flex-1" : ""}>
-        <Link href="/auth/login">Sign in</Link>
+        <Link href="/auth/login" onClick={onClick}>Sign in</Link>
       </Button>
       <Button asChild size="sm" variant="default" className={fullWidth ? "flex-1" : ""}>
-        <Link href="/auth/sign-up">Sign up</Link>
+        <Link href="/auth/sign-up" onClick={onClick}>Sign up</Link>
       </Button>
     </div>
   );
