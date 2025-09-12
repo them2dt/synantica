@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-// import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import {
   validatePassword,
   getStrengthColor,
@@ -27,7 +27,7 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
 
@@ -57,12 +57,13 @@ export function SignUpForm({
   const onSubmit = async (data: SignUpFormData) => {
     console.log("Sign-up form submitted with data:", { email: data.email, passwordLength: data.password.length });
 
-    // Temporarily bypass Turnstile for debugging
-    // TODO: Re-enable after fixing Turnstile integration
-    // if (!turnstileToken) {
-    //   toastError("Verification required", "Please complete the verification challenge.");
-    //   return;
-    // }
+    if (!turnstileToken) {
+      toastError(
+        "Verification required",
+        "Please complete the verification challenge.",
+      );
+      return;
+    }
 
     const supabase = createClient();
     console.log("Supabase client created");
@@ -259,27 +260,29 @@ export function SignUpForm({
           )}
         </div>
 
-        {/* Cloudflare Turnstile Verification - Temporarily disabled for debugging */}
-        {/* <div className="space-y-2">
+        <div className="space-y-2">
           <Label className="text-sm font-medium text-center block">
             Please complete the verification below
           </Label>
           <div className="flex justify-center">
             <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              siteKey={
+                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+                "1x00000000000000000000AA"
+              }
               onSuccess={setTurnstileToken}
               onError={() => setTurnstileToken(null)}
               onExpire={() => setTurnstileToken(null)}
               className="mx-auto"
             />
           </div>
-        </div> */}
+        </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !turnstileToken}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>
