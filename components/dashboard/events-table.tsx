@@ -5,6 +5,8 @@ import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, Fi
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Event, EventDirectory } from '@/types/event'
+import { formatEventDate } from '@/lib/utils/date-formatting'
+import { InlineSpinner } from '@/components/ui/loading'
 
 /**
  * Props for the events table component
@@ -39,15 +41,6 @@ export function EventsTable({
   hasMore = true
 }: EventsTableProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    })
-  }
 
   const handleSort = (column: string) => {
     const newDirection = sortBy === column && sortDirection === 'asc' ? 'desc' : 'asc'
@@ -136,7 +129,7 @@ export function EventsTable({
 
               {/* Date */}
               <td className="p-2 sm:p-3 border-r border-border">
-                <div className="text-xs sm:text-sm">{formatDate(event.date)}</div>
+                <div className="text-xs sm:text-sm">{formatEventDate(event.date)}</div>
               </td>
 
               {/* Time */}
@@ -209,7 +202,7 @@ export function EventsTable({
           >
             {loadingMore ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                <InlineSpinner className="mr-2" />
                 Loading...
               </>
             ) : (

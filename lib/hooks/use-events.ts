@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, EventFilters, EventWithDetails } from '@/lib/database/events-client'
 import { EventDirectory, EventStatus } from '@/types/event'
 import { DatabaseEventCategory, DatabaseTag } from '@/lib/database/types'
+import { handleAsyncError } from '@/lib/utils/error-handling'
 
 /**
  * Custom hook for managing events data - Full details for individual views
@@ -20,24 +21,8 @@ export function useEvents(filters: EventFilters = {}) {
       const data = await getEventsClient(filters)
       setEvents(data)
     } catch (err) {
-      console.error('Error fetching events:', err)
-
-      // Handle different error types
-      let errorMessage = 'Failed to fetch events'
-
-      if (err instanceof Error) {
-        if (err.message.includes('Authentication required')) {
-          errorMessage = 'Please log in to view events'
-        } else if (err.message.includes('permission')) {
-          errorMessage = 'You do not have permission to view events'
-        } else if (err.message.includes('Network error')) {
-          errorMessage = 'Network error. Please check your connection and try again.'
-        } else {
-          errorMessage = err.message
-        }
-      }
-
-      setError(errorMessage)
+      handleAsyncError(err, 'events', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }
@@ -71,24 +56,8 @@ export function useEventsDirectory(filters: EventFilters = {}) {
       const data = await getEventsDirectory(filters)
       setEvents(data)
     } catch (err) {
-      console.error('Error fetching directory events:', err)
-
-      // Handle different error types
-      let errorMessage = 'Failed to fetch events'
-
-      if (err instanceof Error) {
-        if (err.message.includes('Authentication required')) {
-          errorMessage = 'Please log in to view events'
-        } else if (err.message.includes('permission')) {
-          errorMessage = 'You do not have permission to view events'
-        } else if (err.message.includes('Network error')) {
-          errorMessage = 'Network error. Please check your connection and try again.'
-        } else {
-          errorMessage = err.message
-        }
-      }
-
-      setError(errorMessage)
+      handleAsyncError(err, 'events', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }
@@ -146,24 +115,8 @@ export function useEventsDirectoryPaginated(filters: EventFilters = {}, pageSize
       setHasMore(data.length === pageSize)
       setCurrentPage(page)
     } catch (err) {
-      console.error('Error fetching paginated events:', err)
-
-      // Handle different error types
-      let errorMessage = 'Failed to fetch events'
-
-      if (err instanceof Error) {
-        if (err.message.includes('Authentication required')) {
-          errorMessage = 'Please log in to view events'
-        } else if (err.message.includes('permission')) {
-          errorMessage = 'You do not have permission to view events'
-        } else if (err.message.includes('Network error')) {
-          errorMessage = 'Network error. Please check your connection and try again.'
-        } else {
-          errorMessage = err.message
-        }
-      }
-
-      setError(errorMessage)
+      handleAsyncError(err, 'events', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
       setLoadingMore(false)
@@ -240,8 +193,8 @@ export function useEvent(eventId: string) {
       const data = await getEventByIdClient(eventId)
       setEvent(data)
     } catch (err) {
-      console.error('Error fetching event:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch event')
+      handleAsyncError(err, 'event', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }
@@ -274,8 +227,8 @@ export function usePopularEvents(limit: number = 10) {
       const data = await getPopularEventsClient(limit)
       setEvents(data)
     } catch (err) {
-      console.error('Error fetching popular events:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch popular events')
+      handleAsyncError(err, 'popular-events', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }
@@ -309,8 +262,8 @@ export function useEventCategories() {
       const data = await getEventCategoriesClient()
       setCategories(data)
     } catch (err) {
-      console.error('Error fetching categories:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch categories')
+      handleAsyncError(err, 'categories', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }
@@ -344,8 +297,8 @@ export function useTags() {
       const data = await getTagsClient()
       setTags(data)
     } catch (err) {
-      console.error('Error fetching tags:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch tags')
+      handleAsyncError(err, 'tags', setError, setLoading)
+      return // Early return since error is handled
     } finally {
       setLoading(false)
     }

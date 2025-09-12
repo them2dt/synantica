@@ -14,7 +14,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Loader2, AlertTriangle } from 'lucide-react'
+import { AlertTriangle } from 'lucide-react'
+import { InlineSpinner } from '@/components/ui/loading'
 
 /**
  * Props for the delete account modal
@@ -131,7 +132,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
               variant="destructive" 
               disabled={isLoading || !isConfirmationValid}
             >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {isLoading && <InlineSpinner className="mr-2" />}
               Delete Account
             </Button>
           </DialogFooter>

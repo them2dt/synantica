@@ -13,7 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Eye, EyeOff, Loader2 } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
+import { InlineSpinner } from '@/components/ui/loading'
 
 /**
  * Props for the change password modal
@@ -235,7 +236,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && <InlineSpinner className="mr-2" />}
                 Update Password
               </Button>
             </DialogFooter>

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { Event, EventStatus } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
+import { createDatabaseError } from '@/lib/utils/error-handling'
 
 /**
  * Database service for events
@@ -101,8 +102,7 @@ export async function getEvents(filters: EventFilters = {}): Promise<EventWithDe
     const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching events:', error)
-      throw new Error(`Failed to fetch events: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch events: ${error.message}`, 'events')
     }
 
     // Transform the data to match our Event interface
@@ -162,8 +162,7 @@ export async function getEventById(id: string): Promise<EventWithDetails | null>
       if (error.code === 'PGRST116') {
         return null // Event not found
       }
-      console.error('Error fetching event:', error)
-      throw new Error(`Failed to fetch event: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch event: ${error.message}`, 'event')
     }
 
     if (!data) {
@@ -230,8 +229,7 @@ export async function getPopularEvents(limit: number = 10): Promise<EventWithDet
       .limit(limit)
 
     if (error) {
-      console.error('Error fetching popular events:', error)
-      throw new Error(`Failed to fetch popular events: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch popular events: ${error.message}`, 'popular-events')
     }
 
     // Transform the data
@@ -281,8 +279,7 @@ export async function getEventCategories() {
       .order('sort_order')
 
     if (error) {
-      console.error('Error fetching categories:', error)
-      throw new Error(`Failed to fetch categories: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch categories: ${error.message}`, 'categories')
     }
 
     return data || []
@@ -305,8 +302,7 @@ export async function getTags() {
       .order('usage_count', { ascending: false })
 
     if (error) {
-      console.error('Error fetching tags:', error)
-      throw new Error(`Failed to fetch tags: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch tags: ${error.message}`, 'tags')
     }
 
     return data || []
@@ -328,8 +324,7 @@ export async function getEventStats(eventId: string) {
     })
 
     if (error) {
-      console.error('Error fetching event stats:', error)
-      throw new Error(`Failed to fetch event stats: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch event stats: ${error.message}`, 'database')
     }
 
     return data?.[0] || {

@@ -5,31 +5,27 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
+import { formatEventDate } from '@/lib/utils/date-formatting'
+import { EventCardSkeleton } from '@/components/ui/loading'
 
 /**
  * Props for the event card component
  */
 interface EventCardProps {
-  event: Event | EventDirectory
+  event?: Event | EventDirectory
   onLearnMore: (event: Event | EventDirectory) => void
   variant?: 'grid' | 'list'
+  loading?: boolean
 }
 
 /**
  * Event card component displaying event information
  */
-export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardProps) {
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("en-US", {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    })
+export function EventCard({ event, onLearnMore, variant = 'grid', loading = false }: EventCardProps) {
+  // Show skeleton when loading or no event data
+  if (loading || !event) {
+    return <EventCardSkeleton />
   }
-
-
 
   if (variant === 'list') {
     return (
@@ -52,7 +48,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="w-4 h-4 text-accent" />
-                  {formatDate(event.date)}
+                  {formatEventDate(event.date)}
                   <Clock className="w-4 h-4 ml-2 text-accent" />
                   {event.time}
                 </div>
@@ -113,7 +109,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
       <CardContent className="space-y-3 flex-grow">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="w-4 h-4 text-accent" />
-          {formatDate(event.date)}
+          {formatEventDate(event.date)}
           <Clock className="w-4 h-4 ml-2 text-accent" />
           {event.time}
         </div>

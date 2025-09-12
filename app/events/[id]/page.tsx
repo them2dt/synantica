@@ -9,6 +9,7 @@ import { Footer } from '@/components/layout/footer';
 import { useEvent } from '@/lib/hooks/use-events';
 import { useEffect, useState } from 'react';
 import { EventWithDetails } from '@/lib/database/events-client';
+import { formatEventDate } from '@/lib/utils/date-formatting';
 
 
 /**
@@ -138,7 +139,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-accent" />
-                {new Date(event.date).toLocaleDateString()}
+                {formatEventDate(event.date)}
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-accent" />

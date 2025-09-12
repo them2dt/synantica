@@ -13,7 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Loader2, Mail } from 'lucide-react'
+import { Mail } from 'lucide-react'
+import { InlineSpinner } from '@/components/ui/loading'
 
 /**
  * Props for the change email modal
@@ -143,7 +144,7 @@ export function ChangeEmailModal({ isOpen, onClose, currentEmail }: ChangeEmailM
                 Cancel
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                {isLoading && <InlineSpinner className="mr-2" />}
                 Update Email
               </Button>
             </DialogFooter>

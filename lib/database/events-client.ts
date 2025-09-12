@@ -3,7 +3,8 @@
 import { createClient } from '@/lib/supabase/client'
 import { Event, EventStatus, EventDirectory } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
-import { safeDatabaseOperation, handleDatabaseError } from './error-handler'
+import { safeDatabaseOperation } from './error-handler'
+import { createDatabaseError } from '@/lib/utils/error-handling'
 
 // Simple cache implementation
 interface CacheEntry<T = unknown> {
@@ -212,11 +213,7 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
     const { data, error } = await query
 
     if (error) {
-      const dbError = handleDatabaseError(error, 'fetch directory events')
-      if (dbError.type === 'NOT_FOUND') {
-        return []
-      }
-      throw new Error(dbError.message)
+      throw createDatabaseError(`Failed to fetch directory events: ${error.message}`, 'events')
     }
 
     // Transform to optimized EventDirectory objects
@@ -393,14 +390,7 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
     const { data, error } = await query
 
     if (error) {
-      const dbError = handleDatabaseError(error, 'fetch events')
-      
-      // Handle specific cases
-      if (dbError.type === 'NOT_FOUND') {
-        return []
-      }
-      
-      throw new Error(dbError.message)
+      throw createDatabaseError(`Failed to fetch events: ${error.message}`, 'events')
     }
 
     // Transform the data to match our Event interface
@@ -466,13 +456,10 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
       .single() as { data: DatabaseEventWithRelations | null; error: { code?: string; message: string } | null }
 
     if (error) {
-      const dbError = handleDatabaseError(error, 'fetch event by ID')
-      
-      if (dbError.type === 'NOT_FOUND') {
-        return null
+      if (error.code === 'PGRST116') {
+        return null // Event not found
       }
-      
-      throw new Error(dbError.message)
+      throw createDatabaseError(`Failed to fetch event by ID: ${error.message}`, 'event')
     }
 
     if (!data) {
@@ -536,8 +523,7 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
       .limit(limit)
 
     if (error) {
-      console.error('Error fetching popular events:', error)
-      throw new Error(`Failed to fetch popular events: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch popular events: ${error.message}`, 'popular-events')
     }
 
     // Transform the data
@@ -587,8 +573,7 @@ export async function getEventCategoriesClient() {
       .order('sort_order')
 
     if (error) {
-      console.error('Error fetching categories:', error)
-      throw new Error(`Failed to fetch categories: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch categories: ${error.message}`, 'categories')
     }
 
     return data || []
@@ -611,8 +596,7 @@ export async function getTagsClient() {
       .order('usage_count', { ascending: false })
 
     if (error) {
-      console.error('Error fetching tags:', error)
-      throw new Error(`Failed to fetch tags: ${error.message}`)
+      throw createDatabaseError(`Failed to fetch tags: ${error.message}`, 'tags')
     }
 
     return data || []

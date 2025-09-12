@@ -12,6 +12,7 @@ import { ChangePasswordModal } from '@/components/modals/change-password-modal'
 import { ChangeEmailModal } from '@/components/modals/change-email-modal'
 import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
 import { Footer } from '@/components/layout/footer'
+import { formatEventDate } from '@/lib/utils/date-formatting'
 
 /**
  * User profile page
@@ -54,15 +55,6 @@ export default function ProfilePage() {
     return null
   }
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    })
-  }
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -115,12 +107,12 @@ export default function ProfilePage() {
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Account Created</label>
-                  <p className="text-sm">{user.created_at ? formatDate(user.created_at) : 'Unknown'}</p>
+                  <p className="text-sm">{user.created_at ? formatEventDate(user.created_at, 'full') : 'Unknown'}</p>
                 </div>
                 <div>
                   <label className="text-sm font-medium text-muted-foreground">Last Sign In</label>
                   <p className="text-sm">
-                    {user.last_sign_in_at ? formatDate(user.last_sign_in_at) : 'Never'}
+                    {user.last_sign_in_at ? formatEventDate(user.last_sign_in_at, 'full') : 'Never'}
                   </p>
                 </div>
               </div>

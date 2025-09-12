@@ -5,6 +5,7 @@ import { EventsTable } from './events-table'
 import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { Button } from '@/components/ui/button'
+import { InlineSpinner } from '@/components/ui/loading'
 
 /**
  * Props for the events grid component
@@ -79,7 +80,7 @@ export function EventsGrid({
           >
             {loadingMore ? (
               <>
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                <InlineSpinner className="mr-2" />
                 Loading...
               </>
             ) : (

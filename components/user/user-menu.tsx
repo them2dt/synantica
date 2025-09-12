@@ -3,19 +3,18 @@
 import { useEffect, useState } from 'react'
 import { User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { 
-  DropdownMenu, 
-  DropdownMenuContent, 
-  DropdownMenuItem, 
-  DropdownMenuLabel, 
-  DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-
-const isDev = process.env.NODE_ENV !== 'production'
+import { Skeleton } from '@/components/ui/loading'
 
 /**
  * Props for the UserMenu component
@@ -62,11 +61,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center gap-2">
-        <div className="w-20 h-4 bg-muted rounded animate-pulse" />
-      </div>
-    )
+    return <Skeleton className="w-20 h-4" />
   }
 
   if (!user) {
