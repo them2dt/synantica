@@ -5,7 +5,11 @@
  */
 
 import { z } from 'zod'
-import { commonSchemas, validationHelpers } from './common';
+import {
+  commonSchemas,
+  validationHelpers,
+  confirmPasswordSchema,
+} from './common'
 
 // Re-export common schemas for backward compatibility
 export const emailSchema = commonSchemas.signIn.shape.email;
@@ -15,7 +19,21 @@ export const passwordSchema = commonSchemas.signUp.shape.password;
  * Authentication form validation schemas
  * Now using centralized common validation schemas
  */
-export const signUpSchema = commonSchemas.signUp;
+// Basic sign up schema used by the simplified sign up form
+// Includes only the fields present in the current form
+export const signUpSchema = z
+  .object({
+    email: emailSchema,
+    password: passwordSchema,
+    confirmPassword: confirmPasswordSchema,
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
+
+// Export the full schema with additional fields for future use
+export const fullSignUpSchema = commonSchemas.signUp;
 export const signInSchema = commonSchemas.signIn;
 export const forgotPasswordSchema = commonSchemas.forgotPassword;
 export const updatePasswordSchema = commonSchemas.resetPassword;
