@@ -8,6 +8,7 @@ import { ThemeSwitcher } from '@/components/theme-switcher'
 import { AuthButtonClient } from '@/components/auth-button-client'
 import { UserMenu } from '@/components/user/user-menu'
 import { EnvVarWarning } from '@/components/env-var-warning'
+import { MobileNavigation } from '@/components/layout/mobile-navigation'
 import { hasEnvVars } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
@@ -70,49 +71,60 @@ export function Navigation({
         </div>
         
         <div className="flex items-center gap-4">
-          {/* Home Link */}
-          <Link 
-            href="/" 
-            className={cn(
-              "text-sm font-medium transition-colors",
-              isActive('/') 
-                ? "text-accent font-semibold" 
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Home
-          </Link>
-          
-          {/* Dashboard Link */}
-          <Link 
-            href="/dashboard" 
-            className={cn(
-              "text-sm font-medium transition-colors",
-              isActive('/dashboard') 
-                ? "text-accent font-semibold" 
-                : "text-muted-foreground hover:text-foreground"
-            )}
-          >
-            Dashboard
-          </Link>
-          
-          {/* Separator */}
-          
-          {!hasEnvVars && showAuth ? (
-            <EnvVarWarning />
-          ) : showAuth ? (
-            <>
-              <UserMenu showEmail={false} />
-              
-              {/* Separator */}
-              
-              <AuthButtonClient />
-              
-              {/* Separator */}
-            </>
-          ) : null}
-          
-          {showThemeSwitcher && <ThemeSwitcher />}
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-4">
+            {/* Home Link */}
+            <Link 
+              href="/" 
+              className={cn(
+                "text-sm font-medium transition-colors",
+                isActive('/') 
+                  ? "text-accent font-semibold" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Home
+            </Link>
+            
+            {/* Dashboard Link */}
+            <Link 
+              href="/dashboard" 
+              className={cn(
+                "text-sm font-medium transition-colors",
+                isActive('/dashboard') 
+                  ? "text-accent font-semibold" 
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Dashboard
+            </Link>
+            
+            {/* Separator */}
+            
+            {!hasEnvVars && showAuth ? (
+              <EnvVarWarning />
+            ) : showAuth ? (
+              <>
+                <UserMenu showEmail={false} />
+                
+                {/* Separator */}
+                
+                <AuthButtonClient />
+                
+                {/* Separator */}
+              </>
+            ) : null}
+            
+            {showThemeSwitcher && <ThemeSwitcher />}
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <MobileNavigation 
+              showAuth={showAuth}
+              showThemeSwitcher={showThemeSwitcher}
+            />
+          </div>
         </div>
       </div>
     </nav>

@@ -20,7 +20,23 @@ export function useEvents(filters: EventFilters = {}) {
       setEvents(data)
     } catch (err) {
       console.error('Error fetching events:', err)
-      setError(err instanceof Error ? err.message : 'Failed to fetch events')
+      
+      // Handle different error types
+      let errorMessage = 'Failed to fetch events'
+      
+      if (err instanceof Error) {
+        if (err.message.includes('Authentication required')) {
+          errorMessage = 'Please log in to view events'
+        } else if (err.message.includes('permission')) {
+          errorMessage = 'You do not have permission to view events'
+        } else if (err.message.includes('Network error')) {
+          errorMessage = 'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+      
+      setError(errorMessage)
     } finally {
       setLoading(false)
     }

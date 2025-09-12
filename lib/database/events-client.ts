@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/client'
 import { Event, EventStatus } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
+import { safeDatabaseOperation, handleDatabaseError } from './error-handler'
 
 /**
  * Client-side database service for events
@@ -39,10 +40,9 @@ export interface EventWithDetails extends Event {
  * Get all events with optional filters (client-side)
  */
 export async function getEventsClient(filters: EventFilters = {}): Promise<EventWithDetails[]> {
-  const supabase = createClient()
-  
-  try {
-    // Build query with filters
+  return safeDatabaseOperation(async () => {
+    const supabase = createClient()
+    // Build optimized query with proper JOINs to avoid N+1 queries
     let query = supabase
       .from('events')
       .select(`
@@ -57,7 +57,24 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
         time,
         location,
         is_free,
-        event_categories(name)
+        status,
+        organizer_name,
+        created_at,
+        updated_at,
+        view_count,
+        event_categories!inner(
+          id,
+          name,
+          slug,
+          color
+        ),
+        event_tags(
+          tags(
+            id,
+            name,
+            slug
+          )
+        )
       `)
       .eq('status', 'published')
       .order('created_at', { ascending: false })
@@ -103,50 +120,65 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
     const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching events:', error)
-      throw new Error(`Failed to fetch events: ${error.message}`)
+      const dbError = handleDatabaseError(error, 'fetch events')
+      
+      // Handle specific cases
+      if (dbError.type === 'NOT_FOUND') {
+        return []
+      }
+      
+      throw new Error(dbError.message)
     }
 
     // Transform the data to match our Event interface
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const events: EventWithDetails[] = (data || []).map((row: any) => ({
-      id: row.id,
-      title: row.title,
-      description: row.description,
-      category: row.event_categories?.name?.toLowerCase().replace(/\s+/g, '-') || 'other',
-      field: row.field,
-      minAge: row.min_age || 0,
-      maxAge: row.max_age || 100,
-      region: row.region,
-      date: row.date,
-      time: row.time,
-      location: row.location,
-      isFree: row.is_free,
-      status: 'published' as EventStatus,
-      organizer: 'Unknown',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      tags: [],
+    const events: EventWithDetails[] = (data || []).map((row: unknown) => {
+      // Type guard for row data
+      if (!row || typeof row !== 'object') {
+        throw new Error('Invalid event data received from database')
+      }
       
-      // Additional fields from the database
-      category_name: row.event_categories?.name || 'Other',
-      average_rating: 0
-    }))
+      const eventRow = row as Record<string, unknown>
+      
+      // Extract tags from the optimized query result
+      const eventTags = eventRow.event_tags as Array<{ tags: { name: string } }> | undefined
+      const tags = eventTags?.map((et) => et.tags?.name).filter(Boolean) || []
+      
+      return {
+        id: eventRow.id as string,
+        title: eventRow.title as string,
+        description: eventRow.description as string,
+        category: (eventRow.event_categories as { name: string } | undefined)?.name?.toLowerCase().replace(/\s+/g, '-') || 'other',
+        field: eventRow.field as string,
+        minAge: (eventRow.min_age as number) || 0,
+        maxAge: (eventRow.max_age as number) || 100,
+        region: eventRow.region as string,
+        date: eventRow.date as string,
+        time: eventRow.time as string,
+        location: eventRow.location as string,
+        isFree: (eventRow.is_free as boolean) || false,
+        status: (eventRow.status as EventStatus) || 'published',
+        organizer: (eventRow.organizer_name as string) || 'Unknown',
+        createdAt: (eventRow.created_at as string) || new Date().toISOString(),
+        updatedAt: (eventRow.updated_at as string) || new Date().toISOString(),
+        tags,
+        
+        // Additional fields from the database
+        category_name: (eventRow.event_categories as { name: string } | undefined)?.name || 'Other',
+        average_rating: 0,
+        viewCount: (eventRow.view_count as number) || 0
+      }
+    })
 
     return events
-  } catch (error) {
-    console.error('Error in getEventsClient:', error)
-    throw error
-  }
+  }, 'fetch events', true)
 }
 
 /**
  * Get a single event by ID (client-side)
  */
 export async function getEventByIdClient(id: string): Promise<EventWithDetails | null> {
-  const supabase = createClient()
-  
-  try {
+  return safeDatabaseOperation(async () => {
+    const supabase = createClient()
     const { data, error } = await supabase
       .from('events')
       .select(`
@@ -161,11 +193,13 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
       .single() as { data: DatabaseEventWithRelations | null; error: { code?: string; message: string } | null }
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        return null // Event not found
+      const dbError = handleDatabaseError(error, 'fetch event by ID')
+      
+      if (dbError.type === 'NOT_FOUND') {
+        return null
       }
-      console.error('Error fetching event:', error)
-      throw new Error(`Failed to fetch event: ${error.message}`)
+      
+      throw new Error(dbError.message)
     }
 
     if (!data) {
@@ -198,10 +232,7 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
     }
 
     return event
-  } catch (error) {
-    console.error('Error in getEventByIdClient:', error)
-    throw error
-  }
+  }, 'fetch event by ID', true)
 }
 
 /**

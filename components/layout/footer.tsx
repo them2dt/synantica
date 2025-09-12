@@ -39,14 +39,14 @@ export function Footer() {
             <span className="text-muted-foreground">
               Built by{' '}
               <a 
-                href="/gabriele" 
+                href="https://www.gabrieledutli.com/" 
                 className="text-muted-foreground hover:text-accent transition-colors"
               >
                 Gabriele
               </a>
               {' '}&{' '}
               <a 
-                href="/maruthan" 
+                href="https://maruthan.com" 
                 className="text-muted-foreground hover:text-accent transition-colors"
               >
                 Maruthan
