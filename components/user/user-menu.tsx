@@ -16,6 +16,8 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
 /**
  * Props for the UserMenu component
  */
@@ -43,7 +45,9 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
     const getUser = async () => {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
-      console.log('UserMenu - Auth state:', { user: user?.email, loading: false })
+      if (isDev) {
+        console.log('UserMenu - Auth state:', { user: user?.email, loading: false })
+      }
       setUser(user)
       setLoading(false)
     }
@@ -66,11 +70,15 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
   }
 
   if (!user) {
-    console.log('UserMenu - No user found, returning null')
+    if (isDev) {
+      console.log('UserMenu - No user found, returning null')
+    }
     return null
   }
 
-  console.log('UserMenu - Rendering dropdown for user:', user.email)
+  if (isDev) {
+    console.log('UserMenu - Rendering dropdown for user:', user.email)
+  }
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
