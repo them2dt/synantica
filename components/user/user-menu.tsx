@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { User, LogOut } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { 
@@ -14,7 +14,6 @@ import {
 
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
 
 /**
  * Props for the UserMenu component
@@ -40,14 +39,17 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
   const router = useRouter()
 
   useEffect(() => {
-    const getUser = async () => {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      console.log('UserMenu - Auth state:', { user: user?.email, loading: false })
-      setUser(user)
+    const supabase = createClient()
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
       setLoading(false)
+    })
+
+    return () => {
+      subscription.unsubscribe()
     }
-    getUser()
   }, [])
 
   const handleLogout = async () => {
@@ -66,11 +68,8 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
   }
 
   if (!user) {
-    console.log('UserMenu - No user found, returning null')
     return null
   }
-
-  console.log('UserMenu - Rendering dropdown for user:', user.email)
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
