@@ -17,20 +17,7 @@ export function Footer() {
           </div>
 
           {/* Center Section - Instagram Link and Theme Switcher */}
-          <div className="flex items-center gap-4">
-            <a 
-              href="https://instagram.com/synantica" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-accent transition-colors"
-              title="@synantica"
-            >
-              <Instagram className="w-4 h-4" />
-            </a>
-            
-            {/* Theme Switcher */}
-            <ThemeSwitcher />
-          </div>
+
 
           {/* Copyright and Made with */}
           <div className="flex flex-col sm:flex-row items-center gap-2 text-sm text-muted-foreground">
@@ -39,17 +26,17 @@ export function Footer() {
             <span className="text-muted-foreground">
               Built by{' '}
               <a 
-                href="https://www.gabrieledutli.com/" 
-                className="text-muted-foreground hover:text-accent transition-colors"
-              >
-                Gabriele
-              </a>
-              {' '}&{' '}
-              <a 
-                href="https://maruthan.com" 
+                href="https://www.maruthan.com/" 
                 className="text-muted-foreground hover:text-accent transition-colors"
               >
                 Maruthan
+              </a>
+              {' '}for{' '}
+              <a 
+                href="https://visioncatalyzer.com" 
+                className="text-muted-foreground hover:text-accent transition-colors"
+              >
+                VisionCatalyzer
               </a>
             </span>
           </div>

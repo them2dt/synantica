@@ -95,7 +95,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
 
   // Grid variant (default)
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
       <CardHeader>
         <div className="flex items-center justify-between mb-2">
           <Badge
@@ -110,7 +110,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
         <CardDescription className="text-pretty">{event.description}</CardDescription>
       </CardHeader>
 
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 flex-grow">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="w-4 h-4 text-accent" />
           {formatDate(event.date)}
@@ -133,7 +133,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid' }: EventCardPro
         </div>
       </CardContent>
 
-      <CardFooter className="pt-0">
+      <CardFooter className="pt-0 mt-auto">
         <Button 
           className="w-full" 
           size="sm" 
