@@ -7,7 +7,7 @@ import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
 import { EventsGrid } from '@/components/dashboard/events-grid'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
-import { useEventsDirectory, useEventCategories } from '@/lib/hooks/use-events'
+import { useEventsDirectoryPaginated, useEventCategories, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/lib/database/events-client'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
@@ -27,7 +27,7 @@ export default function DashboardPage() {
   // Debounce search term to prevent excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
-  // Build filters for database query
+    // Build filters for database query (without limit for pagination hook)
   const filters: EventFilters = useMemo(() => {
     const baseFilters: EventFilters = {
       search: debouncedSearchTerm || undefined,
@@ -35,8 +35,7 @@ export default function DashboardPage() {
       field: selectedField === 'all' ? undefined : selectedField,
       region: selectedRegion === 'all' ? undefined : selectedRegion,
       minAge: selectedAgeRange[0] > 0 ? selectedAgeRange[0] : undefined,
-      maxAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined,
-      limit: 50 // Increase limit for better UX
+      maxAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined
     }
 
     // Add date filtering if not 'all'
@@ -87,9 +86,32 @@ export default function DashboardPage() {
     return baseFilters
   }, [debouncedSearchTerm, selectedCategory, selectedField, selectedRegion, selectedAgeRange, selectedDate])
 
-  // Fetch events from database - using optimized directory view for better performance
-  const { events: dbEvents, loading, error } = useEventsDirectory(filters)
+  // Fetch events from database - using paginated optimized directory view for better performance
+  const { events: dbEvents, loading, loadingMore, error, hasMore, loadMore, refetch } = useEventsDirectoryPaginated(filters, 20)
   const { categories: dbCategories, loading: categoriesLoading } = useEventCategories()
+
+  // Real-time updates for live event changes
+  useRealtimeEvents((event, action) => {
+    console.log(`Event ${action}:`, event.title)
+
+    // Show a subtle notification (you could enhance this with a toast notification)
+    const notificationMessage = action === 'INSERT'
+      ? `New event added: ${event.title}`
+      : action === 'UPDATE'
+      ? `Event updated: ${event.title}`
+      : `Event removed: ${event.title}`
+
+    console.log(notificationMessage)
+
+    // For now, we'll just log and potentially refresh the data
+    // In a production app, you'd want to update the local state instead
+    if (action !== 'INSERT') {
+      // For updates/deletes, refresh the data after a short delay
+      setTimeout(() => {
+        refetch()
+      }, 2000)
+    }
+  }, true) // Enable real-time updates
 
   // Transform database categories to match our interface
   const eventCategories: CategoryWithIcon[] = useMemo(() => {
@@ -262,6 +284,10 @@ export default function DashboardPage() {
           isListView={isListView}
           sortBy={sortBy}
           onSortChange={setSortBy}
+          showLoadMore={true}
+          onLoadMore={loadMore}
+          loadingMore={loadingMore}
+          hasMore={hasMore}
         />
       </DashboardLayout>
     </ErrorBoundary>

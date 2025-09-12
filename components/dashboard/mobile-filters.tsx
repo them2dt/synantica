@@ -1,11 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Filter, ChevronDown, ChevronUp, Grid3X3, List } from 'lucide-react'
+import { Search, Grid3X3, List } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
 
 /**
@@ -55,7 +54,6 @@ export function MobileFilters({
   onSortChange = () => {}
 }: MobileFiltersProps) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
-  const [activeFilterSection, setActiveFilterSection] = useState<string | null>(null)
 
   const dateOptions = [
     { value: 'all', label: 'All Dates' },
@@ -103,124 +101,6 @@ export function MobileFilters({
     { value: 'created-asc', label: 'Oldest First' }
   ]
 
-  const filterSections = [
-    {
-      id: 'category',
-      label: 'Category',
-      icon: Filter,
-      content: (
-        <Select value={selectedCategory} onValueChange={onCategoryChange}>
-          <SelectTrigger className="w-full h-12">
-            <SelectValue placeholder="Select category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => {
-              const Icon = category.icon
-              return (
-                <SelectItem key={category.value} value={category.value}>
-                  <div className="flex items-center gap-2">
-                    <Icon className="w-4 h-4" />
-                    {category.label}
-                  </div>
-                </SelectItem>
-              )
-            })}
-          </SelectContent>
-        </Select>
-      )
-    },
-    {
-      id: 'date',
-      label: 'Date',
-      icon: Filter,
-      content: (
-        <Select value={selectedDate} onValueChange={onDateChange}>
-          <SelectTrigger className="w-full h-12">
-            <SelectValue placeholder="Select date" />
-          </SelectTrigger>
-          <SelectContent>
-            {dateOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )
-    },
-    {
-      id: 'age',
-      label: 'Age Range',
-      icon: Filter,
-      content: (
-        <CompactAgeFilterDropdown
-          value={selectedAgeRange}
-          onChange={onAgeRangeChange}
-          min={0}
-          max={99}
-          placeholder="Select age range"
-          className="w-full h-12"
-        />
-      )
-    },
-    {
-      id: 'region',
-      label: 'Region',
-      icon: Filter,
-      content: (
-        <Select value={selectedRegion} onValueChange={onRegionChange}>
-          <SelectTrigger className="w-full h-12">
-            <SelectValue placeholder="Select region" />
-          </SelectTrigger>
-          <SelectContent>
-            {regionOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )
-    },
-    {
-      id: 'field',
-      label: 'Field',
-      icon: Filter,
-      content: (
-        <Select value={selectedField} onValueChange={onFieldChange}>
-          <SelectTrigger className="w-full h-12">
-            <SelectValue placeholder="Select field" />
-          </SelectTrigger>
-          <SelectContent>
-            {fieldOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )
-    },
-    {
-      id: 'sort',
-      label: 'Sort By',
-      icon: Filter,
-      content: (
-        <Select value={sortBy} onValueChange={onSortChange}>
-          <SelectTrigger className="w-full h-12">
-            <SelectValue placeholder="Sort by" />
-          </SelectTrigger>
-          <SelectContent>
-            {sortOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )
-    }
-  ]
 
   return (
     <div className="md:hidden space-y-4">
@@ -260,97 +140,126 @@ export function MobileFilters({
         </div>
       </div>
 
-      {/* Filters Collapsible */}
-      <Collapsible open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-        <CollapsibleTrigger asChild>
-          <Button
-            variant="outline"
-            className="w-full h-12 justify-between touch-manipulation"
-            onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-          >
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              <span>Filters</span>
-            </div>
-            {isFiltersOpen ? (
-              <ChevronUp className="h-4 w-4" />
-            ) : (
-              <ChevronDown className="h-4 w-4" />
-            )}
-          </Button>
-        </CollapsibleTrigger>
-        
-        <CollapsibleContent className="space-y-3 mt-3">
-          {filterSections.map((section) => (
-            <Collapsible
-              key={section.id}
-              open={activeFilterSection === section.id}
-              onOpenChange={(open) => setActiveFilterSection(open ? section.id : null)}
-            >
-              <CollapsibleTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="w-full h-12 justify-between touch-manipulation"
-                >
-                  <div className="flex items-center gap-2">
-                    <section.icon className="h-4 w-4" />
-                    <span>{section.label}</span>
-                  </div>
-                  {activeFilterSection === section.id ? (
-                    <ChevronUp className="h-4 w-4" />
-                  ) : (
-                    <ChevronDown className="h-4 w-4" />
-                  )}
-                </Button>
-              </CollapsibleTrigger>
-              
-              <CollapsibleContent className="mt-2">
-                <div className="p-3 bg-muted/50 rounded-lg">
-                  {section.content}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          ))}
-        </CollapsibleContent>
-      </Collapsible>
+      {/* Filters Section */}
+      <div className="space-y-3">
+        <Button
+          variant="outline"
+          className="w-full h-12 justify-between touch-manipulation"
+          onClick={() => setIsFiltersOpen(!isFiltersOpen)}
+        >
+          <span>Filters</span>
+          <span className="text-sm text-muted-foreground">
+            {isFiltersOpen ? 'Hide' : 'Show'}
+          </span>
+        </Button>
 
-      {/* Quick Filter Chips */}
-      <div className="space-y-2">
-        <span className="text-sm font-medium text-muted-foreground">Quick Filters</span>
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant={selectedCategory === 'all' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onCategoryChange('all')}
-            className="h-8 touch-manipulation"
-          >
-            All Events
-          </Button>
-          <Button
-            variant={selectedDate === 'today' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onDateChange('today')}
-            className="h-8 touch-manipulation"
-          >
-            Today
-          </Button>
-          <Button
-            variant={selectedDate === 'this-week' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onDateChange('this-week')}
-            className="h-8 touch-manipulation"
-          >
-            This Week
-          </Button>
-          <Button
-            variant={selectedRegion === 'zurich' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => onRegionChange('zurich')}
-            className="h-8 touch-manipulation"
-          >
-            Zurich
-          </Button>
-        </div>
+        {isFiltersOpen && (
+          <div className="space-y-3 mt-3">
+          {/* Category Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Category</label>
+            <Select value={selectedCategory} onValueChange={onCategoryChange}>
+              <SelectTrigger className="w-full h-12">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((category) => {
+                  const Icon = category.icon
+                  return (
+                    <SelectItem key={category.value} value={category.value}>
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        {category.label}
+                      </div>
+                    </SelectItem>
+                  )
+                })}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Date</label>
+            <Select value={selectedDate} onValueChange={onDateChange}>
+              <SelectTrigger className="w-full h-12">
+                <SelectValue placeholder="Select date" />
+              </SelectTrigger>
+              <SelectContent>
+                {dateOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Age Range Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Age Range</label>
+            <CompactAgeFilterDropdown
+              value={selectedAgeRange}
+              onChange={onAgeRangeChange}
+              min={0}
+              max={99}
+              placeholder="Select age range"
+              className="w-full h-12"
+            />
+          </div>
+
+          {/* Region Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Region</label>
+            <Select value={selectedRegion} onValueChange={onRegionChange}>
+              <SelectTrigger className="w-full h-12">
+                <SelectValue placeholder="Select region" />
+              </SelectTrigger>
+              <SelectContent>
+                {regionOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Field Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Field</label>
+            <Select value={selectedField} onValueChange={onFieldChange}>
+              <SelectTrigger className="w-full h-12">
+                <SelectValue placeholder="Select field" />
+              </SelectTrigger>
+              <SelectContent>
+                {fieldOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Sort By Filter */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-muted-foreground">Sort By</label>
+            <Select value={sortBy} onValueChange={onSortChange}>
+              <SelectTrigger className="w-full h-12">
+                <SelectValue placeholder="Sort by" />
+              </SelectTrigger>
+              <SelectContent>
+                {sortOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          </div>
+        )}
       </div>
     </div>
   )

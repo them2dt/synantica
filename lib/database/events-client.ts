@@ -5,6 +5,69 @@ import { Event, EventStatus, EventDirectory } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
 import { safeDatabaseOperation, handleDatabaseError } from './error-handler'
 
+// Simple cache implementation
+interface CacheEntry<T = unknown> {
+  data: T
+  timestamp: number
+  ttl: number // Time to live in milliseconds
+}
+
+class Cache {
+  private cache = new Map<string, CacheEntry>()
+  private readonly DEFAULT_TTL = 5 * 60 * 1000 // 5 minutes
+
+  private getKey(filters: EventFilters): string {
+    return JSON.stringify(filters)
+  }
+
+  get<T = EventDirectory[]>(filters: EventFilters): T | null {
+    const key = this.getKey(filters)
+    const entry = this.cache.get(key) as CacheEntry<T> | undefined
+
+    if (!entry) return null
+
+    // Check if cache entry has expired
+    if (Date.now() - entry.timestamp > entry.ttl) {
+      this.cache.delete(key)
+      return null
+    }
+
+    return entry.data
+  }
+
+  set<T = EventDirectory[]>(filters: EventFilters, data: T, ttl: number = this.DEFAULT_TTL): void {
+    const key = this.getKey(filters)
+    this.cache.set(key, {
+      data,
+      timestamp: Date.now(),
+      ttl
+    })
+  }
+
+  clear(): void {
+    this.cache.clear()
+  }
+
+  // Clean up expired entries
+  cleanup(): void {
+    const now = Date.now()
+    for (const [key, entry] of this.cache.entries()) {
+      if (now - entry.timestamp > entry.ttl) {
+        this.cache.delete(key)
+      }
+    }
+  }
+}
+
+const eventsCache = new Cache()
+
+// Request deduplication
+const pendingRequests = new Map<string, Promise<EventDirectory[]>>()
+
+function getRequestKey(filters: EventFilters): string {
+  return JSON.stringify(filters)
+}
+
 /**
  * Client-side database service for events
  * For use in client components and hooks
@@ -38,9 +101,25 @@ export interface EventWithDetails extends Event {
 
 /**
  * Get all events with optional filters (client-side) - Optimized for directory views
+ * Includes caching and request deduplication for better performance
  */
 export async function getEventsDirectory(filters: EventFilters = {}): Promise<EventDirectory[]> {
-  return safeDatabaseOperation(async () => {
+  const requestKey = getRequestKey(filters)
+
+  // Check if there's already a pending request for the same filters
+  const pendingRequest = pendingRequests.get(requestKey)
+  if (pendingRequest) {
+    return pendingRequest
+  }
+
+  // Check cache first
+  const cachedData = eventsCache.get(filters)
+  if (cachedData) {
+    return cachedData
+  }
+
+  // Create and store the promise to prevent duplicate requests
+  const requestPromise = safeDatabaseOperation(async () => {
     const supabase = createClient()
 
     // Optimized query with only essential fields for directory/listing views
@@ -179,8 +258,45 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
       }
     })
 
+    // Cache the results for future use
+    eventsCache.set(filters, events)
+
     return events
-  }, 'fetch directory events', true)
+  }, 'fetch directory events', true).finally(() => {
+    // Clean up the pending request
+    pendingRequests.delete(requestKey)
+  })
+
+  // Store the promise to prevent duplicate requests
+  pendingRequests.set(requestKey, requestPromise)
+
+  return requestPromise
+}
+
+/**
+ * Clear the events cache (useful when data might have changed)
+ */
+export function clearEventsCache(): void {
+  eventsCache.clear()
+}
+
+/**
+ * Preload next page of events for smoother user experience
+ * @param filters - Current filters
+ * @param currentPage - Current page number
+ * @param pageSize - Number of events per page
+ */
+export function preloadNextPage(filters: EventFilters = {}, currentPage: number, pageSize: number = 20): void {
+  const nextPageFilters: EventFilters = {
+    ...filters,
+    limit: pageSize,
+    offset: (currentPage + 1) * pageSize
+  }
+
+  // Preload in background without awaiting
+  getEventsDirectory(nextPageFilters).catch(err => {
+    console.warn('Failed to preload next page:', err)
+  })
 }
 
 /**

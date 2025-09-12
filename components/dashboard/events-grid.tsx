@@ -4,6 +4,7 @@ import { EventCard } from './event-card'
 import { EventsTable } from './events-table'
 import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
+import { Button } from '@/components/ui/button'
 
 /**
  * Props for the events grid component
@@ -16,12 +17,28 @@ interface EventsGridProps {
   isListView?: boolean
   sortBy?: string
   onSortChange?: (value: string) => void
+  showLoadMore?: boolean
+  onLoadMore?: () => void
+  loadingMore?: boolean
+  hasMore?: boolean
 }
 
 /**
  * Events grid component displaying filtered events
  */
-export function EventsGrid({ events, selectedCategory, categories, onEventClick, isListView = false, sortBy = 'date-asc', onSortChange = () => {} }: EventsGridProps) {
+export function EventsGrid({
+  events,
+  selectedCategory,
+  categories,
+  onEventClick,
+  isListView = false,
+  sortBy = 'date-asc',
+  onSortChange = () => {},
+  showLoadMore = false,
+  onLoadMore,
+  loadingMore = false,
+  hasMore = true
+}: EventsGridProps) {
   // selectedCategory and categories are used for future filtering enhancements
   // Suppress unused parameter warnings for now
   void selectedCategory;
@@ -47,6 +64,28 @@ export function EventsGrid({ events, selectedCategory, categories, onEventClick,
               variant="grid"
             />
           ))}
+        </div>
+      )}
+
+      {/* Load More Button */}
+      {showLoadMore && hasMore && events.length > 0 && (
+        <div className="flex justify-center py-6">
+          <Button
+            onClick={onLoadMore}
+            disabled={loadingMore}
+            variant="outline"
+            size="lg"
+            className="min-w-32"
+          >
+            {loadingMore ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current mr-2"></div>
+                Loading...
+              </>
+            ) : (
+              'Load More'
+            )}
+          </Button>
         </div>
       )}
 
