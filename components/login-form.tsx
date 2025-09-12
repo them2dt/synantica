@@ -103,10 +103,8 @@ export function LoginForm({
       }
 
       console.log('Login successful, redirecting to dashboard...');
-      
-      // Refresh the page to update server-side authentication state
-      router.refresh();
 
+      // Navigate to the dashboard and refresh to update server-side auth state
       await router.replace("/dashboard");
       router.refresh();
     } catch (err) {
