@@ -1,78 +1,122 @@
-"use client";
+'use client'
 
-import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
+import { FormField } from '@/components/ui/form-field'
+import { useToast } from '@/components/ui/toast'
+import { passwordUpdateSchema } from '@/lib/validations/auth'
+import type { PasswordUpdateFormValues } from '@/lib/validations/auth'
+import { Loader2 } from 'lucide-react'
 
-export function UpdatePasswordForm({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
+export function UpdatePasswordForm() {
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [verificationError, setVerificationError] = useState<string | null>(null)
+  const [isVerifying, setIsVerifying] = useState(true)
+  
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const supabase = createClient()
+  const { error: toastError, success: toastSuccess } = useToast()
 
-  const handleForgotPassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const supabase = createClient();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const { error } = await supabase.auth.updateUser({ password });
-      if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
-    } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    const exchangeCodeForSession = async (code: string) => {
+      const { error } = await supabase.auth.exchangeCodeForSession(code)
+      if (error) {
+        console.error('Code exchange error:', error)
+        setVerificationError('The password reset link is invalid or has expired. Please request a new one.')
+        toastError('Invalid Link', 'This reset link is no longer valid.')
+        // Redirect back to forgot password page after a delay
+        setTimeout(() => {
+          router.push('/auth/forgot-password')
+        }, 3000)
+      }
+      setIsVerifying(false)
     }
-  };
+
+    const code = searchParams.get('code')
+    if (code) {
+      exchangeCodeForSession(code)
+    } else {
+      setVerificationError('No password reset code found in the URL. Please use the link from your email.')
+      setIsVerifying(false)
+    }
+  }, [searchParams, router, supabase, toastError])
+
+  const form = useForm<PasswordUpdateFormValues>({
+    resolver: zodResolver(passwordUpdateSchema),
+    defaultValues: {
+      password: '',
+      confirmPassword: '',
+    },
+  })
+
+  const onSubmit = async (data: PasswordUpdateFormValues) => {
+    setIsSubmitting(true)
+    
+    const { error } = await supabase.auth.updateUser({
+      password: data.password,
+    })
+
+    if (error) {
+      console.error("Password update error:", error)
+      toastError("Error", "Failed to update password. Please try again.")
+    } else {
+      toastSuccess("Success!", "Your password has been updated successfully.")
+      // Redirect to login page after a short delay
+      setTimeout(() => {
+        router.push('/auth/login')
+      }, 2000)
+    }
+    
+    setIsSubmitting(false)
+  }
+
+  if (isVerifying) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <h2 className="text-xl font-semibold">Verifying Link...</h2>
+        <p className="mt-2 text-muted-foreground">
+          Please wait while we verify your password reset request.
+        </p>
+      </div>
+    )
+  }
+
+  if (verificationError) {
+    return (
+      <div className="text-center text-destructive">
+        <h2 className="text-xl font-semibold">Verification Failed</h2>
+        <p className="mt-2">{verificationError}</p>
+      </div>
+    )
+  }
 
   return (
-    <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>
-            Please enter your new password below.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleForgotPassword}>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="password">New password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="New password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              {error && <p className="text-sm text-red-500">{error}</p>}
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Saving..." : "Save new password"}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-    </div>
-  );
+    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <FormField
+        label="New Password"
+        name="password"
+        type="password"
+        placeholder="••••••••"
+        register={form.register}
+        error={form.formState.errors.password}
+      />
+      <FormField
+        label="Confirm New Password"
+        name="confirmPassword"
+        type="password"
+        placeholder="••••••••"
+        register={form.register}
+        error={form.formState.errors.confirmPassword}
+      />
+      <Button type="submit" disabled={isSubmitting} className="w-full">
+        {isSubmitting ? 'Updating...' : 'Update Password'}
+      </Button>
+    </form>
+  )
 }

@@ -1,67 +1,37 @@
-import { ReactNode } from 'react'
+'use client'
+
+import { Input, type InputProps } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
+import { type UseFormRegister, type FieldError, type Path, type FieldValues } from 'react-hook-form'
 
-/**
- * Props for the FormField component
- */
-interface FormFieldProps {
-  /** The label for the field */
+interface FormFieldProps<TFormValues extends FieldValues> extends Omit<InputProps, 'name'> {
   label: string
-  /** The input element */
-  children: ReactNode
-  /** Error message to display */
-  error?: string
-  /** Help text to display below the field */
-  helpText?: string
-  /** Whether the field is required */
-  required?: boolean
-  /** Additional CSS classes */
-  className?: string
-  /** HTML id for the field */
-  id?: string
+  name: Path<TFormValues>
+  register: UseFormRegister<TFormValues>
+  error?: FieldError
 }
 
-/**
- * Reusable FormField component
- * Provides consistent form field layout with label, input, error, and help text
- */
-export function FormField({
-  label,
-  children,
-  error,
-  helpText,
-  required = false,
+export function FormField<TFormValues extends FieldValues>({ 
+  label, 
+  name, 
+  register, 
+  error, 
   className,
-  id
-}: FormFieldProps) {
-  const fieldId = id || `field-${label.toLowerCase().replace(/\s+/g, '-')}`
-
+  ...props 
+}: FormFieldProps<TFormValues>) {
   return (
-    <div className={cn('space-y-2', className)}>
-      <Label 
-        htmlFor={fieldId} 
-        className="text-sm font-medium"
-      >
+    <div className={cn("grid w-full items-center gap-1.5", className)}>
+      <Label htmlFor={name}>
         {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
       </Label>
-      
-      <div>
-        {children}
-      </div>
-      
-      {error && (
-        <p className="text-sm text-red-600">
-          {error}
-        </p>
-      )}
-      
-      {helpText && !error && (
-        <p className="text-sm text-muted-foreground">
-          {helpText}
-        </p>
-      )}
+      <Input
+        id={name}
+        aria-invalid={error ? "true" : "false"}
+        {...register(name)}
+        {...props}
+      />
+      {error && <p className="text-sm text-destructive mt-1">{error.message}</p>}
     </div>
   )
 }
