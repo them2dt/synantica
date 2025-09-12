@@ -30,6 +30,7 @@ export function SignUpForm({
   // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
+  const isDev = process.env.NODE_ENV !== "production";
 
   // React Hook Form setup with Zod validation
   const {
@@ -55,7 +56,12 @@ export function SignUpForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignUpFormData) => {
-    console.log("Sign-up form submitted with data:", { email: data.email, passwordLength: data.password.length });
+    if (isDev) {
+      console.log("Sign-up form submitted with data:", {
+        email: data.email,
+        passwordLength: data.password.length,
+      });
+    }
 
     // Temporarily bypass Turnstile for debugging
     // TODO: Re-enable after fixing Turnstile integration
@@ -65,12 +71,15 @@ export function SignUpForm({
     // }
 
     const supabase = createClient();
-    console.log("Supabase client created");
+    if (isDev) {
+      console.log("Supabase client created");
+    }
 
     try {
-      console.log("Calling supabase.auth.signUp...");
-      console.log("email:", data.email);
-      console.log("password:", data.password);
+      if (isDev) {
+        console.log("Calling supabase.auth.signUp...");
+        console.log("email:", data.email);
+      }
       const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -84,10 +93,14 @@ export function SignUpForm({
       });
 
       // Log the full response for debugging
-      console.log("Sign-up response:", { data: authData, error });
+      if (isDev) {
+        console.log("Sign-up response:", { data: authData, error });
+      }
       
       if (error) {
-        console.error("Sign-up error:", error);
+        if (isDev) {
+          console.error("Sign-up error:", error);
+        }
         // Handle specific error types
         if (error.message.includes("already registered")) {
           toastError("Email already exists", "This email is already registered. Please try signing in instead.");
@@ -100,12 +113,15 @@ export function SignUpForm({
       }
 
       console.log("Sign-up successful, redirecting to dashboard...");
+
       toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
 
       await router.replace("/dashboard");
       router.refresh();
     } catch (catchError) {
-      console.error("Sign-up exception:", catchError);
+      if (isDev) {
+        console.error("Sign-up exception:", catchError);
+      }
       toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
   };

@@ -3,7 +3,12 @@
  * Provides secure string sanitization using DOMPurify
  */
 
-import DOMPurify from 'dompurify';
+import createDOMPurify from 'isomorphic-dompurify';
+import { JSDOM } from 'jsdom';
+
+// Initialize DOMPurify with JSDOM on the server and the browser's DOMPurify in the client
+const windowRef = typeof window === 'undefined' ? new JSDOM('').window : window;
+const DOMPurify = createDOMPurify(windowRef);
 
 /**
  * Sanitizes a string input to prevent XSS attacks

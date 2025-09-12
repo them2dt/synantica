@@ -22,6 +22,7 @@ export function LoginForm({
   // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError } = useToast();
+  const isDev = process.env.NODE_ENV !== "production";
 
   // React Hook Form setup with Zod validation
   const {
@@ -42,7 +43,12 @@ export function LoginForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignInFormData) => {
-    console.log("Login form submitted with data:", { email: data.email, passwordLength: data.password.length });
+    if (isDev) {
+      console.log("Login form submitted with data:", {
+        email: data.email,
+        passwordLength: data.password.length,
+      });
+    }
 
     // Temporarily bypass Turnstile for debugging
     // TODO: Re-enable after fixing Turnstile integration
@@ -52,19 +58,27 @@ export function LoginForm({
     // }
 
     const supabase = createClient();
-    console.log("Supabase client created for login");
+    if (isDev) {
+      console.log("Supabase client created for login");
+    }
 
     try {
-      console.log("Calling supabase.auth.signInWithPassword...");
+      if (isDev) {
+        console.log("Calling supabase.auth.signInWithPassword...");
+      }
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      console.log("Login response:", { data: authData, error });
+      if (isDev) {
+        console.log("Login response:", { data: authData, error });
+      }
 
       if (error) {
-        console.error("Login error:", error.message);
+        if (isDev) {
+          console.error("Login error:", error.message);
+        }
         if (error.message.includes("Invalid login credentials")) {
           toastError("Login Failed", "Invalid email or password. Please try again.");
         } else {
@@ -74,11 +88,16 @@ export function LoginForm({
       }
 
       console.log('Login successful, redirecting to dashboard...');
+      
+      // Refresh the page to update server-side authentication state
+      router.refresh();
 
       await router.replace("/dashboard");
       router.refresh();
     } catch (err) {
-      console.error("An unexpected error occurred:", err);
+      if (isDev) {
+        console.error("An unexpected error occurred:", err);
+      }
       toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
