@@ -1,22 +1,20 @@
 'use client'
 
 import { ReactNode } from 'react'
-import { Logo } from '@/components/ui/logo'
-// No icon imports needed for the minimal design
 
 /**
  * Props for the auth layout component
  */
 interface AuthLayoutProps {
   children: ReactNode
-  subtitle: string
+  title: string
 }
 
 /**
  * HelloFresh-style authentication layout component
  * Features a two-column layout with auth form on left and promotional content on right
  */
-export function AuthLayout({ children, subtitle }: AuthLayoutProps) {
+export function AuthLayout({ children, title }: AuthLayoutProps) {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Auth Form */}
@@ -24,15 +22,9 @@ export function AuthLayout({ children, subtitle }: AuthLayoutProps) {
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-              <Logo size="md" showText={false} />
-            </div>
-                                    <h1 className="text-3xl font-semibold text-foreground mb-2 font-heading">
-              Welcome back!
+            <h1 className="text-3xl font-semibold text-foreground mb-2 font-heading">
+              {title}
             </h1>
-            <p className="text-muted-foreground">
-              {subtitle}
-            </p>
           </div>
 
           {/* Auth Form */}

@@ -4,7 +4,7 @@ import { AuthLayout } from "@/components/auth-layout";
 export default function Page() {
   return (
     <AuthLayout
-      subtitle="Don't have an account yet? Sign up now"
+      title="Sign in"
     >
       <LoginForm />
     </AuthLayout>

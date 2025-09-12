@@ -1,0 +1,90 @@
+# Environment Variables Setup
+
+## Required Environment Variables
+
+Create a `.env.local` file in the root of your project with the following variables:
+
+### Supabase Configuration
+```bash
+# Get these from https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+### Cloudflare Turnstile (Bot Protection)
+```bash
+# Get your site key from https://dash.cloudflare.com/profile/api-tokens
+NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
+
+# Optional: For server-side validation
+TURNSTILE_SECRET_KEY=your_turnstile_secret_key
+```
+
+### Optional Variables
+```bash
+# NextAuth.js (if using authentication)
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_nextauth_secret
+
+# Database URL for direct database access
+DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.YOUR_PROJECT.supabase.co:5432/postgres
+
+# Email configuration
+SMTP_HOST=smtp.your-provider.com
+SMTP_PORT=587
+SMTP_USER=your-email@domain.com
+SMTP_PASSWORD=your-smtp-password
+```
+
+## How to Get Supabase Credentials
+
+1. Go to [Supabase Dashboard](https://supabase.com/dashboard)
+2. Select your project
+3. Go to **Settings** → **API**
+4. Copy the following values:
+   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
+   - **anon/public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY`
+
+## How to Get Cloudflare Turnstile Keys
+
+1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Navigate to **Turnstile** in the sidebar
+3. Click **"Add a site"**
+4. Fill in:
+   - **Site name**: Your app name
+   - **Domain**: `localhost` (for development)
+5. Click **"Create"**
+6. Copy the **Site Key** for `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+7. Copy the **Secret Key** for `TURNSTILE_SECRET_KEY`
+
+## Testing Environment Setup
+
+Once you've set up the environment variables:
+
+1. **Restart your development server:**
+   ```bash
+   npm run dev
+   ```
+
+2. **Check the navigation:** The auth buttons should now be visible and functional
+
+3. **Test authentication:** Try signing up and signing in
+
+## Troubleshooting
+
+### Auth buttons still not visible?
+- Make sure `.env.local` is in the project root
+- Restart the development server after adding environment variables
+- Check that the variable names match exactly (case-sensitive)
+
+### Authentication not working?
+- Verify Supabase project is active
+- Check that the anon key has the correct permissions
+- Ensure your domain is whitelisted in Supabase
+
+### Turnstile not working?
+- Make sure the site key is correct
+- Verify your domain is added to the Turnstile site configuration
+- Check browser console for Turnstile-related errors

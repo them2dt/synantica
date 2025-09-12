@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, Home, LayoutDashboard, User, Sun } from 'lucide-react'
@@ -12,6 +12,8 @@ import { UserMenu } from '@/components/user/user-menu'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { hasEnvVars } from '@/lib/utils'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import type { User as SupabaseUser } from '@supabase/supabase-js'
 
 /**
  * Props for the mobile navigation component
@@ -32,7 +34,28 @@ export function MobileNavigation({
   showThemeSwitcher = true 
 }: MobileNavigationProps) {
   const [open, setOpen] = useState(false)
+  const [user, setUser] = useState<SupabaseUser | null>(null)
+  const [loading, setLoading] = useState(true)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const supabase = createClient()
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
+    })
+
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) {
+        setLoading(false)
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
   
   const isActive = (path: string) => {
     if (path === '/') {
@@ -110,13 +133,15 @@ export function MobileNavigation({
               {/* Auth Section */}
               {showAuth && (
                 <div className="space-y-3">
-                  {!hasEnvVars ? (
-                    <div className="text-xs text-muted-foreground p-3 bg-background/50 rounded-lg text-center border">
+                  {!hasEnvVars && (
+                    <div className="text-xs text-muted-foreground p-2 bg-muted/50 rounded text-center">
                       Environment variables not configured
                     </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {/* User Profile Card */}
+                  )}
+                  <div className="space-y-3">
+                    {loading ? (
+                      <div className="h-10 bg-muted rounded-lg animate-pulse" />
+                    ) : user ? (
                       <UserMenu showEmail={false} onClick={() => setOpen(false)}>
                         <div className="flex items-center gap-3 p-3 bg-background/50 rounded-lg border hover:bg-background/70 transition-colors cursor-pointer w-full">
                           <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
@@ -131,11 +156,10 @@ export function MobileNavigation({
                           </div>
                         </div>
                       </UserMenu>
-                      
-                      {/* Auth Button */}
+                    ) : (
                       <AuthButtonClient fullWidth onClick={() => setOpen(false)} />
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
               )}
 
