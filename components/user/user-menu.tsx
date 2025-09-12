@@ -72,7 +72,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
 
   console.log('UserMenu - Rendering dropdown for user:', user.email)
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         {children || (
           <Button variant="ghost" size="icon" className={className}>

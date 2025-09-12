@@ -38,18 +38,16 @@ export function Navigation({
   return (
     <header 
       className={cn(
-        "fixed top-0 z-50 w-full transition-all duration-300 md:top-4 md:px-4",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
         className
       )}
     >
       <div
         className={cn(
           // Common styles
-          "flex h-16 items-center justify-between transition-all duration-300 mx-auto",
-          // Mobile styles (default)
-          "border-b bg-background/95 backdrop-blur-sm px-4",
-          // Desktop styles
-          "md:max-w-screen-lg md:rounded-xl md:border md:px-4 md:shadow-lg"
+          "flex h-16 items-center justify-between transition-all duration-300",
+          // Styles for fixed navigation
+          "border-b bg-background/95 backdrop-blur-sm px-4 w-full"
         )}
       >
         {/* Left side: Logo + Nav Links */}

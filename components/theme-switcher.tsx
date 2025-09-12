@@ -19,7 +19,7 @@ export function ThemeSwitcher({ children }: ThemeSwitcherProps) {
 
   if (children) {
     return (
-      <DropdownMenu>
+      <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           {children}
         </DropdownMenuTrigger>
@@ -39,7 +39,7 @@ export function ThemeSwitcher({ children }: ThemeSwitcherProps) {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon-sm" className="h-10 w-10 box-border">
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
