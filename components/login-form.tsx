@@ -8,15 +8,18 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
 
@@ -39,6 +42,12 @@ export function LoginForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignInFormData) => {
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      toastError("Verification required", "Please complete the verification challenge.");
+      return;
+    }
+
     const supabase = createClient();
 
     try {
@@ -51,8 +60,6 @@ export function LoginForm({
         // Handle specific error types
         if (error.message.includes("Invalid login credentials")) {
           toastError("Invalid credentials", "Please check your email and password and try again.");
-        } else if (error.message.includes("Email not confirmed")) {
-          toastError("Email not confirmed", "Please check your email and click the confirmation link before signing in.");
         } else if (error.message.includes("Too many requests")) {
           toastError("Too many attempts", "Please wait a few minutes before trying again.");
         } else {
@@ -146,11 +153,27 @@ export function LoginForm({
           </Link>
         </div>
 
+        {/* Cloudflare Turnstile Verification */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-center block">
+            Please complete the verification below
+          </Label>
+          <div className="flex justify-center">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              onSuccess={setTurnstileToken}
+              onError={() => setTurnstileToken(null)}
+              onExpire={() => setTurnstileToken(null)}
+              className="mx-auto"
+            />
+          </div>
+        </div>
+
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !turnstileToken}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
         </Button>

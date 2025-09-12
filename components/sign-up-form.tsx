@@ -14,9 +14,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-import { 
-  validatePassword, 
-  getStrengthColor, 
+import { Turnstile } from "@marsidev/react-turnstile";
+import {
+  validatePassword,
+  getStrengthColor,
   getStrengthDescription
 } from "@/lib/utils/password-validation";
 
@@ -26,6 +27,7 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
 
@@ -53,6 +55,12 @@ export function SignUpForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignUpFormData) => {
+    // Validate Turnstile token
+    if (!turnstileToken) {
+      toastError("Verification required", "Please complete the verification challenge.");
+      return;
+    }
+
     const supabase = createClient();
 
     try {
@@ -61,6 +69,10 @@ export function SignUpForm({
         password: data.password,
         options: {
           emailRedirectTo: `${window.location.origin}/dashboard`,
+          // Disable email confirmation for better UX
+          data: {
+            email_confirm: false,
+          },
         },
       });
 
@@ -76,9 +88,9 @@ export function SignUpForm({
         return;
       }
 
-      // Success
-      toastSuccess("Account created!", "Please check your email to confirm your account.");
-      router.push("/auth/sign-up-success");
+      // Success - redirect directly to dashboard
+      toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
+      router.push("/dashboard");
     } catch {
       toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
@@ -231,11 +243,27 @@ export function SignUpForm({
           )}
         </div>
 
+        {/* Cloudflare Turnstile Verification */}
+        <div className="space-y-2">
+          <Label className="text-sm font-medium text-center block">
+            Please complete the verification below
+          </Label>
+          <div className="flex justify-center">
+            <Turnstile
+              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              onSuccess={setTurnstileToken}
+              onError={() => setTurnstileToken(null)}
+              onExpire={() => setTurnstileToken(null)}
+              className="mx-auto"
+            />
+          </div>
+        </div>
+
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !turnstileToken}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>
