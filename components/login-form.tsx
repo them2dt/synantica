@@ -8,20 +8,21 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-// import { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-// import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError } = useToast();
+  const isDev = process.env.NODE_ENV !== "production";
 
   // React Hook Form setup with Zod validation
   const {
@@ -42,29 +43,43 @@ export function LoginForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignInFormData) => {
-    console.log("Login form submitted with data:", { email: data.email, passwordLength: data.password.length });
+    if (isDev) {
+      console.log("Login form submitted with data:", {
+        email: data.email,
+        passwordLength: data.password.length,
+      });
+    }
 
-    // Temporarily bypass Turnstile for debugging
-    // TODO: Re-enable after fixing Turnstile integration
-    // if (!turnstileToken) {
-    //   toastError("Verification required", "Please complete the verification challenge.");
-    //   return;
-    // }
+    if (!turnstileToken) {
+      toastError(
+        "Verification required",
+        "Please complete the verification challenge.",
+      );
+      return;
+    }
 
     const supabase = createClient();
-    console.log("Supabase client created for login");
+    if (isDev) {
+      console.log("Supabase client created for login");
+    }
 
     try {
-      console.log("Calling supabase.auth.signInWithPassword...");
+      if (isDev) {
+        console.log("Calling supabase.auth.signInWithPassword...");
+      }
       const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      console.log("Login response:", { data: authData, error });
+      if (isDev) {
+        console.log("Login response:", { data: authData, error });
+      }
 
       if (error) {
-        console.error("Login error:", error.message);
+        if (isDev) {
+          console.error("Login error:", error.message);
+        }
         if (error.message.includes("Invalid login credentials")) {
           toastError("Login Failed", "Invalid email or password. Please try again.");
         } else {
@@ -73,16 +88,31 @@ export function LoginForm({
         return;
       }
 
+      // Persist session based on user preference
+      if (authData.session) {
+        const expiresIn = data.keepSignedIn ? 60 * 60 * 24 * 30 : 60 * 60;
+        await supabase.auth.setSession({
+          access_token: authData.session.access_token,
+          refresh_token: authData.session.refresh_token,
+          expires_in: expiresIn,
+        } as {
+          access_token: string;
+          refresh_token: string;
+          expires_in: number;
+        });
+      }
+
       console.log('Login successful, redirecting to dashboard...');
       
       // Refresh the page to update server-side authentication state
       router.refresh();
 
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500); // 500ms delay to allow state to propagate
+      await router.replace("/dashboard");
+      router.refresh();
     } catch (err) {
-      console.error("An unexpected error occurred:", err);
+      if (isDev) {
+        console.error("An unexpected error occurred:", err);
+      }
       toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
@@ -164,27 +194,29 @@ export function LoginForm({
           </Link>
         </div>
 
-        {/* Cloudflare Turnstile Verification - Temporarily disabled for debugging */}
-        {/* <div className="space-y-2">
+        <div className="space-y-2">
           <Label className="text-sm font-medium text-center block">
             Please complete the verification below
           </Label>
           <div className="flex justify-center">
             <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              siteKey={
+                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+                "1x00000000000000000000AA"
+              }
               onSuccess={setTurnstileToken}
               onError={() => setTurnstileToken(null)}
               onExpire={() => setTurnstileToken(null)}
               className="mx-auto"
             />
           </div>
-        </div> */}
+        </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !turnstileToken}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
         </Button>

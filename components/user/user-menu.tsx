@@ -15,6 +15,8 @@ import {
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
+const isDev = process.env.NODE_ENV !== 'production'
+
 /**
  * Props for the UserMenu component
  */

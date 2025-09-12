@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-// import { Turnstile } from "@marsidev/react-turnstile";
+import { Turnstile } from "@marsidev/react-turnstile";
 import {
   validatePassword,
   getStrengthColor,
@@ -27,9 +27,10 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
+  const isDev = process.env.NODE_ENV !== "production";
 
   // React Hook Form setup with Zod validation
   const {
@@ -55,22 +56,31 @@ export function SignUpForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignUpFormData) => {
-    console.log("Sign-up form submitted with data:", { email: data.email, passwordLength: data.password.length });
+    if (isDev) {
+      console.log("Sign-up form submitted with data:", {
+        email: data.email,
+        passwordLength: data.password.length,
+      });
+    }
 
-    // Temporarily bypass Turnstile for debugging
-    // TODO: Re-enable after fixing Turnstile integration
-    // if (!turnstileToken) {
-    //   toastError("Verification required", "Please complete the verification challenge.");
-    //   return;
-    // }
+    if (!turnstileToken) {
+      toastError(
+        "Verification required",
+        "Please complete the verification challenge.",
+      );
+      return;
+    }
 
     const supabase = createClient();
-    console.log("Supabase client created");
+    if (isDev) {
+      console.log("Supabase client created");
+    }
 
     try {
-      console.log("Calling supabase.auth.signUp...");
-      console.log("email:", data.email);
-      console.log("password:", data.password);
+      if (isDev) {
+        console.log("Calling supabase.auth.signUp...");
+        console.log("email:", data.email);
+      }
       const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -84,10 +94,14 @@ export function SignUpForm({
       });
 
       // Log the full response for debugging
-      console.log("Sign-up response:", { data: authData, error });
+      if (isDev) {
+        console.log("Sign-up response:", { data: authData, error });
+      }
       
       if (error) {
-        console.error("Sign-up error:", error);
+        if (isDev) {
+          console.error("Sign-up error:", error);
+        }
         // Handle specific error types
         if (error.message.includes("already registered")) {
           toastError("Email already exists", "This email is already registered. Please try signing in instead.");
@@ -99,15 +113,16 @@ export function SignUpForm({
         return;
       }
 
-      // Refresh the page to update server-side authentication state
-      router.refresh();
-
       console.log("Sign-up successful, redirecting to dashboard...");
-      // Success - redirect directly to dashboard
+
       toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
-      router.push("/dashboard");
+
+      await router.replace("/dashboard");
+      router.refresh();
     } catch (catchError) {
-      console.error("Sign-up exception:", catchError);
+      if (isDev) {
+        console.error("Sign-up exception:", catchError);
+      }
       toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
   };
@@ -259,27 +274,29 @@ export function SignUpForm({
           )}
         </div>
 
-        {/* Cloudflare Turnstile Verification - Temporarily disabled for debugging */}
-        {/* <div className="space-y-2">
+        <div className="space-y-2">
           <Label className="text-sm font-medium text-center block">
             Please complete the verification below
           </Label>
           <div className="flex justify-center">
             <Turnstile
-              siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "1x00000000000000000000AA"}
+              siteKey={
+                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
+                "1x00000000000000000000AA"
+              }
               onSuccess={setTurnstileToken}
               onError={() => setTurnstileToken(null)}
               onExpire={() => setTurnstileToken(null)}
               className="mx-auto"
             />
           </div>
-        </div> */}
+        </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid}
+          disabled={isSubmitting || !isValid || !turnstileToken}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>
