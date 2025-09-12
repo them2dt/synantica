@@ -74,13 +74,9 @@ export function LoginForm({
       }
 
       console.log('Login successful, redirecting to dashboard...');
-      
-      // Refresh the page to update server-side authentication state
-      router.refresh();
 
-      setTimeout(() => {
-        router.push("/dashboard");
-      }, 500); // 500ms delay to allow state to propagate
+      await router.replace("/dashboard");
+      router.refresh();
     } catch (err) {
       console.error("An unexpected error occurred:", err);
       toastError("Login failed", "An unexpected error occurred. Please try again.");
