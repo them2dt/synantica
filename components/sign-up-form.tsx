@@ -112,15 +112,12 @@ export function SignUpForm({
         return;
       }
 
-      // Refresh the page to update server-side authentication state
-      router.refresh();
+      console.log("Sign-up successful, redirecting to dashboard...");
 
-      if (isDev) {
-        console.log("Sign-up successful, redirecting to dashboard...");
-      }
-      // Success - redirect directly to dashboard
       toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
-      router.push("/dashboard");
+
+      await router.replace("/dashboard");
+      router.refresh();
     } catch (catchError) {
       if (isDev) {
         console.error("Sign-up exception:", catchError);
