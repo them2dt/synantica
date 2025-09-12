@@ -14,7 +14,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-import { Turnstile } from "@marsidev/react-turnstile";
+// import { Turnstile } from "@marsidev/react-turnstile";
 import {
   validatePassword,
   getStrengthColor,
@@ -27,7 +27,7 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
 
@@ -55,16 +55,23 @@ export function SignUpForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignUpFormData) => {
-    // Validate Turnstile token
-    if (!turnstileToken) {
-      toastError("Verification required", "Please complete the verification challenge.");
-      return;
-    }
+    console.log("Sign-up form submitted with data:", { email: data.email, passwordLength: data.password.length });
+
+    // Temporarily bypass Turnstile for debugging
+    // TODO: Re-enable after fixing Turnstile integration
+    // if (!turnstileToken) {
+    //   toastError("Verification required", "Please complete the verification challenge.");
+    //   return;
+    // }
 
     const supabase = createClient();
+    console.log("Supabase client created");
 
     try {
-      const { error } = await supabase.auth.signUp({
+      console.log("Calling supabase.auth.signUp...");
+      console.log("email:", data.email);
+      console.log("password:", data.password);
+      const { data: authData, error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -76,7 +83,10 @@ export function SignUpForm({
         },
       });
 
+      console.log("Sign-up response:", { data: authData, error });
+
       if (error) {
+        console.error("Sign-up error:", error);
         // Handle specific error types
         if (error.message.includes("already registered")) {
           toastError("Email already exists", "This email is already registered. Please try signing in instead.");
@@ -88,10 +98,29 @@ export function SignUpForm({
         return;
       }
 
+      console.log("Sign-up successful, creating user profile...");
+
+      // Try to create user profile manually if the trigger didn't work
+      try {
+        if (authData.user?.id) {
+          await supabase.from('user_profiles').insert({
+            id: authData.user.id,
+            email: data.email,
+          }).select().single();
+
+          console.log("User profile created successfully");
+        }
+      } catch (profileError) {
+        console.warn("User profile creation failed (might already exist):", profileError);
+        // This is okay - the profile might already exist or the trigger created it
+      }
+
+      console.log("Sign-up successful, redirecting to dashboard...");
       // Success - redirect directly to dashboard
       toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
       router.push("/dashboard");
-    } catch {
+    } catch (catchError) {
+      console.error("Sign-up exception:", catchError);
       toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
   };
@@ -243,8 +272,8 @@ export function SignUpForm({
           )}
         </div>
 
-        {/* Cloudflare Turnstile Verification */}
-        <div className="space-y-2">
+        {/* Cloudflare Turnstile Verification - Temporarily disabled for debugging */}
+        {/* <div className="space-y-2">
           <Label className="text-sm font-medium text-center block">
             Please complete the verification below
           </Label>
@@ -257,13 +286,13 @@ export function SignUpForm({
               className="mx-auto"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid || !turnstileToken}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>

@@ -101,16 +101,15 @@ export function Navigation({
             
             {/* Separator */}
             
-            {!hasEnvVars && showAuth ? (
-              <EnvVarWarning />
-            ) : showAuth ? (
+            {showAuth ? (
               <>
+                {!hasEnvVars && <EnvVarWarning />}
                 <UserMenu showEmail={false} />
-                
+
                 {/* Separator */}
-                
+
                 <AuthButtonClient />
-                
+
                 {/* Separator */}
               </>
             ) : null}

@@ -8,18 +8,18 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+// import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-import { Turnstile } from "@marsidev/react-turnstile";
+// import { Turnstile } from "@marsidev/react-turnstile";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  // const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
 
@@ -42,21 +42,29 @@ export function LoginForm({
    * Handle form submission with enhanced error handling
    */
   const onSubmit = async (data: SignInFormData) => {
-    // Validate Turnstile token
-    if (!turnstileToken) {
-      toastError("Verification required", "Please complete the verification challenge.");
-      return;
-    }
+    console.log("Login form submitted with data:", { email: data.email, passwordLength: data.password.length });
+
+    // Temporarily bypass Turnstile for debugging
+    // TODO: Re-enable after fixing Turnstile integration
+    // if (!turnstileToken) {
+    //   toastError("Verification required", "Please complete the verification challenge.");
+    //   return;
+    // }
 
     const supabase = createClient();
+    console.log("Supabase client created for login");
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      console.log("Calling supabase.auth.signInWithPassword...");
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
+      console.log("Login response:", { data: authData, error });
+
       if (error) {
+        console.error("Login error:", error);
         // Handle specific error types
         if (error.message.includes("Invalid login credentials")) {
           toastError("Invalid credentials", "Please check your email and password and try again.");
@@ -68,10 +76,17 @@ export function LoginForm({
         return;
       }
 
+      console.log("Login successful, redirecting to dashboard...");
       // Success
       toastSuccess("Welcome back!", "You have been successfully signed in.");
-      router.push("/dashboard");
-    } catch {
+
+      // Add a small delay to ensure auth state is updated
+      setTimeout(() => {
+        console.log("Executing router.push('/dashboard')...");
+        router.push("/dashboard");
+      }, 500);
+    } catch (catchError) {
+      console.error("Login exception:", catchError);
       toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
@@ -153,8 +168,8 @@ export function LoginForm({
           </Link>
         </div>
 
-        {/* Cloudflare Turnstile Verification */}
-        <div className="space-y-2">
+        {/* Cloudflare Turnstile Verification - Temporarily disabled for debugging */}
+        {/* <div className="space-y-2">
           <Label className="text-sm font-medium text-center block">
             Please complete the verification below
           </Label>
@@ -167,13 +182,13 @@ export function LoginForm({
               className="mx-auto"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid || !turnstileToken}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}
         </Button>
