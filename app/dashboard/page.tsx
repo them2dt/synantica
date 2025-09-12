@@ -5,9 +5,9 @@ import { useRouter } from 'next/navigation'
 import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
 import { DashboardLayout } from '@/components/dashboard/dashboard-layout'
 import { EventsGrid } from '@/components/dashboard/events-grid'
-import { Event } from '@/types/event'
+import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
-import { useEvents, useEventCategories } from '@/lib/hooks/use-events'
+import { useEventsDirectory, useEventCategories } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/lib/database/events-client'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
@@ -47,11 +47,27 @@ export default function DashboardPage() {
           baseFilters.dateFrom = now.toISOString().split('T')[0]
           baseFilters.dateTo = now.toISOString().split('T')[0]
           break
+        case 'tomorrow':
+          const tomorrow = new Date(now)
+          tomorrow.setDate(now.getDate() + 1)
+          baseFilters.dateFrom = tomorrow.toISOString().split('T')[0]
+          baseFilters.dateTo = tomorrow.toISOString().split('T')[0]
+          break
         case 'this-week':
-          const weekStart = new Date(now.setDate(now.getDate() - now.getDay()))
-          const weekEnd = new Date(now.setDate(now.getDate() - now.getDay() + 6))
+          const weekStart = new Date(now)
+          weekStart.setDate(now.getDate() - now.getDay())
+          const weekEnd = new Date(weekStart)
+          weekEnd.setDate(weekStart.getDate() + 6)
           baseFilters.dateFrom = weekStart.toISOString().split('T')[0]
           baseFilters.dateTo = weekEnd.toISOString().split('T')[0]
+          break
+        case 'next-week':
+          const nextWeekStart = new Date(now)
+          nextWeekStart.setDate(now.getDate() - now.getDay() + 7)
+          const nextWeekEnd = new Date(nextWeekStart)
+          nextWeekEnd.setDate(nextWeekStart.getDate() + 6)
+          baseFilters.dateFrom = nextWeekStart.toISOString().split('T')[0]
+          baseFilters.dateTo = nextWeekEnd.toISOString().split('T')[0]
           break
         case 'this-month':
           const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -59,14 +75,20 @@ export default function DashboardPage() {
           baseFilters.dateFrom = monthStart.toISOString().split('T')[0]
           baseFilters.dateTo = monthEnd.toISOString().split('T')[0]
           break
+        case 'next-month':
+          const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1)
+          const nextMonthEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0)
+          baseFilters.dateFrom = nextMonthStart.toISOString().split('T')[0]
+          baseFilters.dateTo = nextMonthEnd.toISOString().split('T')[0]
+          break
       }
     }
 
     return baseFilters
   }, [debouncedSearchTerm, selectedCategory, selectedField, selectedRegion, selectedAgeRange, selectedDate])
 
-  // Fetch events from database
-  const { events: dbEvents, loading, error } = useEvents(filters)
+  // Fetch events from database - using optimized directory view for better performance
+  const { events: dbEvents, loading, error } = useEventsDirectory(filters)
   const { categories: dbCategories, loading: categoriesLoading } = useEventCategories()
 
   // Transform database categories to match our interface
@@ -135,7 +157,7 @@ export default function DashboardPage() {
   // Calculate statistics
   const totalEvents = dbEvents?.length || 0
 
-  const handleEventClick = (event: Event) => {
+  const handleEventClick = (event: EventDirectory) => {
     // Navigate to the event detail page
     router.push(`/events/${event.id}`)
   }

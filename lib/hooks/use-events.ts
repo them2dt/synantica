@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { getEventsClient, getEventByIdClient, getPopularEventsClient, EventFilters, EventWithDetails } from '@/lib/database/events-client'
+import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, EventFilters, EventWithDetails } from '@/lib/database/events-client'
+import { EventDirectory } from '@/types/event'
 import { DatabaseEventCategory, DatabaseTag } from '@/lib/database/types'
 
 /**
- * Custom hook for managing events data
+ * Custom hook for managing events data - Full details for individual views
  */
 export function useEvents(filters: EventFilters = {}) {
   const [events, setEvents] = useState<EventWithDetails[]>([])
@@ -20,10 +21,10 @@ export function useEvents(filters: EventFilters = {}) {
       setEvents(data)
     } catch (err) {
       console.error('Error fetching events:', err)
-      
+
       // Handle different error types
       let errorMessage = 'Failed to fetch events'
-      
+
       if (err instanceof Error) {
         if (err.message.includes('Authentication required')) {
           errorMessage = 'Please log in to view events'
@@ -35,7 +36,58 @@ export function useEvents(filters: EventFilters = {}) {
           errorMessage = err.message
         }
       }
-      
+
+      setError(errorMessage)
+    } finally {
+      setLoading(false)
+    }
+  }, [filters])
+
+  useEffect(() => {
+    fetchEvents()
+  }, [fetchEvents])
+
+  return {
+    events,
+    loading,
+    error,
+    refetch: fetchEvents
+  }
+}
+
+/**
+ * Custom hook for managing directory-optimized events data
+ * @param filters - Optional filters to apply
+ */
+export function useEventsDirectory(filters: EventFilters = {}) {
+  const [events, setEvents] = useState<EventDirectory[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchEvents = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await getEventsDirectory(filters)
+      setEvents(data)
+    } catch (err) {
+      console.error('Error fetching directory events:', err)
+
+      // Handle different error types
+      let errorMessage = 'Failed to fetch events'
+
+      if (err instanceof Error) {
+        if (err.message.includes('Authentication required')) {
+          errorMessage = 'Please log in to view events'
+        } else if (err.message.includes('permission')) {
+          errorMessage = 'You do not have permission to view events'
+        } else if (err.message.includes('Network error')) {
+          errorMessage = 'Network error. Please check your connection and try again.'
+        } else {
+          errorMessage = err.message
+        }
+      }
+
       setError(errorMessage)
     } finally {
       setLoading(false)

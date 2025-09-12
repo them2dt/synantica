@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Event } from '@/types/event'
+import { Event, EventDirectory } from '@/types/event'
 
 /**
  * Props for the events table component
  */
 interface EventsTableProps {
-  events: Event[]
-  onEventClick: (event: Event) => void
+  events: Event[] | EventDirectory[]
+  onEventClick: (event: Event | EventDirectory) => void
   sortBy: string
   onSortChange: (value: string) => void
 }
@@ -56,56 +56,57 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
   void getSortIcon;
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse border border-border">
+    <div className="overflow-x-auto overflow-y-visible scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent -mx-4 sm:mx-0 touch-manipulation">
+      <div className="min-w-full inline-block align-middle px-4 sm:px-0">
+        <table className="w-full border-collapse border border-border min-w-[800px]">
         <thead>
-          <tr className="border-b">
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <Type className="w-4 h-4 text-accent" />
-                <span>Event</span>
+          <tr className="border-b bg-muted/30">
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border sticky left-0 bg-muted/30 z-10">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Type className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Event</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <Calendar className="w-4 h-4 text-accent" />
-                <span>Date</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Date</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <Clock className="w-4 h-4 text-accent" />
-                <span>Time</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Time</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <MapPin className="w-4 h-4 text-accent" />
-                <span>Location</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Location</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <Tag className="w-4 h-4 text-accent" />
-                <span>Category</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Category</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <FileText className="w-4 h-4 text-accent" />
-                <span>Field</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Field</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-2">
-                <Tag className="w-4 h-4 text-accent" />
-                <span>Tags</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Tags</span>
               </div>
             </th>
-            <th className="text-left p-3 font-medium text-muted-foreground">
-              <div className="flex items-center justify-start gap-2">
-                <Target className="w-4 h-4 text-accent" />
-                <span>Action</span>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Target className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Action</span>
               </div>
             </th>
           </tr>
@@ -114,62 +115,65 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
           {events.map((event) => (
             <tr key={event.id} className="border-b hover:bg-muted/50 transition-colors">
               {/* Event Name */}
-              <td className="p-3 border-r border-border">
-                <div className="font-medium text-foreground">{event.title}</div>
+              <td className="p-2 sm:p-3 border-r border-border sticky left-0 bg-background z-10">
+                <div className="font-medium text-foreground text-sm sm:text-base max-w-[200px] sm:max-w-none truncate">
+                  {event.title}
+                </div>
               </td>
 
               {/* Date */}
-              <td className="p-3 border-r border-border">
-                <div className="text-sm">{formatDate(event.date)}</div>
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm">{formatDate(event.date)}</div>
               </td>
 
               {/* Time */}
-              <td className="p-3 border-r border-border">
-                <div className="text-sm">{event.time}</div>
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm">{event.time}</div>
               </td>
 
               {/* Location */}
-              <td className="p-3 border-r border-border">
-                <div className="text-sm">{event.location}</div>
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm max-w-[120px] sm:max-w-none truncate" title={event.location}>
+                  {event.location}
+                </div>
               </td>
 
-
               {/* Category */}
-              <td className="p-3 border-r border-border">
-                <div className="text-sm capitalize">
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm capitalize">
                   {event.category}
                 </div>
               </td>
 
               {/* Field */}
-              <td className="p-3 border-r border-border">
-                <div className="text-sm">
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm max-w-[100px] sm:max-w-none truncate" title={event.field}>
                   {event.field}
                 </div>
               </td>
 
               {/* Tags */}
-              <td className="p-3 border-r border-border">
+              <td className="p-2 sm:p-3 border-r border-border">
                 <div className="flex flex-wrap gap-1">
-                  {event.tags.slice(0, 2).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs">
+                  {event.tags.slice(0, 1).map((tag) => (
+                    <Badge key={tag} variant="outline" className="text-xs px-1 py-0">
                       {tag}
                     </Badge>
                   ))}
-                  {event.tags.length > 2 && (
-                    <Badge variant="outline" className="text-xs">
-                      +{event.tags.length - 2}
+                  {event.tags.length > 1 && (
+                    <Badge variant="outline" className="text-xs px-1 py-0">
+                      +{event.tags.length - 1}
                     </Badge>
                   )}
                 </div>
               </td>
 
               {/* Action */}
-              <td className="p-3">
+              <td className="p-2 sm:p-3">
                 <Button 
                   size="sm" 
                   onClick={() => onEventClick(event)}
-                  className="h-8"
+                  className="h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
                 >
                   Learn More
                 </Button>
@@ -177,7 +181,8 @@ export function EventsTable({ events, onEventClick, sortBy, onSortChange }: Even
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { Event, EventStatus } from '@/types/event'
+import { Event, EventStatus, EventDirectory } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
 import { safeDatabaseOperation, handleDatabaseError } from './error-handler'
 
@@ -37,7 +37,154 @@ export interface EventWithDetails extends Event {
 }
 
 /**
- * Get all events with optional filters (client-side)
+ * Get all events with optional filters (client-side) - Optimized for directory views
+ */
+export async function getEventsDirectory(filters: EventFilters = {}): Promise<EventDirectory[]> {
+  return safeDatabaseOperation(async () => {
+    const supabase = createClient()
+
+    // Optimized query with only essential fields for directory/listing views
+    let query = supabase
+      .from('events')
+      .select(`
+        id,
+        title,
+        description,
+        short_description,
+        field,
+        min_age,
+        max_age,
+        region,
+        date,
+        time,
+        end_date,
+        end_time,
+        location,
+        is_virtual,
+        is_free,
+        status,
+        is_featured,
+        organizer_name,
+        view_count,
+        created_at,
+        updated_at,
+        event_categories!inner(
+          id,
+          name,
+          slug
+        ),
+        event_tags(
+          tags(
+            id,
+            name,
+            slug
+          )
+        )
+      `)
+      .eq('status', 'published')
+      .order('created_at', { ascending: false })
+
+    // Apply filters (same as before)
+    if (filters.search) {
+      query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer_name.ilike.%${filters.search}%`)
+    }
+
+    if (filters.category) {
+      query = query.eq('event_categories.slug', filters.category)
+    }
+
+    if (filters.field) {
+      query = query.eq('field', filters.field)
+    }
+
+    if (filters.minAge !== undefined) {
+      query = query.gte('min_age', filters.minAge)
+    }
+
+    if (filters.maxAge !== undefined) {
+      query = query.lte('max_age', filters.maxAge)
+    }
+
+    if (filters.region) {
+      query = query.eq('region', filters.region)
+    }
+
+    if (filters.dateFrom) {
+      query = query.gte('date', filters.dateFrom)
+    }
+
+    if (filters.dateTo) {
+      query = query.lte('date', filters.dateTo)
+    }
+
+    if (filters.isFree !== undefined) {
+      query = query.eq('is_free', filters.isFree)
+    }
+
+    // Apply pagination
+    if (filters.limit) {
+      query = query.limit(filters.limit)
+    }
+
+    if (filters.offset) {
+      query = query.range(filters.offset, filters.offset + (filters.limit || 20) - 1)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      const dbError = handleDatabaseError(error, 'fetch directory events')
+      if (dbError.type === 'NOT_FOUND') {
+        return []
+      }
+      throw new Error(dbError.message)
+    }
+
+    // Transform to optimized EventDirectory objects
+    const events: EventDirectory[] = (data || []).map((row: unknown) => {
+      if (!row || typeof row !== 'object') {
+        throw new Error('Invalid event data received from database')
+      }
+
+      const eventRow = row as Record<string, unknown>
+
+      // Extract tags from the optimized query result
+      const eventTags = eventRow.event_tags as Array<{ tags: { name: string } }> | undefined
+      const tags = eventTags?.map((et) => et.tags?.name).filter(Boolean) || []
+
+      return {
+        id: eventRow.id as string,
+        title: eventRow.title as string,
+        description: (eventRow.description as string) || '',
+        shortDescription: (eventRow.short_description as string) || undefined,
+        category: (eventRow.event_categories as { slug: string } | undefined)?.slug || 'other',
+        field: eventRow.field as string,
+        minAge: (eventRow.min_age as number) || 0,
+        maxAge: (eventRow.max_age as number) || 100,
+        region: eventRow.region as string,
+        date: eventRow.date as string,
+        time: eventRow.time as string,
+        endDate: (eventRow.end_date as string) || undefined,
+        endTime: (eventRow.end_time as string) || undefined,
+        location: eventRow.location as string,
+        isVirtual: (eventRow.is_virtual as boolean) || false,
+        isFree: (eventRow.is_free as boolean) || false,
+        status: (eventRow.status as EventStatus) || 'published',
+        isFeatured: (eventRow.is_featured as boolean) || false,
+        organizer: (eventRow.organizer_name as string) || 'Unknown',
+        viewCount: (eventRow.view_count as number) || 0,
+        createdAt: (eventRow.created_at as string) || new Date().toISOString(),
+        updatedAt: (eventRow.updated_at as string) || new Date().toISOString(),
+        tags
+      }
+    })
+
+    return events
+  }, 'fetch directory events', true)
+}
+
+/**
+ * Get all events with optional filters (client-side) - Full details for individual views
  */
 export async function getEventsClient(filters: EventFilters = {}): Promise<EventWithDetails[]> {
   return safeDatabaseOperation(async () => {
@@ -81,29 +228,39 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
 
     // Apply filters
     if (filters.search) {
-      query = query.ilike('title', `%${filters.search}%`)
+      // Search across multiple fields for better directory experience
+      query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer_name.ilike.%${filters.search}%`)
     }
-    
+
     if (filters.category) {
-      query = query.eq('event_categories.name', filters.category)
+      // Filter by category slug instead of name for better performance
+      query = query.eq('event_categories.slug', filters.category)
     }
-    
+
     if (filters.field) {
       query = query.eq('field', filters.field)
     }
-    
+
     if (filters.minAge !== undefined) {
       query = query.gte('min_age', filters.minAge)
     }
-    
+
     if (filters.maxAge !== undefined) {
       query = query.lte('max_age', filters.maxAge)
     }
-    
+
     if (filters.region) {
       query = query.eq('region', filters.region)
     }
-    
+
+    if (filters.dateFrom) {
+      query = query.gte('date', filters.dateFrom)
+    }
+
+    if (filters.dateTo) {
+      query = query.lte('date', filters.dateTo)
+    }
+
     if (filters.isFree !== undefined) {
       query = query.eq('is_free', filters.isFree)
     }

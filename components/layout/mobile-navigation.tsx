@@ -133,7 +133,7 @@ export function MobileNavigation({
                       </UserMenu>
                       
                       {/* Auth Button */}
-                      <AuthButtonClient />
+                      <AuthButtonClient fullWidth />
                     </div>
                   )}
                 </div>

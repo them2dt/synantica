@@ -5,8 +5,14 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User } from "@supabase/supabase-js";
+import { cn } from "@/lib/utils";
 
-export function AuthButtonClient() {
+interface AuthButtonClientProps {
+  /** Whether to make buttons full width */
+  fullWidth?: boolean
+}
+
+export function AuthButtonClient({ fullWidth = false }: AuthButtonClientProps = {}) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -32,8 +38,8 @@ export function AuthButtonClient() {
 
   if (loading) {
     return (
-      <div className="flex gap-2">
-        <Button size="sm" variant="outline" disabled>
+      <div className={cn("flex gap-2", fullWidth && "w-full")}>
+        <Button size="sm" variant="outline" disabled className={fullWidth ? "flex-1" : ""}>
           Loading...
         </Button>
       </div>
@@ -45,11 +51,11 @@ export function AuthButtonClient() {
       {/* User is logged in - could add user menu here */}
     </div>
   ) : (
-    <div className="flex gap-2">
-      <Button asChild size="sm" variant="outline">
+    <div className={cn("flex gap-2", fullWidth && "w-full")}>
+      <Button asChild size="sm" variant="outline" className={fullWidth ? "flex-1" : ""}>
         <Link href="/auth/login">Sign in</Link>
       </Button>
-      <Button asChild size="sm" variant="default">
+      <Button asChild size="sm" variant="default" className={fullWidth ? "flex-1" : ""}>
         <Link href="/auth/sign-up">Sign up</Link>
       </Button>
     </div>

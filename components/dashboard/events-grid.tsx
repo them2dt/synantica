@@ -2,17 +2,17 @@
 
 import { EventCard } from './event-card'
 import { EventsTable } from './events-table'
-import { Event } from '@/types/event'
+import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 
 /**
  * Props for the events grid component
  */
 interface EventsGridProps {
-  events: Event[]
+  events: Event[] | EventDirectory[]
   selectedCategory: string
   categories: CategoryWithIcon[]
-  onEventClick: (event: Event) => void
+  onEventClick: (event: Event | EventDirectory) => void
   isListView?: boolean
   sortBy?: string
   onSortChange?: (value: string) => void

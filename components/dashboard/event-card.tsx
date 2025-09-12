@@ -4,14 +4,14 @@ import { Calendar, Clock, MapPin } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Event } from '@/types/event'
+import { Event, EventDirectory } from '@/types/event'
 
 /**
  * Props for the event card component
  */
 interface EventCardProps {
-  event: Event
-  onLearnMore: (event: Event) => void
+  event: Event | EventDirectory
+  onLearnMore: (event: Event | EventDirectory) => void
   variant?: 'grid' | 'list'
 }
 

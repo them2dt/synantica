@@ -152,6 +152,55 @@ export type EventSortBy =
 export type EventViewMode = 'grid' | 'list'
 
 /**
+ * Optimized Event interface for directory/listing views
+ * Contains only essential fields for performance and reduced payload size
+ */
+export interface EventDirectory {
+  // Core identification
+  id: string
+  title: string
+  description?: string
+  shortDescription?: string
+
+  // Categorization (simplified)
+  category: string
+  field: string
+  tags: string[]
+
+  // Age and region filters
+  minAge?: number
+  maxAge?: number
+  region: string
+
+  // Date and time
+  date: string
+  time: string
+  endDate?: string
+  endTime?: string
+
+  // Location (simplified)
+  location: string
+  isVirtual?: boolean
+
+  // Pricing
+  isFree: boolean
+
+  // Status
+  status: EventStatus
+  isFeatured?: boolean
+
+  // Organizer (simplified)
+  organizer: string
+
+  // Analytics
+  viewCount?: number
+
+  // Timestamps
+  createdAt: string
+  updatedAt: string
+}
+
+/**
  * Event form data for creating/editing events
  */
 export interface EventFormData {
