@@ -87,6 +87,20 @@ export function LoginForm({
         return;
       }
 
+      // Persist session based on user preference
+      if (authData.session) {
+        const expiresIn = data.keepSignedIn ? 60 * 60 * 24 * 30 : 60 * 60;
+        await supabase.auth.setSession({
+          access_token: authData.session.access_token,
+          refresh_token: authData.session.refresh_token,
+          expires_in: expiresIn,
+        } as {
+          access_token: string;
+          refresh_token: string;
+          expires_in: number;
+        });
+      }
+
       console.log('Login successful, redirecting to dashboard...');
       
       // Refresh the page to update server-side authentication state
