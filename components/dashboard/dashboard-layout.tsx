@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 // import { Badge } from '@/components/ui/badge' // Unused for now
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
+import { DashboardViewMode } from '@/components/dashboard/dashboard-view-selector'
 
 /**
  * Props for the dashboard layout component
@@ -25,8 +26,8 @@ interface DashboardLayoutProps {
   onRegionChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
-  isListView?: boolean
-  onViewChange?: (isList: boolean) => void
+  viewMode?: DashboardViewMode
+  onViewModeChange?: (mode: DashboardViewMode) => void
   sortBy?: string
   onSortChange?: (value: string) => void
 }
@@ -51,8 +52,8 @@ export function DashboardLayout({
   onRegionChange,
   selectedField,
   onFieldChange,
-  isListView,
-  onViewChange,
+  viewMode,
+  onViewModeChange,
   sortBy,
   onSortChange,
 }: DashboardLayoutProps) {
@@ -75,14 +76,14 @@ export function DashboardLayout({
               onDateChange={onDateChange}
               selectedAgeRange={selectedAgeRange}
               onAgeRangeChange={onAgeRangeChange}
-              selectedRegion={selectedRegion}
-              onRegionChange={onRegionChange}
-              selectedField={selectedField}
-              onFieldChange={onFieldChange}
-              isListView={isListView}
-              onViewChange={onViewChange}
-              sortBy={sortBy}
-              onSortChange={onSortChange}
+          selectedRegion={selectedRegion}
+          onRegionChange={onRegionChange}
+          selectedField={selectedField}
+          onFieldChange={onFieldChange}
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          sortBy={sortBy}
+          onSortChange={onSortChange}
             />
           </div>
 

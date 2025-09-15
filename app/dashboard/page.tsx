@@ -10,6 +10,7 @@ import { useEventsDirectoryPaginated, useEventCategories, useRealtimeEvents } fr
 import { EventFilters } from '@/lib/database/events-client'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { DashboardViewMode } from '@/components/dashboard/dashboard-view-selector'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
@@ -32,7 +33,7 @@ export default function DashboardPage() {
   const [selectedAgeRange, setSelectedAgeRange] = useState<[number, number]>([0, 99])
   const [selectedRegion, setSelectedRegion] = useState('all')
   const [selectedField, setSelectedField] = useState('all')
-  const [isListView, setIsListView] = useState(false)
+  const [viewMode, setViewMode] = useState<DashboardViewMode>('ag-grid') // Default to AG Grid for professional experience
   const [sortBy, setSortBy] = useState('date-asc')
 
   // Debounce search term to prevent excessive API calls
@@ -214,8 +215,8 @@ export default function DashboardPage() {
           onRegionChange={setSelectedRegion}
           selectedField={selectedField}
           onFieldChange={setSelectedField}
-          isListView={isListView}
-          onViewChange={setIsListView}
+          viewMode={viewMode}
+          onViewModeChange={setViewMode}
           sortBy={sortBy}
           onSortChange={setSortBy}
         >
@@ -243,8 +244,8 @@ export default function DashboardPage() {
         onRegionChange={setSelectedRegion}
         selectedField={selectedField}
         onFieldChange={setSelectedField}
-        isListView={isListView}
-        onViewChange={setIsListView}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
         sortBy={sortBy}
         onSortChange={setSortBy}
       >
@@ -282,8 +283,8 @@ export default function DashboardPage() {
         onRegionChange={setSelectedRegion}
         selectedField={selectedField}
         onFieldChange={setSelectedField}
-        isListView={isListView}
-        onViewChange={setIsListView}
+        viewMode={viewMode}
+        onViewModeChange={setViewMode}
         sortBy={sortBy}
         onSortChange={setSortBy}
       >
@@ -292,7 +293,8 @@ export default function DashboardPage() {
           selectedCategory={selectedCategory}
           categories={eventCategories}
           onEventClick={handleEventClick}
-          isListView={isListView}
+          isListView={viewMode === 'list'}
+          isAGGridView={viewMode === 'ag-grid'}
           sortBy={sortBy}
           onSortChange={setSortBy}
           showLoadMore={true}

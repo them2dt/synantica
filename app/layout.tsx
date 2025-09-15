@@ -8,6 +8,7 @@ import { NavigationSpacer } from "@/components/layout/navigation-spacer";
 import { ToastProvider } from "@/components/ui/toast";
 import { AuthNav } from '@/components/layout/auth-nav';
 import "./globals.css";
+import "../styles/ag-grid-theme.css";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`

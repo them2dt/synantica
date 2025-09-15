@@ -1,0 +1,264 @@
+/**
+ * AG Grid Custom Theme
+ * Matches the existing Tailwind design system
+ * Professional styling for the student event platform dashboard
+ */
+
+/* Import AG Grid core styles */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-alpine.css';
+
+/* Custom AG Grid theme variables */
+.ag-theme-student-events {
+  /* Color scheme matching the reference image */
+  --ag-foreground-color: hsl(var(--foreground));
+  --ag-background-color: hsl(var(--background));
+  --ag-header-foreground-color: hsl(var(--foreground)); /* Darker header text */
+  --ag-header-background-color: transparent; /* No header background */
+  --ag-odd-row-background-color: transparent;
+  --ag-row-hover-color: hsl(var(--muted) / 0.5);
+  
+  /* Border colors from image */
+  --ag-border-color: hsl(var(--border));
+  --ag-row-border-color: hsl(var(--border));
+  --ag-header-column-separator-color: hsl(var(--border));
+  
+  /* Primary color (accent) from image */
+  --ag-accent-color: #E64980; /* Vibrant pink for icons */
+  
+  /* Font settings from image */
+  --ag-font-family: inherit;
+  --ag-font-size: 14px;
+  --ag-header-font-size: 14px;
+  --ag-header-font-weight: 500;
+  
+  /* Spacing from image */
+  --ag-grid-size: 8px;
+  --ag-cell-horizontal-padding: 16px;
+  --ag-header-height: 48px;
+  --ag-row-height: 56px;
+  
+  /* Scrollbar styling */
+  --ag-scrollbar-size: 8px;
+}
+
+/* Custom styling for specific elements */
+.ag-theme-student-events {
+  border: 1px solid hsl(var(--border));
+  border-radius: 8px;
+  overflow: hidden;
+
+  /* Header styling from image */
+  .ag-header {
+    border-bottom: 1px solid hsl(var(--border));
+    background-color: transparent;
+  }
+  
+  .ag-header-cell {
+    font-weight: 500;
+    color: hsl(var(--muted-foreground));
+    border-right: 1px solid hsl(var(--border));
+  }
+  
+  .ag-header-cell:last-child {
+    border-right: none;
+  }
+  
+  .ag-header-cell-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Row styling from image */
+  .ag-row {
+    border-bottom: 1px solid hsl(var(--border)) !important;
+    transition: background-color 0.2s ease;
+    background-color: hsl(var(--background)); /* Ensure solid background */
+  }
+
+  .ag-row:last-child {
+    border-bottom: none !important;
+  }
+  
+  .ag-row:hover {
+    background-color: hsl(var(--muted) / 0.5);
+  }
+  
+  .ag-cell {
+    border-right: none; /* No vertical borders in rows */
+    display: flex;
+    align-items: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    background-color: inherit; /* Inherit row background */
+    overflow: hidden; /* Hide overflowing content */
+  }
+  
+  .ag-cell:last-child {
+    border-right: none;
+  }
+  
+  /* Loading overlay */
+  .ag-overlay-loading-wrapper {
+    background-color: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .ag-overlay-loading-center {
+    color: hsl(var(--muted-foreground));
+    font-size: 14px;
+  }
+  
+  /* No rows overlay */
+  .ag-overlay-no-rows-wrapper {
+    background-color: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    padding: 48px 24px;
+  }
+  
+  .ag-overlay-no-rows-center {
+    color: hsl(var(--muted-foreground));
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  /* Pagination styling from image */
+  .ag-paging-panel {
+    border-top: 1px solid hsl(var(--border));
+    background-color: hsl(var(--background));
+    padding: 12px 16px;
+    font-size: 14px;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .ag-paging-button {
+    color: hsl(var(--foreground));
+  }
+  
+  .ag-paging-button:hover:not(.ag-disabled) {
+    background-color: hsl(var(--muted));
+  }
+
+  .ag-paging-page-summary-panel {
+    justify-content: flex-end;
+  }
+  
+  /* Filter styling */
+  .ag-filter-wrapper {
+    background-color: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .ag-filter-body-wrapper {
+    padding: 16px;
+  }
+  
+  /* Sort indicator styling */
+  .ag-sort-indicator-container {
+    margin-left: 8px;
+  }
+  
+  .ag-sort-ascending-icon,
+  .ag-sort-descending-icon {
+    color: hsl(var(--primary));
+  }
+  
+  /* Column resizer */
+  .ag-header-cell-resize {
+    color: hsl(var(--border));
+  }
+  
+  .ag-header-cell-resize:hover {
+    color: hsl(var(--muted-foreground));
+  }
+  
+  /* Selection checkbox */
+  .ag-checkbox-input-wrapper {
+    border: 1px solid hsl(var(--border));
+    border-radius: 4px;
+    background-color: hsl(var(--background));
+  }
+  
+  .ag-checkbox-input-wrapper.ag-checked {
+    background-color: hsl(var(--primary));
+    border-color: hsl(var(--primary));
+  }
+  
+  /* Menu styling */
+  .ag-menu {
+    background-color: hsl(var(--background));
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+  
+  .ag-menu-option {
+    color: hsl(var(--foreground));
+    padding: 8px 16px;
+    transition: background-color 0.2s ease;
+  }
+  
+  .ag-menu-option:hover {
+    background-color: hsl(var(--muted));
+  }
+  
+  /* Scrollbar styling for webkit browsers */
+  .ag-body-viewport::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .ag-body-viewport::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .ag-body-viewport::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 4px;
+  }
+  
+  .ag-body-viewport::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground));
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .ag-theme-student-events {
+    --ag-font-size: 13px;
+    --ag-header-font-size: 12px;
+    --ag-row-height: 48px;
+    --ag-header-height: 44px;
+    --ag-cell-horizontal-padding: 8px;
+  }
+}
+
+/* Dark mode specific adjustments */
+@media (prefers-color-scheme: dark) {
+  .ag-theme-student-events {
+    /* Enhanced contrast for dark mode */
+    --ag-row-hover-color: hsl(var(--muted) / 0.7);
+    --ag-selected-row-background-color: hsl(var(--accent) / 0.15);
+  }
+}
+
+/* Print styles */
+@media print {
+  .ag-theme-student-events {
+    --ag-background-color: white;
+    --ag-foreground-color: black;
+    --ag-border-color: #ccc;
+    
+    .ag-paging-panel {
+      display: none;
+    }
+  }
+}
+

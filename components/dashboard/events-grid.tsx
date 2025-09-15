@@ -2,6 +2,7 @@
 
 import { EventCard } from './event-card'
 import { EventsTable } from './events-table'
+import { EventsAGGrid } from './events-ag-grid'
 import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { Button } from '@/components/ui/button'
@@ -16,6 +17,7 @@ interface EventsGridProps {
   categories: CategoryWithIcon[]
   onEventClick: (event: Event | EventDirectory) => void
   isListView?: boolean
+  isAGGridView?: boolean
   sortBy?: string
   onSortChange?: (value: string) => void
   showLoadMore?: boolean
@@ -33,6 +35,7 @@ export function EventsGrid({
   categories,
   onEventClick,
   isListView = false,
+  isAGGridView = false,
   sortBy = 'date-asc',
   onSortChange = () => {},
   showLoadMore = false,
@@ -47,8 +50,20 @@ export function EventsGrid({
 
   return (
     <div className="space-y-6">
-      {/* Events Grid/List */}
-      {isListView ? (
+      {/* Events Grid/List/AG Grid */}
+      {isAGGridView ? (
+        <EventsAGGrid
+          events={events}
+          onEventClick={onEventClick}
+          loading={loadingMore}
+          height={600}
+          enablePagination={true}
+          pageSize={25}
+          enableSorting={true}
+          enableFiltering={true}
+          enableColumnResizing={true}
+        />
+      ) : isListView ? (
         <EventsTable
           events={events}
           onEventClick={onEventClick}
@@ -68,8 +83,8 @@ export function EventsGrid({
         </div>
       )}
 
-      {/* Load More Button */}
-      {showLoadMore && hasMore && events.length > 0 && (
+      {/* Load More Button (only for non-AG Grid views since AG Grid has built-in pagination) */}
+      {!isAGGridView && showLoadMore && hasMore && events.length > 0 && (
         <div className="flex justify-center py-6">
           <Button
             onClick={onLoadMore}

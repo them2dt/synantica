@@ -1,11 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { Search, Grid3X3, List } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
+import { CompactDashboardViewSelector, DashboardViewMode } from '@/components/dashboard/dashboard-view-selector'
 
 /**
  * Props for the mobile filters component
@@ -24,8 +25,8 @@ interface MobileFiltersProps {
   onRegionChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
-  isListView?: boolean
-  onViewChange?: (isList: boolean) => void
+  viewMode?: DashboardViewMode
+  onViewModeChange?: (mode: DashboardViewMode) => void
   sortBy?: string
   onSortChange?: (value: string) => void
 }
@@ -48,8 +49,8 @@ export function MobileFilters({
   onRegionChange = () => {},
   selectedField = 'all',
   onFieldChange = () => {},
-  isListView = false,
-  onViewChange = () => {},
+  viewMode = 'grid',
+  onViewModeChange = () => {},
   sortBy = 'date-asc',
   onSortChange = () => {}
 }: MobileFiltersProps) {
@@ -116,28 +117,14 @@ export function MobileFilters({
       </div>
 
       {/* View Toggle */}
+      {/* View Mode Section */}
       <div className="space-y-3">
         <span className="text-sm font-medium text-muted-foreground">View Mode</span>
-        <div className="flex gap-2">
-          <Button
-            variant={!isListView ? "default" : "outline"}
-            size="sm"
-            onClick={() => onViewChange(false)}
-            className="flex-1 h-12 touch-manipulation"
-          >
-            <Grid3X3 className="h-4 w-4 mr-2" />
-            Grid
-          </Button>
-          <Button
-            variant={isListView ? "default" : "outline"}
-            size="sm"
-            onClick={() => onViewChange(true)}
-            className="flex-1 h-12 touch-manipulation"
-          >
-            <List className="h-4 w-4 mr-2" />
-            List
-          </Button>
-        </div>
+        <CompactDashboardViewSelector
+          currentView={viewMode}
+          onViewChange={onViewModeChange}
+          className="w-full"
+        />
       </div>
 
       {/* Filters Section */}
@@ -257,6 +244,17 @@ export function MobileFilters({
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          {/* View Mode Selector */}
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              View Mode
+            </label>
+            <CompactDashboardViewSelector
+              currentView={viewMode}
+              onViewChange={onViewModeChange}
+            />
           </div>
           </div>
         )}

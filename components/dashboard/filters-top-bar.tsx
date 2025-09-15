@@ -1,11 +1,11 @@
 'use client'
 
-import { Search, Grid3X3, List } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Button } from '@/components/ui/button'
 import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
 import { MobileFilters } from '@/components/dashboard/mobile-filters'
+import { DashboardViewSelector, DashboardViewMode } from '@/components/dashboard/dashboard-view-selector'
 
 /**
  * Props for the filters top bar component
@@ -24,8 +24,8 @@ interface FiltersTopBarProps {
   onRegionChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
-  isListView?: boolean
-  onViewChange?: (isList: boolean) => void
+  viewMode?: DashboardViewMode
+  onViewModeChange?: (mode: DashboardViewMode) => void
   sortBy?: string
   onSortChange?: (value: string) => void
 }
@@ -48,8 +48,8 @@ export function FiltersTopBar({
   onRegionChange = () => {},
   selectedField = 'all',
   onFieldChange = () => {},
-  isListView = false,
-  onViewChange = () => {},
+  viewMode = 'grid',
+  onViewModeChange = () => {},
   sortBy = 'date-asc',
   onSortChange = () => {}
 }: FiltersTopBarProps) {
@@ -106,21 +106,24 @@ export function FiltersTopBar({
     <div className="space-y-6">
       {/* Desktop Filters */}
       <div className="hidden md:block space-y-6">
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            placeholder="Search events..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
-          />
-        </div>
+        {/* Search Bar - hide in AG Grid view */}
+        {viewMode !== 'ag-grid' && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search events..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        )}
 
         {/* Controls Row */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          {/* Left Side - Sorter and Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+          {/* Left Side - Sorter and Filters - hide in AG Grid view */}
+          {viewMode !== 'ag-grid' && (
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             {/* Sorter - First */}
             <Select value={sortBy} onValueChange={onSortChange}>
               <SelectTrigger className="w-48 [&>svg]:hidden">
@@ -217,49 +220,39 @@ export function FiltersTopBar({
               </div>
             </div>
           </div>
+          )}
 
           {/* Right Side - View Toggle */}
-          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-            <Button
-              variant={!isListView ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange(false)}
-              className="h-8 px-3"
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={isListView ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange(true)}
-              className="h-8 px-3"
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
+          {/* View Mode Selector */}
+          <DashboardViewSelector
+            currentView={viewMode}
+            onViewChange={onViewModeChange}
+          />
         </div>
       </div>
 
-      {/* Mobile Filters */}
-      <MobileFilters
-        searchTerm={searchTerm}
-        onSearchChange={onSearchChange}
-        selectedCategory={selectedCategory}
-        onCategoryChange={onCategoryChange}
-        categories={categories}
-        selectedDate={selectedDate}
-        onDateChange={onDateChange}
-        selectedAgeRange={selectedAgeRange}
-        onAgeRangeChange={onAgeRangeChange}
-        selectedRegion={selectedRegion}
-        onRegionChange={onRegionChange}
-        selectedField={selectedField}
-        onFieldChange={onFieldChange}
-        isListView={isListView}
-        onViewChange={onViewChange}
-        sortBy={sortBy}
-        onSortChange={onSortChange}
-      />
+      {/* Mobile Filters - hide in AG Grid view */}
+      {viewMode !== 'ag-grid' && (
+        <MobileFilters
+          searchTerm={searchTerm}
+          onSearchChange={onSearchChange}
+          selectedCategory={selectedCategory}
+          onCategoryChange={onCategoryChange}
+          categories={categories}
+          selectedDate={selectedDate}
+          onDateChange={onDateChange}
+          selectedAgeRange={selectedAgeRange}
+          onAgeRangeChange={onAgeRangeChange}
+          selectedRegion={selectedRegion}
+          onRegionChange={onRegionChange}
+          selectedField={selectedField}
+          onFieldChange={onFieldChange}
+          viewMode={viewMode}
+          onViewModeChange={onViewModeChange}
+          sortBy={sortBy}
+          onSortChange={onSortChange}
+        />
+      )}
     </div>
   )
 }
