@@ -7,7 +7,7 @@ import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventCategories, useRealtimeEvents } from '@/lib/hooks/use-events'
-import { EventFilters } from '@/lib/database/events-client'
+import { EventFilters } from '@/types/event'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 
@@ -38,7 +38,7 @@ export default function DashboardPage() {
   // Debounce search term to prevent excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
-    // Build filters for database query (without limit for pagination hook)
+  // Build filters for database query (without limit for pagination hook)
   const filters: EventFilters = useMemo(() => {
     const baseFilters: EventFilters = {
       search: debouncedSearchTerm || undefined,
@@ -177,6 +177,10 @@ export default function DashboardPage() {
           return a.title.localeCompare(b.title)
         case 'title-desc':
           return b.title.localeCompare(a.title)
+        case 'age-asc':
+          return (a.minAge || 0) - (b.minAge || 0)
+        case 'age-desc':
+          return (b.minAge || 0) - (a.minAge || 0)
         case 'created-desc':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         case 'created-asc':

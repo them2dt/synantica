@@ -97,6 +97,8 @@ export function MobileFilters({
     { value: 'date-desc', label: 'Date (Latest First)' },
     { value: 'title-asc', label: 'Title (A-Z)' },
     { value: 'title-desc', label: 'Title (Z-A)' },
+    { value: 'age-asc', label: 'Min Age (Lowest First)' },
+    { value: 'age-desc', label: 'Min Age (Highest First)' },
     { value: 'created-desc', label: 'Newest First' },
     { value: 'created-asc', label: 'Oldest First' }
   ]

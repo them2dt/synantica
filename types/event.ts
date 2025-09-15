@@ -124,15 +124,16 @@ export interface EventReview {
 export interface EventFilters {
   search?: string
   category?: string
-  date?: string
   field?: string
   minAge?: number
   maxAge?: number
   region?: string
-  location?: string
+  dateFrom?: string
+  dateTo?: string
   isFree?: boolean
-  isVirtual?: boolean
   status?: EventStatus
+  limit?: number
+  offset?: number
 }
 
 /**
@@ -143,6 +144,8 @@ export type EventSortBy =
   | 'date-desc' 
   | 'title-asc' 
   | 'title-desc' 
+  | 'age-asc'
+  | 'age-desc'
   | 'created-asc'
   | 'created-desc'
 

@@ -1,7 +1,7 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { Event, EventStatus, EventDirectory } from '@/types/event'
+import { Event, EventStatus, EventDirectory, EventFilters } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
 import { safeDatabaseOperation } from './error-handler'
 import { createDatabaseError } from '@/lib/utils/error-handling'
@@ -74,20 +74,6 @@ function getRequestKey(filters: EventFilters): string {
  * For use in client components and hooks
  */
 
-export interface EventFilters {
-  search?: string
-  category?: string
-  field?: string
-  minAge?: number
-  maxAge?: number
-  region?: string
-  dateFrom?: string
-  dateTo?: string
-  isFree?: boolean
-  status?: EventStatus
-  limit?: number
-  offset?: number
-}
 
 export interface EventWithDetails extends Event {
   category_name: string

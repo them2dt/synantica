@@ -1,9 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target } from 'lucide-react'
+import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { InlineSpinner } from '@/components/ui/loading'
@@ -105,8 +104,8 @@ export function EventsTable({
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
-                <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Tags</span>
+                <Users className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Min Age</span>
               </div>
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground">
@@ -158,19 +157,10 @@ export function EventsTable({
                 </div>
               </td>
 
-              {/* Tags */}
+              {/* Min Age */}
               <td className="p-2 sm:p-3 border-r border-border">
-                <div className="flex flex-wrap gap-1">
-                  {event.tags.slice(0, 1).map((tag) => (
-                    <Badge key={tag} variant="outline" className="text-xs px-1 py-0">
-                      {tag}
-                    </Badge>
-                  ))}
-                  {event.tags.length > 1 && (
-                    <Badge variant="outline" className="text-xs px-1 py-0">
-                      +{event.tags.length - 1}
-                    </Badge>
-                  )}
+                <div className="text-xs sm:text-sm font-medium">
+                  {event.minAge || 0}+
                 </div>
               </td>
 

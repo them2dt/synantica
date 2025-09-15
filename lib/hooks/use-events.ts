@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, EventFilters, EventWithDetails } from '@/lib/database/events-client'
-import { EventDirectory, EventStatus } from '@/types/event'
+import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, EventWithDetails } from '@/lib/database/events-client'
+import { EventDirectory, EventStatus, EventFilters } from '@/types/event'
 import { DatabaseEventCategory, DatabaseTag } from '@/lib/database/types'
 import { handleAsyncError } from '@/lib/utils/error-handling'
 

@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import { Event, EventStatus } from '@/types/event'
+import { Event, EventStatus, EventFilters } from '@/types/event'
 import { DatabaseEventWithRelations } from './types'
 import { createDatabaseError } from '@/lib/utils/error-handling'
 
@@ -8,20 +8,6 @@ import { createDatabaseError } from '@/lib/utils/error-handling'
  * Handles all CRUD operations and complex queries
  */
 
-export interface EventFilters {
-  search?: string
-  category?: string
-  field?: string
-  minAge?: number
-  maxAge?: number
-  region?: string
-  dateFrom?: string
-  dateTo?: string
-  isFree?: boolean
-  status?: EventStatus
-  limit?: number
-  offset?: number
-}
 
 export interface EventWithDetails extends Event {
   category_name: string

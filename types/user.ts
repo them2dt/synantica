@@ -30,6 +30,10 @@ export interface UserProfile {
   major?: string
   graduationYear?: number
   
+  // Age information
+  birthYear?: number
+  dateOfBirth?: string
+  
   // Social links
   linkedinUrl?: string
   githubUrl?: string
@@ -103,6 +107,8 @@ export interface UserProfileFormData {
   university?: string
   major?: string
   graduationYear?: number
+  birthYear?: number
+  dateOfBirth?: string
   linkedinUrl?: string
   githubUrl?: string
   websiteUrl?: string
