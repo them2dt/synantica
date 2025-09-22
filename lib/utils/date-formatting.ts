@@ -51,53 +51,69 @@ export function formatEventDate(
 
     switch (format) {
       case 'short':
-        return date.toLocaleDateString("en-US", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-        })
+        // Use consistent formatting to avoid hydration issues
+        const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const weekday = weekdays[date.getDay()]
+        const month = months[date.getMonth()]
+        const day = date.getDate()
+        return `${weekday}, ${month} ${day}`
 
       case 'medium':
-        return date.toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-        })
+        // Use consistent formatting to avoid hydration issues
+        const weekdaysLong = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const monthsLong = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        const weekdayLong = weekdaysLong[date.getDay()]
+        const monthLong = monthsLong[date.getMonth()]
+        const dayLong = date.getDate()
+        return `${weekdayLong}, ${monthLong} ${dayLong}`
 
       case 'long':
-        return date.toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })
+        // Use consistent formatting to avoid hydration issues
+        const weekdaysLong2 = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const monthsLong2 = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        const weekdayLong2 = weekdaysLong2[date.getDay()]
+        const monthLong2 = monthsLong2[date.getMonth()]
+        const dayLong2 = date.getDate()
+        const yearLong = date.getFullYear()
+        return `${weekdayLong2}, ${monthLong2} ${dayLong2}, ${yearLong}`
 
       case 'full':
-        return date.toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-          hour: "numeric",
-          minute: "2-digit"
-        })
+        // Use consistent formatting to avoid hydration issues
+        const weekdaysFull = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+        const monthsFull = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+        const weekdayFull = weekdaysFull[date.getDay()]
+        const monthFull = monthsFull[date.getMonth()]
+        const dayFull = date.getDate()
+        const yearFull = date.getFullYear()
+        const hour = date.getHours()
+        const minute = date.getMinutes().toString().padStart(2, '0')
+        const hour12 = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour
+        const ampm = hour >= 12 ? 'PM' : 'AM'
+        return `${weekdayFull}, ${monthFull} ${dayFull}, ${yearFull} at ${hour12}:${minute} ${ampm}`
 
       case 'date-only':
-        return date.toLocaleDateString("en-US")
+        // Use consistent formatting to avoid hydration issues
+        const monthOnly = (date.getMonth() + 1).toString().padStart(2, '0')
+        const dayOnly = date.getDate().toString().padStart(2, '0')
+        const yearOnly = date.getFullYear()
+        return `${monthOnly}/${dayOnly}/${yearOnly}`
 
       case 'table':
-        return date.toLocaleDateString("de-DE", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
-        })
+        // Use consistent formatting to avoid hydration issues
+        const dayTable = date.getDate().toString().padStart(2, '0')
+        const monthTable = (date.getMonth() + 1).toString().padStart(2, '0')
+        const yearTable = date.getFullYear()
+        return `${dayTable}.${monthTable}.${yearTable}`
 
       default:
-        return date.toLocaleDateString("en-US", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-        })
+        // Use consistent formatting to avoid hydration issues
+        const weekdaysDefault = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const monthsDefault = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        const weekdayDefault = weekdaysDefault[date.getDay()]
+        const monthDefault = monthsDefault[date.getMonth()]
+        const dayDefault = date.getDate()
+        return `${weekdayDefault}, ${monthDefault} ${dayDefault}`
     }
   } catch (error) {
     console.warn('Error formatting date:', error)

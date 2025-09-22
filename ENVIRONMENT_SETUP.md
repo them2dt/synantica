@@ -8,8 +8,15 @@ Create a `.env.local` file in the root of your project with the following variab
 ```bash
 # Get these from https://supabase.com/dashboard/project/YOUR_PROJECT/settings/api
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# The following variable is required for the Vercel Postgres database, but can
+# be ignored if you're using a different database provider.
+POSTGRES_URL=your_postgres_database_url
+# The following variable is required for local development to start a webhook
+# listener that automatically updates your database when you change your SQL
+# files. You can get this from your Supabase project's API settings.
+SUPABASE_DB_PASSWORD=your_supabase_db_password
 ```
 
 ### Cloudflare Turnstile (Bot Protection)
@@ -19,6 +26,9 @@ NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
 
 # Optional: For server-side validation
 TURNSTILE_SECRET_KEY=your_turnstile_secret_key
+# The following variable is required for the Turnstile captcha. You can get
+# this from your Cloudflare Turnstile settings.
+CLOUDFLARE_TURNSTILE_SECRET_KEY=your_turnstile_secret_key
 ```
 
 ### Optional Variables
@@ -44,8 +54,11 @@ SMTP_PASSWORD=your-smtp-password
 3. Go to **Settings** → **API**
 4. Copy the following values:
    - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon/public key** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - **anon/public key** → `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY`
    - **service_role key** → `SUPABASE_SERVICE_ROLE_KEY`
+   - **Database Password** → `SUPABASE_DB_PASSWORD`
+   - **Connection string** → `POSTGRES_URL`
+     - **Important**: Make sure you get the connection string that starts with `postgresql://` and not `postgres://`. Also, make sure to replace the `[YOUR-PASSWORD]` placeholder with your actual database password.
 
 ## How to Get Cloudflare Turnstile Keys
 
