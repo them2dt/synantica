@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { InlineSpinner } from '@/components/ui/loading'
+import { motion } from 'framer-motion'
 
 /**
  * Props for the events table component
@@ -40,6 +41,27 @@ export function EventsTable({
   hasMore = true
 }: EventsTableProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc')
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.05,
+      },
+    },
+  };
+
+  const rowVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.4,
+        ease: 'easeOut',
+      },
+    },
+  };
 
   const handleSort = (column: string) => {
     const newDirection = sortBy === column && sortDirection === 'asc' ? 'desc' : 'asc'
@@ -116,9 +138,9 @@ export function EventsTable({
             </th>
           </tr>
         </thead>
-        <tbody>
+        <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
           {events.map((event) => (
-            <tr key={event.id} className="border-b hover:bg-muted/50 transition-colors">
+            <motion.tr key={event.id} className="border-b hover:bg-muted/50 transition-colors" variants={rowVariants}>
               {/* Event Name */}
               <td className="p-2 sm:p-3 border-r border-border sticky left-0 bg-background z-10">
                 <div className="font-medium text-foreground text-sm sm:text-base max-w-[200px] sm:max-w-none truncate">
@@ -174,9 +196,9 @@ export function EventsTable({
                   Learn More
                 </Button>
               </td>
-            </tr>
+            </motion.tr>
           ))}
-        </tbody>
+        </motion.tbody>
         </table>
       </div>
 

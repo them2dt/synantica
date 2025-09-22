@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 // import { Badge } from '@/components/ui/badge' // Unused for now
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
+import { motion } from 'framer-motion'
 
 /**
  * Props for the dashboard layout component
@@ -88,7 +89,13 @@ export function DashboardLayout({
 
           {/* Main Content Area */}
           <main>
-            {children}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              {children}
+            </motion.div>
           </main>
         </div>
       </div>
