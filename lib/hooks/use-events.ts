@@ -261,7 +261,7 @@ export function useEventTypes() {
       const data = await getEventTypesClient()
       setEventTypes(data)
     } catch (err) {
-      handleAsyncError(err, 'event-types', setError, setLoading)
+      handleAsyncError(err, 'events', setError, setLoading)
       return // Early return since error is handled
     } finally {
       setLoading(false)
@@ -296,7 +296,7 @@ export function useEventFields() {
       const data = await getEventFieldsClient()
       setFields(data)
     } catch (err) {
-      handleAsyncError(err, 'event-fields', setError, setLoading)
+      handleAsyncError(err, 'events', setError, setLoading)
       return // Early return since error is handled
     } finally {
       setLoading(false)

@@ -1,10 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Users } from 'lucide-react'
+import { Calendar, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Users, Globe } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
+import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
 import { InlineSpinner } from '@/components/ui/loading'
 import { motion } from 'framer-motion'
 
@@ -49,7 +50,7 @@ export function EventsTable({
         staggerChildren: 0.05,
       },
     },
-  };
+  } as const;
 
   const rowVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -58,10 +59,10 @@ export function EventsTable({
       y: 0,
       transition: {
         duration: 0.4,
-        ease: 'easeOut',
+        ease: "easeOut" as const,
       },
     },
-  };
+  } as const;
 
   const handleSort = (column: string) => {
     const newDirection = sortBy === column && sortDirection === 'asc' ? 'desc' : 'asc'
@@ -108,6 +109,12 @@ export function EventsTable({
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
+                <Globe className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Country</span>
+              </div>
+            </th>
+            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
+              <div className="flex items-center justify-start gap-1 sm:gap-2">
                 <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
                 <span className="text-xs sm:text-sm">Type</span>
               </div>
@@ -150,6 +157,16 @@ export function EventsTable({
               <td className="p-2 sm:p-3 border-r border-border">
                 <div className="text-xs sm:text-sm max-w-[120px] sm:max-w-none truncate" title={event.location}>
                   {event.location}
+                </div>
+              </td>
+
+              {/* Country */}
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="flex items-center gap-2 text-xs sm:text-sm">
+                  <span className="text-lg">{getCountryFlag(event.country)}</span>
+                  <span className="truncate" title={getCountryDisplayName(event.country)}>
+                    {getCountryDisplayName(event.country)}
+                  </span>
                 </div>
               </td>
 

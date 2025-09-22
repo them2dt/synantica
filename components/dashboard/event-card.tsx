@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { EventCardSkeleton } from '@/components/ui/loading'
+import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
 import { motion } from 'framer-motion'
 
 /**
@@ -36,13 +37,25 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
             {/* Content Section */}
             <div className="flex-1 p-4 flex flex-col justify-between">
               <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge
-                    className="capitalize text-xs"
-                    variant={event.type === "contests" ? "default" : "secondary"}
-                  >
-                    {event.type}
-                  </Badge>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      className="capitalize text-xs"
+                      variant="default"
+                      style={{ backgroundColor: '#FF327D', color: 'white' }}
+                    >
+                      {event.type}
+                    </Badge>
+                    <Badge
+                      variant="outline"
+                      className="text-xs border-muted-foreground/30 text-muted-foreground"
+                    >
+                      Age: {event.fromAge || 0}-{event.toAge || 99}
+                    </Badge>
+                  </div>
+                  <div className="text-2xl" title={getCountryDisplayName(event.country)}>
+                    {getCountryFlag(event.country)}
+                  </div>
                 </div>
                 <CardTitle className="text-lg text-balance text-primary mb-2">{event.name}</CardTitle>
                 <CardDescription className="text-pretty text-sm mb-3 line-clamp-2">{event.description}</CardDescription>
@@ -96,13 +109,24 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
       <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
         <CardHeader>
           <div className="flex items-center justify-between mb-2">
-            <Badge
-              className="capitalize"
-              variant={event.type === "contests" ? "default" : "secondary"}
-              style={event.type === "contests" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
-            >
-              {event.type}
-            </Badge>
+            <div className="flex items-center gap-2">
+                <Badge
+                  className="capitalize"
+                  variant="default"
+                  style={{ backgroundColor: '#FF327D', color: 'white' }}
+                >
+                  {event.type}
+                </Badge>
+              <Badge
+                variant="outline"
+                className="text-xs border-muted-foreground/30 text-muted-foreground"
+              >
+                Age: {event.fromAge || 0}-{event.toAge || 99}
+              </Badge>
+            </div>
+            <div className="text-2xl" title={getCountryDisplayName(event.country)}>
+              {getCountryFlag(event.country)}
+            </div>
           </div>
           <CardTitle className="text-lg text-balance text-primary">{event.name}</CardTitle>
           <CardDescription className="text-pretty">{event.description}</CardDescription>

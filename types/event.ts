@@ -134,6 +134,10 @@ export interface EventDirectory {
   // Organizer (simplified)
   organizer: string
 
+  // Media and links
+  youtubeLink?: string
+  links: string[]
+
   // Timestamps
   createdAt: string
   updatedAt: string

@@ -13,8 +13,8 @@ import { motion } from 'framer-motion'
  */
 interface EventsGridProps {
   events: Event[] | EventDirectory[]
-  selectedCategory: string
-  categories: CategoryWithIcon[]
+  selectedType: string
+  eventTypes: CategoryWithIcon[]
   onEventClick: (event: Event | EventDirectory) => void
   isListView?: boolean
   sortBy?: string
@@ -30,8 +30,8 @@ interface EventsGridProps {
  */
 export function EventsGrid({
   events,
-  selectedCategory,
-  categories,
+  selectedType,
+  eventTypes,
   onEventClick,
   isListView = false,
   sortBy = 'date-asc',
@@ -41,10 +41,10 @@ export function EventsGrid({
   loadingMore = false,
   hasMore = true
 }: EventsGridProps) {
-  // selectedCategory and categories are used for future filtering enhancements
+  // selectedType and eventTypes are used for future filtering enhancements
   // Suppress unused parameter warnings for now
-  void selectedCategory;
-  void categories;
+  void selectedType;
+  void eventTypes;
 
   const gridVariants = {
     hidden: { opacity: 0 },

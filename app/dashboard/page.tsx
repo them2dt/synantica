@@ -3,11 +3,12 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
+import { Calendar, Users, BookOpen, Trophy } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/types/event'
+import { DateRange } from 'react-day-picker'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 
@@ -27,10 +28,10 @@ const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(
 export default function DashboardPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [selectedDate, setSelectedDate] = useState('all')
+  const [selectedType, setSelectedType] = useState('all')
+  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>(undefined)
   const [selectedAgeRange, setSelectedAgeRange] = useState<[number, number]>([0, 99])
-  const [selectedRegion, setSelectedRegion] = useState('all')
+  const [selectedCountry, setSelectedCountry] = useState('all')
   const [selectedField, setSelectedField] = useState('all')
   const [isListView, setIsListView] = useState(false)
   const [sortBy, setSortBy] = useState('date-asc')
@@ -42,60 +43,18 @@ export default function DashboardPage() {
   const filters: EventFilters = useMemo(() => {
     const baseFilters: EventFilters = {
       search: debouncedSearchTerm || undefined,
-      type: selectedCategory === 'all' ? undefined : selectedCategory,
+      type: selectedType === 'all' ? undefined : selectedType,
       fields: selectedField === 'all' ? undefined : [selectedField],
-      country: selectedRegion === 'all' ? undefined : selectedRegion,
+      country: selectedCountry === 'all' ? undefined : selectedCountry,
       fromAge: selectedAgeRange[0] > 0 ? selectedAgeRange[0] : undefined,
-      toAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined
+      toAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined,
+      fromDate: selectedDateRange?.from ? selectedDateRange.from.toISOString().split('T')[0] : undefined,
+      toDate: selectedDateRange?.to ? selectedDateRange.to.toISOString().split('T')[0] : undefined
     }
 
-    // Add date filtering if not 'all'
-    if (selectedDate !== 'all') {
-      const now = new Date()
-      switch (selectedDate) {
-        case 'today':
-          baseFilters.fromDate = now.toISOString().split('T')[0]
-          baseFilters.toDate = now.toISOString().split('T')[0]
-          break
-        case 'tomorrow':
-          const tomorrow = new Date(now)
-          tomorrow.setDate(now.getDate() + 1)
-          baseFilters.fromDate = tomorrow.toISOString().split('T')[0]
-          baseFilters.toDate = tomorrow.toISOString().split('T')[0]
-          break
-        case 'this-week':
-          const weekStart = new Date(now)
-          weekStart.setDate(now.getDate() - now.getDay())
-          const weekEnd = new Date(weekStart)
-          weekEnd.setDate(weekStart.getDate() + 6)
-          baseFilters.fromDate = weekStart.toISOString().split('T')[0]
-          baseFilters.toDate = weekEnd.toISOString().split('T')[0]
-          break
-        case 'next-week':
-          const nextWeekStart = new Date(now)
-          nextWeekStart.setDate(now.getDate() - now.getDay() + 7)
-          const nextWeekEnd = new Date(nextWeekStart)
-          nextWeekEnd.setDate(nextWeekStart.getDate() + 6)
-          baseFilters.fromDate = nextWeekStart.toISOString().split('T')[0]
-          baseFilters.toDate = nextWeekEnd.toISOString().split('T')[0]
-          break
-        case 'this-month':
-          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
-          const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-          baseFilters.fromDate = monthStart.toISOString().split('T')[0]
-          baseFilters.toDate = monthEnd.toISOString().split('T')[0]
-          break
-        case 'next-month':
-          const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1)
-          const nextMonthEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0)
-          baseFilters.fromDate = nextMonthStart.toISOString().split('T')[0]
-          baseFilters.toDate = nextMonthEnd.toISOString().split('T')[0]
-          break
-      }
-    }
 
     return baseFilters
-  }, [debouncedSearchTerm, selectedCategory, selectedField, selectedRegion, selectedAgeRange, selectedDate])
+  }, [debouncedSearchTerm, selectedType, selectedField, selectedCountry, selectedAgeRange, selectedDateRange])
 
   // Fetch events from database - using paginated optimized directory view for better performance
   const { events: dbEvents, loading, loadingMore, error, hasMore, loadMore, refetch } = useEventsDirectoryPaginated(filters, 20)
@@ -124,11 +83,11 @@ export default function DashboardPage() {
     }
   }, true) // Enable real-time updates
 
-  // Transform database categories to match our interface
-  const eventCategories: CategoryWithIcon[] = useMemo(() => {
+  // Transform database event types to match our interface
+  const eventTypes: CategoryWithIcon[] = useMemo(() => {
     const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
       'olympiads': Trophy,
-      'contests': Trophy,
+      'contests': Calendar,
       'events': Users,
       'workshops': BookOpen
     }
@@ -194,16 +153,16 @@ export default function DashboardPage() {
         <DashboardLayout
           searchTerm={searchTerm}
           onSearchChange={setSearchTerm}
-          selectedCategory={selectedCategory}
-          onCategoryChange={setSelectedCategory}
-          categories={eventCategories}
+          selectedType={selectedType}
+          onTypeChange={setSelectedType}
+          eventTypes={eventTypes}
           totalEvents={0}
-          selectedDate={selectedDate}
-          onDateChange={setSelectedDate}
+          selectedDateRange={selectedDateRange}
+          onDateRangeChange={setSelectedDateRange}
           selectedAgeRange={selectedAgeRange}
           onAgeRangeChange={setSelectedAgeRange}
-          selectedRegion={selectedRegion}
-          onRegionChange={setSelectedRegion}
+          selectedCountry={selectedCountry}
+          onCountryChange={setSelectedCountry}
           selectedField={selectedField}
           onFieldChange={setSelectedField}
           isListView={isListView}
@@ -223,16 +182,16 @@ export default function DashboardPage() {
       <DashboardLayout
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        categories={eventCategories}
+        selectedType={selectedType}
+        onTypeChange={setSelectedType}
+        eventTypes={eventTypes}
         totalEvents={0}
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
+        selectedDateRange={selectedDateRange}
+        onDateRangeChange={setSelectedDateRange}
         selectedAgeRange={selectedAgeRange}
         onAgeRangeChange={setSelectedAgeRange}
-        selectedRegion={selectedRegion}
-        onRegionChange={setSelectedRegion}
+        selectedCountry={selectedCountry}
+        onCountryChange={setSelectedCountry}
         selectedField={selectedField}
         onFieldChange={setSelectedField}
         isListView={isListView}
@@ -262,16 +221,16 @@ export default function DashboardPage() {
       <DashboardLayout
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
-        selectedCategory={selectedCategory}
-        onCategoryChange={setSelectedCategory}
-        categories={eventCategories}
+        selectedType={selectedType}
+        onTypeChange={setSelectedType}
+        eventTypes={eventTypes}
         totalEvents={totalEvents}
-        selectedDate={selectedDate}
-        onDateChange={setSelectedDate}
+        selectedDateRange={selectedDateRange}
+        onDateRangeChange={setSelectedDateRange}
         selectedAgeRange={selectedAgeRange}
         onAgeRangeChange={setSelectedAgeRange}
-        selectedRegion={selectedRegion}
-        onRegionChange={setSelectedRegion}
+        selectedCountry={selectedCountry}
+        onCountryChange={setSelectedCountry}
         selectedField={selectedField}
         onFieldChange={setSelectedField}
         isListView={isListView}
@@ -281,8 +240,8 @@ export default function DashboardPage() {
       >
         <EventsGrid
           events={sortedEvents}
-          selectedCategory={selectedCategory}
-          categories={eventCategories}
+          selectedType={selectedType}
+          eventTypes={eventTypes}
           onEventClick={handleEventClick}
           isListView={isListView}
           sortBy={sortBy}

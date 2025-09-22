@@ -56,32 +56,33 @@ export async function getEvents(filters: EventFilters = {}): Promise<EventWithDe
       query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer.ilike.%${filters.search}%`)
     }
     
-    if (filters.category) {
-      query = query.eq('type', filters.category)
+    if (filters.type) {
+      query = query.eq('type', filters.type)
     }
     
-    if (filters.field) {
-      query = query.contains('fields', [filters.field])
+    if (filters.fields && filters.fields.length > 0) {
+      query = query.contains('fields', filters.fields)
     }
     
-    if (filters.minAge !== undefined) {
-      query = query.gte('from_age', filters.minAge)
+    // Age range filtering: event age range should overlap with filter range
+    if (filters.fromAge !== undefined || filters.toAge !== undefined) {
+      const minAge = filters.fromAge || 0
+      const maxAge = filters.toAge || 99
+      
+      // Event should be included if: event.fromAge <= maxAge AND event.toAge >= minAge
+      query = query.lte('from_age', maxAge).gte('to_age', minAge)
     }
     
-    if (filters.maxAge !== undefined) {
-      query = query.lte('to_age', filters.maxAge)
+    if (filters.country) {
+      query = query.eq('country', filters.country)
     }
     
-    if (filters.region) {
-      query = query.eq('country', filters.region)
+    if (filters.fromDate) {
+      query = query.gte('from_date', filters.fromDate)
     }
     
-    if (filters.dateFrom) {
-      query = query.gte('from_date', filters.dateFrom)
-    }
-    
-    if (filters.dateTo) {
-      query = query.lte('to_date', filters.dateTo)
+    if (filters.toDate) {
+      query = query.lte('to_date', filters.toDate)
     }
 
     // Apply pagination
@@ -277,7 +278,7 @@ export async function getEventTypes() {
       .order('name')
 
     if (error) {
-      throw createDatabaseError(`Failed to fetch event types: ${error.message}`, 'event-types')
+      throw createDatabaseError(`Failed to fetch event types: ${error.message}`, 'events')
     }
 
     return data || []
@@ -300,7 +301,7 @@ export async function getEventFields() {
       .order('usage_count', { ascending: false })
 
     if (error) {
-      throw createDatabaseError(`Failed to fetch event fields: ${error.message}`, 'event-fields')
+      throw createDatabaseError(`Failed to fetch event fields: ${error.message}`, 'events')
     }
 
     return data || []

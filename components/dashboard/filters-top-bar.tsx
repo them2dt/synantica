@@ -5,7 +5,10 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
+import { DateRangePicker } from '@/components/ui/date-range-picker'
 import { MobileFilters } from '@/components/dashboard/mobile-filters'
+import { getAllCountries } from '@/lib/utils/country-flags'
+import { DateRange } from 'react-day-picker'
 
 /**
  * Props for the filters top bar component
@@ -13,15 +16,15 @@ import { MobileFilters } from '@/components/dashboard/mobile-filters'
 interface FiltersTopBarProps {
   searchTerm: string
   onSearchChange: (value: string) => void
-  selectedCategory: string
-  onCategoryChange: (value: string) => void
-  categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
-  selectedDate?: string
-  onDateChange?: (value: string) => void
+  selectedType: string
+  onTypeChange: (value: string) => void
+  eventTypes: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
+  selectedDateRange?: DateRange
+  onDateRangeChange?: (range: DateRange | undefined) => void
   selectedAgeRange?: [number, number]
   onAgeRangeChange?: (value: [number, number]) => void
-  selectedRegion?: string
-  onRegionChange?: (value: string) => void
+  selectedCountry?: string
+  onCountryChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
   isListView?: boolean
@@ -37,15 +40,15 @@ interface FiltersTopBarProps {
 export function FiltersTopBar({
   searchTerm,
   onSearchChange,
-  selectedCategory,
-  onCategoryChange,
-  categories,
-  selectedDate = 'all',
-  onDateChange = () => {},
+  selectedType,
+  onTypeChange,
+  eventTypes,
+  selectedDateRange,
+  onDateRangeChange = () => {},
   selectedAgeRange = [0, 99],
   onAgeRangeChange = () => {},
-  selectedRegion = 'all',
-  onRegionChange = () => {},
+  selectedCountry = 'all',
+  onCountryChange = () => {},
   selectedField = 'all',
   onFieldChange = () => {},
   isListView = false,
@@ -54,27 +57,11 @@ export function FiltersTopBar({
   onSortChange = () => {}
 }: FiltersTopBarProps) {
 
-  const dateOptions = [
-    { value: 'all', label: 'All Dates' },
-    { value: 'today', label: 'Today' },
-    { value: 'tomorrow', label: 'Tomorrow' },
-    { value: 'this-week', label: 'This Week' },
-    { value: 'next-week', label: 'Next Week' },
-    { value: 'this-month', label: 'This Month' },
-    { value: 'next-month', label: 'Next Month' }
-  ]
 
 
-  const regionOptions = [
-    { value: 'all', label: 'All Regions' },
-    { value: 'zurich', label: 'Zurich' },
-    { value: 'bern', label: 'Bern' },
-    { value: 'basel', label: 'Basel' },
-    { value: 'lausanne', label: 'Lausanne' },
-    { value: 'geneva', label: 'Geneva' },
-    { value: 'lucerne', label: 'Lucerne' },
-    { value: 'st-gallen', label: 'St. Gallen' },
-    { value: 'international', label: 'International' }
+  const countryOptions = [
+    { value: 'all', label: 'All Countries', flag: undefined },
+    ...getAllCountries()
   ]
 
   const fieldOptions = [
@@ -133,7 +120,7 @@ export function FiltersTopBar({
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
             {/* Sorter - First */}
             <Select value={sortBy} onValueChange={onSortChange}>
-              <SelectTrigger className="w-48 [&>svg]:hidden">
+              <SelectTrigger className="w-48 h-10 [&>svg]:hidden">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
               <SelectContent>
@@ -149,19 +136,19 @@ export function FiltersTopBar({
             <div className="flex flex-col lg:flex-row gap-3">
               {/* First Row of Filters */}
               <div className="flex flex-col sm:flex-row gap-3">
-                {/* Category Filter */}
-                <Select value={selectedCategory} onValueChange={onCategoryChange}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue placeholder="Category" />
+                {/* Event Type Filter */}
+                <Select value={selectedType} onValueChange={onTypeChange}>
+                  <SelectTrigger className="w-40 h-10">
+                    <SelectValue placeholder="Type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => {
-                      const Icon = category.icon
+                    {eventTypes.map((eventType) => {
+                      const Icon = eventType.icon
                       return (
-                        <SelectItem key={category.value} value={category.value}>
+                        <SelectItem key={eventType.value} value={eventType.value}>
                           <div className="flex items-center gap-2">
                             <Icon className="w-4 h-4" />
-                            {category.label}
+                            {eventType.label}
                           </div>
                         </SelectItem>
                       )
@@ -169,19 +156,13 @@ export function FiltersTopBar({
                   </SelectContent>
                 </Select>
 
-                {/* Date Filter */}
-                <Select value={selectedDate} onValueChange={onDateChange}>
-                  <SelectTrigger className="w-36">
-                    <SelectValue placeholder="Date" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {dateOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                {/* Date Range Filter */}
+                <DateRangePicker
+                  value={selectedDateRange}
+                  onChange={onDateRangeChange}
+                  placeholder="Select date range"
+                  className="w-48 h-10 max-w-48"
+                />
 
               </div>
 
@@ -194,18 +175,21 @@ export function FiltersTopBar({
                   min={0}
                   max={99}
                   placeholder="Age"
-                  className="w-32"
+                  className="w-32 h-10"
                 />
 
-                {/* Region Filter */}
-                <Select value={selectedRegion} onValueChange={onRegionChange}>
-                  <SelectTrigger className="w-36">
-                    <SelectValue placeholder="Region" />
+                {/* Country Filter */}
+                <Select value={selectedCountry} onValueChange={onCountryChange}>
+                  <SelectTrigger className="w-40 h-10">
+                    <SelectValue placeholder="Country" />
                   </SelectTrigger>
-                  <SelectContent>
-                    {regionOptions.map((option) => (
+                  <SelectContent className="max-h-60">
+                    {countryOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        <div className="flex items-center gap-2">
+                          {option.flag && <span className="text-lg">{option.flag}</span>}
+                          <span>{option.label}</span>
+                        </div>
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -213,7 +197,7 @@ export function FiltersTopBar({
 
                 {/* Field Filter */}
                 <Select value={selectedField} onValueChange={onFieldChange}>
-                  <SelectTrigger className="w-40">
+                  <SelectTrigger className="w-40 h-10">
                     <SelectValue placeholder="Field" />
                   </SelectTrigger>
                   <SelectContent>
@@ -254,15 +238,15 @@ export function FiltersTopBar({
       <MobileFilters
         searchTerm={searchTerm}
         onSearchChange={onSearchChange}
-        selectedCategory={selectedCategory}
-        onCategoryChange={onCategoryChange}
-        categories={categories}
-        selectedDate={selectedDate}
-        onDateChange={onDateChange}
+        selectedType={selectedType}
+        onTypeChange={onTypeChange}
+        eventTypes={eventTypes}
+        selectedDateRange={selectedDateRange}
+        onDateRangeChange={onDateRangeChange}
         selectedAgeRange={selectedAgeRange}
         onAgeRangeChange={onAgeRangeChange}
-        selectedRegion={selectedRegion}
-        onRegionChange={onRegionChange}
+        selectedCountry={selectedCountry}
+        onCountryChange={onCountryChange}
         selectedField={selectedField}
         onFieldChange={onFieldChange}
         isListView={isListView}

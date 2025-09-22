@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
+import { DateRangePicker } from '@/components/ui/date-range-picker'
+import { getAllCountries } from '@/lib/utils/country-flags'
+import { DateRange } from 'react-day-picker'
 
 /**
  * Props for the mobile filters component
@@ -13,15 +16,15 @@ import { CompactAgeFilterDropdown } from '@/components/ui/age-filter-dropdown'
 interface MobileFiltersProps {
   searchTerm: string
   onSearchChange: (value: string) => void
-  selectedCategory: string
-  onCategoryChange: (value: string) => void
-  categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
-  selectedDate?: string
-  onDateChange?: (value: string) => void
+  selectedType: string
+  onTypeChange: (value: string) => void
+  eventTypes: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
+  selectedDateRange?: DateRange
+  onDateRangeChange?: (range: DateRange | undefined) => void
   selectedAgeRange?: [number, number]
   onAgeRangeChange?: (value: [number, number]) => void
-  selectedRegion?: string
-  onRegionChange?: (value: string) => void
+  selectedCountry?: string
+  onCountryChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
   isListView?: boolean
@@ -37,15 +40,15 @@ interface MobileFiltersProps {
 export function MobileFilters({
   searchTerm,
   onSearchChange,
-  selectedCategory,
-  onCategoryChange,
-  categories,
-  selectedDate = 'all',
-  onDateChange = () => {},
+  selectedType,
+  onTypeChange,
+  eventTypes,
+  selectedDateRange,
+  onDateRangeChange = () => {},
   selectedAgeRange = [0, 99],
   onAgeRangeChange = () => {},
-  selectedRegion = 'all',
-  onRegionChange = () => {},
+  selectedCountry = 'all',
+  onCountryChange = () => {},
   selectedField = 'all',
   onFieldChange = () => {},
   isListView = false,
@@ -55,26 +58,10 @@ export function MobileFilters({
 }: MobileFiltersProps) {
   const [isFiltersOpen, setIsFiltersOpen] = useState(false)
 
-  const dateOptions = [
-    { value: 'all', label: 'All Dates' },
-    { value: 'today', label: 'Today' },
-    { value: 'tomorrow', label: 'Tomorrow' },
-    { value: 'this-week', label: 'This Week' },
-    { value: 'next-week', label: 'Next Week' },
-    { value: 'this-month', label: 'This Month' },
-    { value: 'next-month', label: 'Next Month' }
-  ]
 
-  const regionOptions = [
-    { value: 'all', label: 'All Regions' },
-    { value: 'zurich', label: 'Zurich' },
-    { value: 'bern', label: 'Bern' },
-    { value: 'basel', label: 'Basel' },
-    { value: 'lausanne', label: 'Lausanne' },
-    { value: 'geneva', label: 'Geneva' },
-    { value: 'lucerne', label: 'Lucerne' },
-    { value: 'st-gallen', label: 'St. Gallen' },
-    { value: 'international', label: 'International' }
+  const countryOptions = [
+    { value: 'all', label: 'All Countries', flag: undefined },
+    ...getAllCountries()
   ]
 
   const fieldOptions = [
@@ -167,19 +154,19 @@ export function MobileFilters({
           <div className="space-y-3 mt-3">
           {/* Category Filter */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Category</label>
-            <Select value={selectedCategory} onValueChange={onCategoryChange}>
+            <label className="text-sm font-medium text-muted-foreground">Event Type</label>
+            <Select value={selectedType} onValueChange={onTypeChange}>
               <SelectTrigger className="w-full h-12">
-                <SelectValue placeholder="Select category" />
+                <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
-                {categories.map((category) => {
-                  const Icon = category.icon
+                {eventTypes.map((eventType) => {
+                  const Icon = eventType.icon
                   return (
-                    <SelectItem key={category.value} value={category.value}>
+                    <SelectItem key={eventType.value} value={eventType.value}>
                       <div className="flex items-center gap-2">
                         <Icon className="w-4 h-4" />
-                        {category.label}
+                        {eventType.label}
                       </div>
                     </SelectItem>
                   )
@@ -188,21 +175,15 @@ export function MobileFilters({
             </Select>
           </div>
 
-          {/* Date Filter */}
+          {/* Date Range Filter */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Date</label>
-            <Select value={selectedDate} onValueChange={onDateChange}>
-              <SelectTrigger className="w-full h-12">
-                <SelectValue placeholder="Select date" />
-              </SelectTrigger>
-              <SelectContent>
-                {dateOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <label className="text-sm font-medium text-muted-foreground">Date Range</label>
+            <DateRangePicker
+              value={selectedDateRange}
+              onChange={onDateRangeChange}
+              placeholder="Select date range"
+              className="w-full h-12"
+            />
           </div>
 
           {/* Age Range Filter */}
@@ -220,15 +201,18 @@ export function MobileFilters({
 
           {/* Region Filter */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-muted-foreground">Region</label>
-            <Select value={selectedRegion} onValueChange={onRegionChange}>
+            <label className="text-sm font-medium text-muted-foreground">Country</label>
+            <Select value={selectedCountry} onValueChange={onCountryChange}>
               <SelectTrigger className="w-full h-12">
-                <SelectValue placeholder="Select region" />
+                <SelectValue placeholder="Select country" />
               </SelectTrigger>
-              <SelectContent>
-                {regionOptions.map((option) => (
+              <SelectContent className="max-h-60">
+                {countryOptions.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
-                    {option.label}
+                    <div className="flex items-center gap-2">
+                      {option.flag && <span className="text-lg">{option.flag}</span>}
+                      <span>{option.label}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>

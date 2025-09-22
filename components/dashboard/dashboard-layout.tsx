@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 import { motion } from 'framer-motion'
+import { DateRange } from 'react-day-picker'
 
 /**
  * Props for the dashboard layout component
@@ -14,16 +15,16 @@ interface DashboardLayoutProps {
   children: ReactNode
   searchTerm: string
   onSearchChange: (value: string) => void
-  selectedCategory: string
-  onCategoryChange: (value: string) => void
-  categories: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
+  selectedType: string
+  onTypeChange: (value: string) => void
+  eventTypes: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   totalEvents: number
-  selectedDate?: string
-  onDateChange?: (value: string) => void
+  selectedDateRange?: DateRange
+  onDateRangeChange?: (range: DateRange | undefined) => void
   selectedAgeRange?: [number, number]
   onAgeRangeChange?: (value: [number, number]) => void
-  selectedRegion?: string
-  onRegionChange?: (value: string) => void
+  selectedCountry?: string
+  onCountryChange?: (value: string) => void
   selectedField?: string
   onFieldChange?: (value: string) => void
   isListView?: boolean
@@ -40,16 +41,16 @@ export function DashboardLayout({
   children,
   searchTerm,
   onSearchChange,
-  selectedCategory,
-  onCategoryChange,
-  categories,
+  selectedType,
+  onTypeChange,
+  eventTypes,
   totalEvents, // For future use in header stats
-  selectedDate,
-  onDateChange,
+  selectedDateRange,
+  onDateRangeChange,
   selectedAgeRange,
   onAgeRangeChange,
-  selectedRegion,
-  onRegionChange,
+  selectedCountry,
+  onCountryChange,
   selectedField,
   onFieldChange,
   isListView,
@@ -69,15 +70,15 @@ export function DashboardLayout({
             <FiltersTopBar
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}
-              selectedCategory={selectedCategory}
-              onCategoryChange={onCategoryChange}
-              categories={categories}
-              selectedDate={selectedDate}
-              onDateChange={onDateChange}
+              selectedType={selectedType}
+              onTypeChange={onTypeChange}
+              eventTypes={eventTypes}
+        selectedDateRange={selectedDateRange}
+        onDateRangeChange={onDateRangeChange}
               selectedAgeRange={selectedAgeRange}
               onAgeRangeChange={onAgeRangeChange}
-              selectedRegion={selectedRegion}
-              onRegionChange={onRegionChange}
+              selectedCountry={selectedCountry}
+              onCountryChange={onCountryChange}
               selectedField={selectedField}
               onFieldChange={onFieldChange}
               isListView={isListView}

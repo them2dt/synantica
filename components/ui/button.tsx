@@ -56,11 +56,30 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       )
     }
 
+    const { 
+      onDrag, 
+      onDragStart, 
+      onDragEnd, 
+      onAnimationStart, 
+      onAnimationEnd, 
+      onAnimationIteration,
+      onTransitionEnd,
+      ...motionProps 
+    } = props;
+    // Suppress unused variable warnings for destructured event handlers
+    void onDrag;
+    void onDragStart;
+    void onDragEnd;
+    void onAnimationStart;
+    void onAnimationEnd;
+    void onAnimationIteration;
+    void onTransitionEnd;
+    
     return (
       <motion.button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...props}
+        {...motionProps}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
       />
