@@ -3,7 +3,30 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { isAdminUser } from '@/lib/supabase/admin-routes'
 
-// GET /api/admin/events - Get all events
+/**
+ * GET /api/admin/events - Retrieve all events for admin management
+ * 
+ * This endpoint fetches all events from the database with elevated permissions,
+ * bypassing Row Level Security (RLS) policies. Only admin users can access this endpoint.
+ * 
+ * @returns {Promise<NextResponse>} JSON response containing all events
+ * 
+ * @throws {401} Unauthorized - When user is not authenticated
+ * @throws {403} Forbidden - When user is not an admin
+ * @throws {500} Internal Server Error - When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const response = await fetch('/api/admin/events')
+ * const { events } = await response.json()
+ * ```
+ * 
+ * @security
+ * - Requires authentication
+ * - Requires admin privileges
+ * - Uses service role key for database access
+ * - Bypasses RLS policies
+ */
 export async function GET() {
   try {
     const supabase = await createClient()
@@ -59,7 +82,41 @@ export async function GET() {
   }
 }
 
-// POST /api/admin/events - Create new event
+/**
+ * POST /api/admin/events - Create a new event
+ * 
+ * This endpoint creates a new event in the database with elevated permissions.
+ * Only admin users can create events through this endpoint.
+ * 
+ * @param {NextRequest} request - The incoming request containing event data
+ * @returns {Promise<NextResponse>} JSON response containing the created event
+ * 
+ * @throws {400} Bad Request - When required fields are missing
+ * @throws {401} Unauthorized - When user is not authenticated
+ * @throws {403} Forbidden - When user is not an admin
+ * @throws {500} Internal Server Error - When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const response = await fetch('/api/admin/events', {
+ *   method: 'POST',
+ *   headers: { 'Content-Type': 'application/json' },
+ *   body: JSON.stringify({
+ *     name: 'New Event',
+ *     description: 'Event description',
+ *     fromDate: '2024-01-01',
+ *     toDate: '2024-01-02',
+ *     // ... other fields
+ *   })
+ * })
+ * ```
+ * 
+ * @security
+ * - Requires authentication
+ * - Requires admin privileges
+ * - Uses service role key for database access
+ * - Bypasses RLS policies
+ */
 export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()

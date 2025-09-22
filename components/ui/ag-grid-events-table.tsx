@@ -17,21 +17,60 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Plus, Trash2 } from 'lucide-react'
 
+/**
+ * Props for the AGGridEventsTable component
+ * 
+ * @interface AGGridEventsTableProps
+ */
 interface AGGridEventsTableProps {
+  /** Array of events to display in the table */
   events: Event[]
+  /** Callback function to add a new event */
   onAddEvent: (eventData: Partial<Event>) => Promise<Event | null>
+  /** Callback function to update an existing event */
   onUpdateEvent: (id: string, eventData: Partial<Event>) => Promise<Event | null>
+  /** Callback function to delete an event */
   onDeleteEvent: (id: string) => Promise<boolean>
 }
 
+/**
+ * AGGridEventsTable - Admin events management table component
+ * 
+ * This component provides a full-featured data grid for managing events in the admin panel.
+ * It includes inline editing, sorting, filtering, bulk operations, and CRUD functionality.
+ * 
+ * @param {AGGridEventsTableProps} props - Component props
+ * @returns {JSX.Element} The rendered events table
+ * 
+ * @features
+ * - Inline editing of event properties
+ * - Sorting and filtering capabilities
+ * - Bulk selection and deletion
+ * - Quick search/filter
+ * - Add new events
+ * - Real-time updates
+ * 
+ * @example
+ * ```tsx
+ * <AGGridEventsTable
+ *   events={events}
+ *   onAddEvent={handleAddEvent}
+ *   onUpdateEvent={handleUpdateEvent}
+ *   onDeleteEvent={handleDeleteEvent}
+ * />
+ * ```
+ */
 export function AGGridEventsTable({
   events,
   onAddEvent,
   onUpdateEvent,
   onDeleteEvent,
 }: AGGridEventsTableProps) {
+  /** AG-Grid API instance for programmatic control */
   const [gridApi, setGridApi] = useState<GridApi<Event> | null>(null)
+  /** Array of selected event IDs for bulk operations */
   const [selectedEventIds, setSelectedEventIds] = useState<string[]>([])
+  /** Quick filter text for searching events */
   const [quickFilterText, setQuickFilterText] = useState('')
 
   const columnDefs = useMemo<ColDef<Event>[]>(

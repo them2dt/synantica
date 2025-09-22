@@ -3,7 +3,34 @@ import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { isAdminUser } from '@/lib/supabase/admin-routes'
 
-// GET /api/admin/events/[id] - Get single event
+/**
+ * GET /api/admin/events/[id] - Retrieve a single event by ID
+ * 
+ * This endpoint fetches a specific event from the database with elevated permissions.
+ * Only admin users can access this endpoint.
+ * 
+ * @param {NextRequest} request - The incoming request
+ * @param {Object} params - Route parameters
+ * @param {Promise<{id: string}>} params.params - Promise containing the event ID
+ * @returns {Promise<NextResponse>} JSON response containing the event
+ * 
+ * @throws {401} Unauthorized - When user is not authenticated
+ * @throws {403} Forbidden - When user is not an admin
+ * @throws {404} Not Found - When event with given ID doesn't exist
+ * @throws {500} Internal Server Error - When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const response = await fetch('/api/admin/events/event-id-123')
+ * const { event } = await response.json()
+ * ```
+ * 
+ * @security
+ * - Requires authentication
+ * - Requires admin privileges
+ * - Uses service role key for database access
+ * - Bypasses RLS policies
+ */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -64,7 +91,42 @@ export async function GET(
   }
 }
 
-// PUT /api/admin/events/[id] - Update event
+/**
+ * PUT /api/admin/events/[id] - Update an existing event
+ * 
+ * This endpoint updates a specific event in the database with elevated permissions.
+ * Only admin users can update events through this endpoint.
+ * 
+ * @param {NextRequest} request - The incoming request containing updated event data
+ * @param {Object} params - Route parameters
+ * @param {Promise<{id: string}>} params.params - Promise containing the event ID
+ * @returns {Promise<NextResponse>} JSON response containing the updated event
+ * 
+ * @throws {400} Bad Request - When required fields are missing
+ * @throws {401} Unauthorized - When user is not authenticated
+ * @throws {403} Forbidden - When user is not an admin
+ * @throws {404} Not Found - When event with given ID doesn't exist
+ * @throws {500} Internal Server Error - When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const response = await fetch('/api/admin/events/event-id-123', {
+ *   method: 'PUT',
+ *   headers: { 'Content-Type': 'application/json' },
+ *   body: JSON.stringify({
+ *     name: 'Updated Event Name',
+ *     description: 'Updated description',
+ *     // ... other fields
+ *   })
+ * })
+ * ```
+ * 
+ * @security
+ * - Requires authentication
+ * - Requires admin privileges
+ * - Uses service role key for database access
+ * - Bypasses RLS policies
+ */
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -165,7 +227,37 @@ export async function PUT(
   }
 }
 
-// DELETE /api/admin/events/[id] - Delete event
+/**
+ * DELETE /api/admin/events/[id] - Delete an event
+ * 
+ * This endpoint permanently deletes a specific event from the database with elevated permissions.
+ * Only admin users can delete events through this endpoint.
+ * 
+ * @param {NextRequest} request - The incoming request
+ * @param {Object} params - Route parameters
+ * @param {Promise<{id: string}>} params.params - Promise containing the event ID
+ * @returns {Promise<NextResponse>} JSON response confirming deletion
+ * 
+ * @throws {401} Unauthorized - When user is not authenticated
+ * @throws {403} Forbidden - When user is not an admin
+ * @throws {404} Not Found - When event with given ID doesn't exist
+ * @throws {500} Internal Server Error - When database operation fails
+ * 
+ * @example
+ * ```typescript
+ * const response = await fetch('/api/admin/events/event-id-123', {
+ *   method: 'DELETE'
+ * })
+ * const { message } = await response.json()
+ * ```
+ * 
+ * @security
+ * - Requires authentication
+ * - Requires admin privileges
+ * - Uses service role key for database access
+ * - Bypasses RLS policies
+ * - Permanently deletes data
+ */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }

@@ -2,8 +2,51 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { hasEnvVars } from "../utils";
 import { isPublicRoute } from "./public-routes";
-import { isAdminRoute, isAdminUser } from "./admin-routes";
+import { isAdminRoute } from "./admin-routes";
 
+// Edge Runtime compatible admin check
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isAdminUserEdge(user: any): boolean {
+  // Check user metadata for admin role
+  if (user?.user_metadata?.role === 'admin') {
+    return true;
+  }
+  
+  // Check user email against admin list (recommended)
+  const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+  if (adminEmails.includes(user?.email as string)) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Updates the user session and handles route protection
+ * 
+ * This middleware function runs on every request and:
+ * 1. Creates a Supabase client for session management
+ * 2. Checks if the user is authenticated
+ * 3. Redirects unauthenticated users to login for protected routes
+ * 4. Redirects non-admin users away from admin routes
+ * 5. Maintains session state across requests
+ * 
+ * @param {NextRequest} request - The incoming request
+ * @returns {Promise<NextResponse>} The response with updated session
+ * 
+ * @security
+ * - Protects all non-public routes
+ * - Enforces admin access control
+ * - Maintains secure session handling
+ * 
+ * @example
+ * ```typescript
+ * // This is automatically called by Next.js middleware
+ * export async function middleware(request: NextRequest) {
+ *   return await updateSession(request);
+ * }
+ * ```
+ */
 export async function updateSession(request: NextRequest) {
   const supabaseResponse = NextResponse.next({
     request,
@@ -53,7 +96,7 @@ export async function updateSession(request: NextRequest) {
 
   // Additional admin route protection
   if (user && isAdminRoute(request.nextUrl.pathname)) {
-    if (!isAdminUser(user)) {
+    if (!isAdminUserEdge(user)) {
       // User is authenticated but not an admin; redirect to dashboard
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";

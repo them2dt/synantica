@@ -5,11 +5,47 @@ import { AGGridEventsTable } from '@/components/ui/ag-grid-events-table'
 import { Event } from '@/types/event'
 import { AlertCircle } from 'lucide-react'
 
+/**
+ * EventsManagementPage - Main admin page for event management
+ * 
+ * This page provides the primary interface for administrators to manage events.
+ * It includes the AG-Grid table for CRUD operations and handles loading/error states.
+ * 
+ * @returns {JSX.Element} The rendered events management page
+ * 
+ * @features
+ * - Event listing with AG-Grid table
+ * - Add, edit, delete events
+ * - Loading and error states
+ * - Real-time data updates
+ * 
+ * @security
+ * - Protected by admin middleware
+ * - Requires admin authentication
+ * - Uses admin API endpoints
+ */
 export default function EventsManagementPage() {
+  /** Array of events to display in the admin table */
   const [events, setEvents] = useState<Event[]>([])
+  /** Loading state for data fetching operations */
   const [loading, setLoading] = useState(true)
+  /** Error message for failed operations */
   const [error, setError] = useState<string | null>(null)
 
+  /**
+   * Loads all events from the admin API
+   * 
+   * @async
+   * @function loadEvents
+   * @returns {Promise<void>}
+   * 
+   * @throws {Error} When API request fails
+   * 
+   * @example
+   * ```typescript
+   * await loadEvents()
+   * ```
+   */
   const loadEvents = useCallback(async () => {
     try {
       setLoading(true)
@@ -29,6 +65,26 @@ export default function EventsManagementPage() {
     loadEvents()
   }, [loadEvents])
 
+  /**
+   * Handles adding a new event via the admin API
+   * 
+   * @async
+   * @function handleAddEvent
+   * @param {Partial<Event>} eventData - The event data to create
+   * @returns {Promise<Event | null>} The created event or null if failed
+   * 
+   * @throws {Error} When API request fails
+   * 
+   * @example
+   * ```typescript
+   * const newEvent = await handleAddEvent({
+   *   name: 'New Event',
+   *   description: 'Event description',
+   *   fromDate: '2024-01-01',
+   *   toDate: '2024-01-02'
+   * })
+   * ```
+   */
   const handleAddEvent = useCallback(async (eventData: Partial<Event>) => {
     try {
       const response = await fetch('/api/admin/events', {
@@ -47,6 +103,25 @@ export default function EventsManagementPage() {
     }
   }, [loadEvents])
 
+  /**
+   * Handles updating an existing event via the admin API
+   * 
+   * @async
+   * @function handleUpdateEvent
+   * @param {string} id - The ID of the event to update
+   * @param {Partial<Event>} eventData - The updated event data
+   * @returns {Promise<Event | null>} The updated event or null if failed
+   * 
+   * @throws {Error} When API request fails
+   * 
+   * @example
+   * ```typescript
+   * const updatedEvent = await handleUpdateEvent('event-id-123', {
+   *   name: 'Updated Event Name',
+   *   description: 'Updated description'
+   * })
+   * ```
+   */
   const handleUpdateEvent = useCallback(async (id: string, eventData: Partial<Event>) => {
     try {
       const response = await fetch(`/api/admin/events/${id}`, {
@@ -66,6 +141,24 @@ export default function EventsManagementPage() {
     }
   }, [loadEvents])
 
+  /**
+   * Handles deleting an event via the admin API
+   * 
+   * @async
+   * @function handleDeleteEvent
+   * @param {string} id - The ID of the event to delete
+   * @returns {Promise<boolean>} True if deletion succeeded, false otherwise
+   * 
+   * @throws {Error} When API request fails
+   * 
+   * @example
+   * ```typescript
+   * const success = await handleDeleteEvent('event-id-123')
+   * if (success) {
+   *   console.log('Event deleted successfully')
+   * }
+   * ```
+   */
   const handleDeleteEvent = useCallback(async (id: string) => {
     try {
       const response = await fetch(`/api/admin/events/${id}`, {
