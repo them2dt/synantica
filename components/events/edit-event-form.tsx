@@ -67,17 +67,12 @@ export function EditEventForm({ eventId, initialEvent }: EditEventFormProps) {
     status: 'active' as 'active' | 'cancelled' | 'completed'
   })
 
-  // Event categories
-  const categories = [
-    { value: 'hackathon', label: 'Hackathon' },
-    { value: 'workshop', label: 'Workshop' },
-    { value: 'social', label: 'Social Event' },
-    { value: 'career', label: 'Career Fair' },
-    { value: 'academic', label: 'Academic' },
-    { value: 'wellness', label: 'Wellness' },
-    { value: 'sports', label: 'Sports' },
-    { value: 'cultural', label: 'Cultural' },
-    { value: 'other', label: 'Other' }
+  // Event types
+  const eventTypes = [
+    { value: 'olympiads', label: 'Olympiads' },
+    { value: 'contests', label: 'Contests' },
+    { value: 'events', label: 'Events' },
+    { value: 'workshops', label: 'Workshops' }
   ]
 
   // Load initial data
@@ -235,9 +230,9 @@ export function EditEventForm({ eventId, initialEvent }: EditEventFormProps) {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.value} value={category.value}>
-                        {category.label}
+                    {eventTypes.map((eventType) => (
+                      <SelectItem key={eventType.value} value={eventType.value}>
+                        {eventType.label}
                       </SelectItem>
                     ))}
                   </SelectContent>

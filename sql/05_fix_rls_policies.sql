@@ -1,15 +1,16 @@
 -- =====================================================
--- Fix RLS Policies to Prevent Infinite Recursion
+-- Fix RLS Policies for Simplified Schema
 -- =====================================================
--- This script fixes the RLS policies that are causing
--- infinite recursion issues, particularly with user_role_assignments
+-- This script fixes the RLS policies for the new simplified
+-- schema to prevent infinite recursion issues and allow sign-up
 -- =====================================================
 
 -- Drop problematic policies
 DROP POLICY IF EXISTS "Admins can manage roles" ON user_role_assignments;
 DROP POLICY IF EXISTS "Admins can manage events" ON events;
-DROP POLICY IF EXISTS "Admins can manage categories" ON event_categories;
-DROP POLICY IF EXISTS "Admins can manage tags" ON tags;
+DROP POLICY IF EXISTS "Admins can manage event types" ON event_types;
+DROP POLICY IF EXISTS "Admins can manage event fields" ON event_fields;
+DROP POLICY IF EXISTS "Admins can manage event field assignments" ON event_field_assignments;
 DROP POLICY IF EXISTS "Admins can manage registrations" ON event_registrations;
 DROP POLICY IF EXISTS "Admins can manage reviews" ON event_reviews;
 DROP POLICY IF EXISTS "Admins can manage interests" ON user_interests;
@@ -38,16 +39,16 @@ CREATE POLICY "Allow update on events" ON events
 CREATE POLICY "Allow delete on events" ON events
     FOR DELETE USING (true);
 
--- For event_categories - allow all operations
-CREATE POLICY "Allow all operations on event_categories" ON event_categories
+-- For event_types - allow all operations
+CREATE POLICY "Allow all operations on event_types" ON event_types
     FOR ALL USING (true);
 
--- For tags - allow all operations
-CREATE POLICY "Allow all operations on tags" ON tags
+-- For event_fields - allow all operations
+CREATE POLICY "Allow all operations on event_fields" ON event_fields
     FOR ALL USING (true);
 
--- For event_tags - allow all operations
-CREATE POLICY "Allow all operations on event_tags" ON event_tags
+-- For event_field_assignments - allow all operations
+CREATE POLICY "Allow all operations on event_field_assignments" ON event_field_assignments
     FOR ALL USING (true);
 
 -- For event_registrations - allow all operations

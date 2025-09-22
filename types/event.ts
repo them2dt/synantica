@@ -8,99 +8,48 @@
 export enum EventStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
-  CANCELLED = 'cancelled',
-  COMPLETED = 'completed'
-}
-
-/**
- * Event registration status
- */
-export enum RegistrationStatus {
-  OPEN = 'open',
-  CLOSED = 'closed',
-  FULL = 'full',
   CANCELLED = 'cancelled'
 }
 
 /**
- * Main Event interface
- * Based on the current usage and the event detail page requirements
+ * Main Event interface - Clean and simplified
  */
 export interface Event {
   // Core identification
   id: string
-  title: string
+  name: string
   description: string
-  shortDescription?: string
   
-  // Categorization
-  category: string
-  tags: string[]
-  field: string
-  minAge?: number
-  maxAge?: number
-  region: string
-  
-  // Date and time
-  date: string
-  time: string
-  endDate?: string
-  endTime?: string
-  
-  // Multi-day event support
-  isMultiDay?: boolean
-  duration?: number // Duration in days
-  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
-  recurringEndDate?: string
-  eventSchedule?: Array<{
-    date: string
-    startTime: string
-    endTime: string
-    title?: string
-    description?: string
-    location?: string
-  }>
+  // Date range
+  fromDate: string
+  toDate: string
   
   // Location
   location: string
-  venueDetails?: string
-  isVirtual?: boolean
-  virtualLink?: string
+  country: string
   
-  
-  // Pricing
-  isFree: boolean
-  price?: number
-  currency?: string
-  
-  
-  // Status and metadata
-  status: EventStatus
-  isFeatured?: boolean
-  isVerified?: boolean
-  
-  // Additional information
+  // Organizer
   organizer: string
-  organizerId?: string
-  requirements?: string[]
-  prizes?: string[]
-  externalLinks?: string[]
   
-  // Resources and links
-  supportPdfs?: Array<{ name: string; url: string }>
-  organizationHomepage?: string
-  youtubeVideos?: string[]
-  alumniContactEmail?: string
+  // Age range
+  fromAge?: number
+  toAge?: number
   
-  // Analytics
-  viewCount?: number
+  // Media and links
+  youtubeLink?: string
+  links: string[]
+  
+  // Categorization
+  type: string
+  fields: string[]
+  
+  // Status
+  status: EventStatus
   
   // Timestamps
   createdAt: string
   updatedAt: string
-  publishedAt?: string
 }
-
 
 /**
  * Event review interface
@@ -119,33 +68,32 @@ export interface EventReview {
 }
 
 /**
- * Event filter options
+ * Event filter options - Updated for new structure
  */
 export interface EventFilters {
   search?: string
-  category?: string
-  field?: string
-  minAge?: number
-  maxAge?: number
-  region?: string
-  dateFrom?: string
-  dateTo?: string
-  isFree?: boolean
+  type?: string
+  fields?: string[]
+  fromAge?: number
+  toAge?: number
+  country?: string
+  fromDate?: string
+  toDate?: string
   status?: EventStatus
   limit?: number
   offset?: number
 }
 
 /**
- * Event sort options
+ * Event sort options - Updated for new structure
  */
 export type EventSortBy = 
-  | 'date-asc' 
-  | 'date-desc' 
-  | 'title-asc' 
-  | 'title-desc' 
-  | 'age-asc'
-  | 'age-desc'
+  | 'fromDate-asc' 
+  | 'fromDate-desc' 
+  | 'name-asc' 
+  | 'name-desc' 
+  | 'fromAge-asc'
+  | 'fromAge-desc'
   | 'created-asc'
   | 'created-desc'
 
@@ -161,42 +109,30 @@ export type EventViewMode = 'grid' | 'list'
 export interface EventDirectory {
   // Core identification
   id: string
-  title: string
+  name: string
   description?: string
-  shortDescription?: string
 
   // Categorization (simplified)
-  category: string
-  field: string
-  tags: string[]
+  type: string
+  fields: string[]
 
-  // Age and region filters
-  minAge?: number
-  maxAge?: number
-  region: string
+  // Age and location filters
+  fromAge?: number
+  toAge?: number
+  country: string
 
-  // Date and time
-  date: string
-  time: string
-  endDate?: string
-  endTime?: string
+  // Date range
+  fromDate: string
+  toDate: string
 
   // Location (simplified)
   location: string
-  isVirtual?: boolean
-
-  // Pricing
-  isFree: boolean
 
   // Status
   status: EventStatus
-  isFeatured?: boolean
 
   // Organizer (simplified)
   organizer: string
-
-  // Analytics
-  viewCount?: number
 
   // Timestamps
   createdAt: string
@@ -204,44 +140,21 @@ export interface EventDirectory {
 }
 
 /**
- * Event form data for creating/editing events
+ * Event form data for creating/editing events - Simplified
  */
 export interface EventFormData {
-  title: string
+  name: string
   description: string
-  shortDescription?: string
-  field: string
-  category: string
-  tags: string[]
-  minAge?: number
-  maxAge?: number
-  region: string
-  date: string
-  time: string
-  endDate?: string
-  endTime?: string
-  isMultiDay?: boolean
-  duration?: number
-  recurringPattern?: 'none' | 'daily' | 'weekly' | 'monthly'
-  recurringEndDate?: string
-  eventSchedule?: Array<{
-    date: string
-    startTime: string
-    endTime: string
-    title?: string
-    description?: string
-    location?: string
-  }>
+  fromDate: string
+  toDate: string
   location: string
-  venueDetails?: string
-  isVirtual?: boolean
-  virtualLink?: string
-  registrationRequired: boolean
-  registrationDeadline?: string
-  isFree: boolean
-  price?: number
-  currency?: string
-  requirements?: string[]
-  prizes?: string[]
-  externalLinks?: string[]
+  country: string
+  organizer: string
+  fromAge?: number
+  toAge?: number
+  youtubeLink?: string
+  links: string[]
+  type: string
+  fields: string[]
+  status: EventStatus
 }

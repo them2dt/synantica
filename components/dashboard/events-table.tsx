@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Calendar, Clock, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Target, Users } from 'lucide-react'
+import { Calendar, MapPin, ArrowUpDown, ArrowUp, ArrowDown, Type, Tag, FileText, Users } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
@@ -97,13 +97,7 @@ export function EventsTable({
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
                 <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Date</span>
-              </div>
-            </th>
-            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-1 sm:gap-2">
-                <Clock className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Time</span>
+                <span className="text-xs sm:text-sm">Date Range</span>
               </div>
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
@@ -115,25 +109,19 @@ export function EventsTable({
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
                 <Tag className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Category</span>
+                <span className="text-xs sm:text-sm">Type</span>
               </div>
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
                 <FileText className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Field</span>
-              </div>
-            </th>
-            <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground border-r border-border">
-              <div className="flex items-center justify-start gap-1 sm:gap-2">
-                <Users className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Min Age</span>
+                <span className="text-xs sm:text-sm">Fields</span>
               </div>
             </th>
             <th className="text-left p-2 sm:p-3 font-medium text-muted-foreground">
               <div className="flex items-center justify-start gap-1 sm:gap-2">
-                <Target className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
-                <span className="text-xs sm:text-sm">Action</span>
+                <Users className="w-3 h-3 sm:w-4 sm:h-4 text-accent" />
+                <span className="text-xs sm:text-sm">Age Range</span>
               </div>
             </th>
           </tr>
@@ -141,21 +129,21 @@ export function EventsTable({
         <motion.tbody variants={containerVariants} initial="hidden" animate="visible">
           {events.map((event) => (
             <motion.tr key={event.id} className="border-b hover:bg-muted/50 transition-colors" variants={rowVariants}>
-              {/* Event Name */}
+              {/* Event Name - Clickable */}
               <td className="p-2 sm:p-3 border-r border-border sticky left-0 bg-background z-10">
-                <div className="font-medium text-foreground text-sm sm:text-base max-w-[200px] sm:max-w-none truncate">
-                  {event.title}
+                <button 
+                  onClick={() => onEventClick(event)}
+                  className="font-medium text-foreground text-sm sm:text-base max-w-[200px] sm:max-w-none truncate text-left hover:text-primary hover:underline transition-colors cursor-pointer"
+                >
+                  {event.name}
+                </button>
+              </td>
+
+              {/* Date Range - Merged */}
+              <td className="p-2 sm:p-3 border-r border-border">
+                <div className="text-xs sm:text-sm">
+                  {formatEventDate(event.fromDate, 'table')}-{formatEventDate(event.toDate, 'table')}
                 </div>
-              </td>
-
-              {/* Date */}
-              <td className="p-2 sm:p-3 border-r border-border">
-                <div className="text-xs sm:text-sm">{formatEventDate(event.date)}</div>
-              </td>
-
-              {/* Time */}
-              <td className="p-2 sm:p-3 border-r border-border">
-                <div className="text-xs sm:text-sm">{event.time}</div>
               </td>
 
               {/* Location */}
@@ -165,36 +153,26 @@ export function EventsTable({
                 </div>
               </td>
 
-              {/* Category */}
+              {/* Type */}
               <td className="p-2 sm:p-3 border-r border-border">
                 <div className="text-xs sm:text-sm capitalize">
-                  {event.category}
+                  {event.type}
                 </div>
               </td>
 
-              {/* Field */}
+              {/* Fields */}
               <td className="p-2 sm:p-3 border-r border-border">
-                <div className="text-xs sm:text-sm max-w-[100px] sm:max-w-none truncate" title={event.field}>
-                  {event.field}
+                <div className="text-xs sm:text-sm max-w-[100px] sm:max-w-none truncate" title={event.fields.join(', ')}>
+                  {event.fields.slice(0, 2).join(', ')}
+                  {event.fields.length > 2 && '...'}
                 </div>
               </td>
 
-              {/* Min Age */}
-              <td className="p-2 sm:p-3 border-r border-border">
-                <div className="text-xs sm:text-sm font-medium">
-                  {event.minAge || 0}+
-                </div>
-              </td>
-
-              {/* Action */}
+              {/* Age Range */}
               <td className="p-2 sm:p-3">
-                <Button 
-                  size="sm" 
-                  onClick={() => onEventClick(event)}
-                  className="h-7 sm:h-8 text-xs sm:text-sm px-2 sm:px-3"
-                >
-                  Learn More
-                </Button>
+                <div className="text-xs sm:text-sm font-medium">
+                  {event.fromAge || 0}-{event.toAge || 99}
+                </div>
               </td>
             </motion.tr>
           ))}

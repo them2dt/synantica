@@ -2,7 +2,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Calendar, Clock, MapPin, Users, Download, ExternalLink, Share2, Mail } from 'lucide-react';
+import { ArrowLeft, Calendar, MapPin, Users, Download, ExternalLink, Share2, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { Footer } from '@/components/layout/footer';
 // Event type is used in the component logic
@@ -120,14 +120,14 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               <Badge 
                 variant="default" 
                 className="capitalize"
-                style={event.category === "hackathon" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
+                style={event.type === "contests" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
               >
-                {event.category}
+                {event.type}
               </Badge>
             </div>
             
             <CardTitle className="text-4xl mb-4 font-heading font-semibold">
-              {event.title}
+              {event.name}
             </CardTitle>
             
             <CardDescription className="text-xl">
@@ -139,11 +139,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-accent" />
-                {formatEventDate(event.date)}
-              </div>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-accent" />
-                {event.time}
+                {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
               </div>
               <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-accent" />
@@ -153,10 +149,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 <Users className="w-4 h-4 text-accent" />
                 Organized by {event.organizer}
               </div>
-              {event.minAge && event.maxAge && (
+              {event.fromAge && event.toAge && (
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-accent" />
-                  Ages {event.minAge}-{event.maxAge}
+                  Ages {event.fromAge}-{event.toAge}
                 </div>
               )}
             </div>
@@ -226,13 +222,13 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
         {/* Tags */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Tags</CardTitle>
+            <CardTitle>Fields</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-2">
-              {event.tags.map((tag, index) => (
+              {event.fields.map((field, index) => (
                 <Badge key={index} variant="outline" className="border-accent">
-                  {tag}
+                  {field}
                 </Badge>
               ))}
             </div>
@@ -252,7 +248,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               <p className="text-muted-foreground mb-4">
                 Want to ask our alumni about their experience and tips to succeed? Send us your questions!
               </p>
-              <a href={`mailto:${getAlumniContactEmail()}?subject=Question about ${event.title}`}>
+              <a href={`mailto:${getAlumniContactEmail()}?subject=Question about ${event.name}`}>
                 <Button variant="outline" className="gap-2">
                   <Mail className="w-4 h-4 text-accent" />
                   Contact Alumni
@@ -268,7 +264,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <Button variant="outline" size="lg" className="px-8" onClick={() => {
               if (navigator.share) {
                 navigator.share({
-                  title: event.title,
+                  title: event.name,
                   text: event.description,
                   url: window.location.href
                 });

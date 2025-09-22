@@ -12,6 +12,7 @@ export type DateFormat =
   | 'long'       // "Monday, January 1, 2024" - for profiles
   | 'full'       // "Monday, January 1, 2024 at 2:30 PM" - for complete info
   | 'date-only'  // "1/1/2024" - simple date format
+  | 'table'      // "01.01.2024" - for table display
 
 /**
  * Time format options
@@ -83,6 +84,13 @@ export function formatEventDate(
 
       case 'date-only':
         return date.toLocaleDateString("en-US")
+
+      case 'table':
+        return date.toLocaleDateString("de-DE", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
 
       default:
         return date.toLocaleDateString("en-US", {

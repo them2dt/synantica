@@ -1,6 +1,6 @@
 'use client'
 
-import { Calendar, Clock, MapPin } from 'lucide-react'
+import { Calendar, MapPin } from 'lucide-react'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -39,20 +39,18 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                 <div className="flex items-center gap-2 mb-2">
                   <Badge
                     className="capitalize text-xs"
-                    variant={event.category === "hackathon" ? "default" : "secondary"}
+                    variant={event.type === "contests" ? "default" : "secondary"}
                   >
-                    {event.category}
+                    {event.type}
                   </Badge>
                 </div>
-                <CardTitle className="text-lg text-balance text-primary mb-2">{event.title}</CardTitle>
+                <CardTitle className="text-lg text-balance text-primary mb-2">{event.name}</CardTitle>
                 <CardDescription className="text-pretty text-sm mb-3 line-clamp-2">{event.description}</CardDescription>
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <Calendar className="w-4 h-4 text-accent" />
-                    {formatEventDate(event.date)}
-                    <Clock className="w-4 h-4 ml-2 text-accent" />
-                    {event.time}
+                    {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
                   </div>
 
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -62,14 +60,14 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
 
                   <div className="flex flex-wrap gap-1">
-                    {event.tags.slice(0, 3).map((tag) => (
-                      <Badge key={tag} variant="outline" className="text-xs border-accent">
-                        {tag}
+                    {event.fields.slice(0, 3).map((field) => (
+                      <Badge key={field} variant="outline" className="text-xs border-accent">
+                        {field}
                       </Badge>
                     ))}
-                    {event.tags.length > 3 && (
+                    {event.fields.length > 3 && (
                       <Badge variant="outline" className="text-xs border-accent">
-                        +{event.tags.length - 3}
+                        +{event.fields.length - 3}
                       </Badge>
                     )}
                   </div>
@@ -100,22 +98,20 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
           <div className="flex items-center justify-between mb-2">
             <Badge
               className="capitalize"
-              variant={event.category === "hackathon" ? "default" : "secondary"}
-              style={event.category === "hackathon" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
+              variant={event.type === "contests" ? "default" : "secondary"}
+              style={event.type === "contests" ? { backgroundColor: '#FF327D', color: 'white' } : {}}
             >
-              {event.category}
+              {event.type}
             </Badge>
           </div>
-          <CardTitle className="text-lg text-balance text-primary">{event.title}</CardTitle>
+          <CardTitle className="text-lg text-balance text-primary">{event.name}</CardTitle>
           <CardDescription className="text-pretty">{event.description}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-3 flex-grow">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Calendar className="w-4 h-4 text-accent" />
-            {formatEventDate(event.date)}
-            <Clock className="w-4 h-4 ml-2 text-accent" />
-            {event.time}
+            {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
           </div>
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -125,9 +121,9 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
 
           <div className="flex flex-wrap gap-1">
-            {event.tags.map((tag) => (
-              <Badge key={tag} variant="outline" className="text-xs border-accent">
-                {tag}
+            {event.fields.map((field) => (
+              <Badge key={field} variant="outline" className="text-xs border-accent">
+                {field}
               </Badge>
             ))}
           </div>

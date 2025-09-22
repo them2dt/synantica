@@ -1,5 +1,5 @@
 -- =====================================================
--- Drop All Tables Script
+-- Drop All Tables Script - SIMPLIFIED SCHEMA
 -- =====================================================
 -- This script drops all tables in the correct order
 -- to respect foreign key constraints.
@@ -11,8 +11,8 @@
 -- =====================================================
 
 -- Drop triggers that might prevent table deletion
-DROP TRIGGER IF EXISTS update_tag_usage_on_insert ON event_tags;
-DROP TRIGGER IF EXISTS update_tag_usage_on_delete ON event_tags;
+DROP TRIGGER IF EXISTS update_field_usage_on_insert ON event_field_assignments;
+DROP TRIGGER IF EXISTS update_field_usage_on_delete ON event_field_assignments;
 DROP TRIGGER IF EXISTS update_registration_count_on_insert ON event_registrations;
 DROP TRIGGER IF EXISTS update_registration_count_on_update ON event_registrations;
 DROP TRIGGER IF EXISTS update_registration_count_on_delete ON event_registrations;
@@ -20,8 +20,8 @@ DROP TRIGGER IF EXISTS update_registration_count_on_delete ON event_registration
 -- Drop updated_at triggers
 DROP TRIGGER IF EXISTS update_user_profiles_updated_at ON user_profiles;
 DROP TRIGGER IF EXISTS update_user_settings_updated_at ON user_settings;
-DROP TRIGGER IF EXISTS update_event_categories_updated_at ON event_categories;
-DROP TRIGGER IF EXISTS update_tags_updated_at ON tags;
+DROP TRIGGER IF EXISTS update_event_types_updated_at ON event_types;
+DROP TRIGGER IF EXISTS update_event_fields_updated_at ON event_fields;
 DROP TRIGGER IF EXISTS update_events_updated_at ON events;
 DROP TRIGGER IF EXISTS update_event_reviews_updated_at ON event_reviews;
 DROP TRIGGER IF EXISTS update_user_interests_updated_at ON user_interests;
@@ -32,27 +32,27 @@ DROP TRIGGER IF EXISTS update_user_interests_updated_at ON user_interests;
 
 -- Drop custom functions
 DROP FUNCTION IF EXISTS update_updated_at_column();
-DROP FUNCTION IF EXISTS trigger_update_tag_usage();
+DROP FUNCTION IF EXISTS trigger_update_field_usage();
 DROP FUNCTION IF EXISTS trigger_update_registration_count();
 DROP FUNCTION IF EXISTS is_admin(UUID);
 DROP FUNCTION IF EXISTS is_organizer(UUID);
 DROP FUNCTION IF EXISTS get_user_role(UUID);
 DROP FUNCTION IF EXISTS get_event_stats(UUID);
 DROP FUNCTION IF EXISTS get_popular_events(INTEGER, INTEGER);
-DROP FUNCTION IF EXISTS search_events(TEXT, VARCHAR, VARCHAR, INTEGER, INTEGER, VARCHAR, DATE, DATE, BOOLEAN, INTEGER, INTEGER);
+DROP FUNCTION IF EXISTS search_events(TEXT, VARCHAR, TEXT[], INTEGER, INTEGER, VARCHAR, DATE, DATE, INTEGER, INTEGER);
 DROP FUNCTION IF EXISTS get_user_event_history(UUID);
 DROP FUNCTION IF EXISTS get_user_recommendations(UUID, INTEGER);
-DROP FUNCTION IF EXISTS update_tag_usage_counts();
-DROP FUNCTION IF EXISTS update_event_registration_counts();
+DROP FUNCTION IF EXISTS update_field_usage_counts();
 DROP FUNCTION IF EXISTS cleanup_expired_events();
 DROP FUNCTION IF EXISTS get_users_for_event_notification(UUID);
+DROP FUNCTION IF EXISTS handle_new_user();
 
 -- =====================================================
 -- DROP TABLES (in reverse dependency order)
 -- =====================================================
 
 -- Drop junction tables first (many-to-many relationships)
-DROP TABLE IF EXISTS event_tags CASCADE;
+DROP TABLE IF EXISTS event_field_assignments CASCADE;
 DROP TABLE IF EXISTS user_interests CASCADE;
 
 -- Drop tables with foreign keys to other tables
@@ -63,8 +63,8 @@ DROP TABLE IF EXISTS user_settings CASCADE;
 
 -- Drop main tables
 DROP TABLE IF EXISTS events CASCADE;
-DROP TABLE IF EXISTS tags CASCADE;
-DROP TABLE IF EXISTS event_categories CASCADE;
+DROP TABLE IF EXISTS event_fields CASCADE;
+DROP TABLE IF EXISTS event_types CASCADE;
 DROP TABLE IF EXISTS user_profiles CASCADE;
 
 -- =====================================================
@@ -110,4 +110,4 @@ END $$;
 -- COMMENTS
 -- =====================================================
 
-COMMENT ON SCHEMA public IS 'All tables have been dropped. Run 01_create_tables.sql to recreate the schema.';
+COMMENT ON SCHEMA public IS 'All tables have been dropped. Run 01_create_tables.sql to recreate the simplified schema.';

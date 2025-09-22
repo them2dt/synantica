@@ -2,7 +2,6 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { Event, EventStatus, EventDirectory, EventFilters } from '@/types/event'
-import { DatabaseEventWithRelations } from './types'
 import { safeDatabaseOperation } from './error-handler'
 import { createDatabaseError } from '@/lib/utils/error-handling'
 
@@ -114,77 +113,57 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
       .from('events')
       .select(`
         id,
-        title,
+        name,
         description,
-        short_description,
-        field,
-        min_age,
-        max_age,
-        region,
-        date,
-        time,
-        end_date,
-        end_time,
+        from_date,
+        to_date,
         location,
-        is_virtual,
-        is_free,
+        country,
+        organizer,
+        from_age,
+        to_age,
+        youtube_link,
+        links,
+        type,
+        fields,
         status,
-        is_featured,
-        organizer_name,
-        view_count,
         created_at,
-        updated_at,
-        event_categories!inner(
-          id,
-          name,
-          slug
-        ),
-        event_tags(
-          tags(
-            id,
-            name,
-            slug
-          )
-        )
+        updated_at
       `)
       .eq('status', 'published')
       .order('created_at', { ascending: false })
 
     // Apply filters (same as before)
     if (filters.search) {
-      query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer_name.ilike.%${filters.search}%`)
+      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer.ilike.%${filters.search}%`)
     }
 
     if (filters.category) {
-      query = query.eq('event_categories.slug', filters.category)
+      query = query.eq('type', filters.category)
     }
 
     if (filters.field) {
-      query = query.eq('field', filters.field)
+      query = query.contains('fields', [filters.field])
     }
 
     if (filters.minAge !== undefined) {
-      query = query.gte('min_age', filters.minAge)
+      query = query.gte('from_age', filters.minAge)
     }
 
     if (filters.maxAge !== undefined) {
-      query = query.lte('max_age', filters.maxAge)
+      query = query.lte('to_age', filters.maxAge)
     }
 
     if (filters.region) {
-      query = query.eq('region', filters.region)
+      query = query.eq('country', filters.region)
     }
 
     if (filters.dateFrom) {
-      query = query.gte('date', filters.dateFrom)
+      query = query.gte('from_date', filters.dateFrom)
     }
 
     if (filters.dateTo) {
-      query = query.lte('date', filters.dateTo)
-    }
-
-    if (filters.isFree !== undefined) {
-      query = query.eq('is_free', filters.isFree)
+      query = query.lte('to_date', filters.dateTo)
     }
 
     // Apply pagination
@@ -210,34 +189,24 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
 
       const eventRow = row as Record<string, unknown>
 
-      // Extract tags from the optimized query result
-      const eventTags = eventRow.event_tags as Array<{ tags: { name: string } }> | undefined
-      const tags = eventTags?.map((et) => et.tags?.name).filter(Boolean) || []
-
       return {
         id: eventRow.id as string,
-        title: eventRow.title as string,
+        name: eventRow.name as string,
         description: (eventRow.description as string) || '',
-        shortDescription: (eventRow.short_description as string) || undefined,
-        category: (eventRow.event_categories as { slug: string } | undefined)?.slug || 'other',
-        field: eventRow.field as string,
-        minAge: (eventRow.min_age as number) || 0,
-        maxAge: (eventRow.max_age as number) || 100,
-        region: eventRow.region as string,
-        date: eventRow.date as string,
-        time: eventRow.time as string,
-        endDate: (eventRow.end_date as string) || undefined,
-        endTime: (eventRow.end_time as string) || undefined,
+        fromDate: eventRow.from_date as string,
+        toDate: eventRow.to_date as string,
         location: eventRow.location as string,
-        isVirtual: (eventRow.is_virtual as boolean) || false,
-        isFree: (eventRow.is_free as boolean) || false,
+        country: eventRow.country as string,
+        organizer: eventRow.organizer as string,
+        fromAge: (eventRow.from_age as number) || undefined,
+        toAge: (eventRow.to_age as number) || undefined,
+        youtubeLink: (eventRow.youtube_link as string) || undefined,
+        links: (eventRow.links as string[]) || [],
+        type: eventRow.type as string,
+        fields: (eventRow.fields as string[]) || [],
         status: (eventRow.status as EventStatus) || 'published',
-        isFeatured: (eventRow.is_featured as boolean) || false,
-        organizer: (eventRow.organizer_name as string) || 'Unknown',
-        viewCount: (eventRow.view_count as number) || 0,
         createdAt: (eventRow.created_at as string) || new Date().toISOString(),
-        updatedAt: (eventRow.updated_at as string) || new Date().toISOString(),
-        tags
+        updatedAt: (eventRow.updated_at as string) || new Date().toISOString()
       }
     })
 
@@ -293,34 +262,22 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
       .from('events')
       .select(`
         id,
-        title,
+        name,
         description,
-        field,
-        min_age,
-        max_age,
-        region,
-        date,
-        time,
+        from_date,
+        to_date,
         location,
-        is_free,
+        country,
+        organizer,
+        from_age,
+        to_age,
+        youtube_link,
+        links,
+        type,
+        fields,
         status,
-        organizer_name,
         created_at,
-        updated_at,
-        view_count,
-        event_categories!inner(
-          id,
-          name,
-          slug,
-          color
-        ),
-        event_tags(
-          tags(
-            id,
-            name,
-            slug
-          )
-        )
+        updated_at
       `)
       .eq('status', 'published')
       .order('created_at', { ascending: false })
@@ -328,40 +285,36 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
     // Apply filters
     if (filters.search) {
       // Search across multiple fields for better directory experience
-      query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer_name.ilike.%${filters.search}%`)
+      query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%,organizer.ilike.%${filters.search}%`)
     }
 
     if (filters.category) {
-      // Filter by category slug instead of name for better performance
-      query = query.eq('event_categories.slug', filters.category)
+      // Filter by type instead of category
+      query = query.eq('type', filters.category)
     }
 
     if (filters.field) {
-      query = query.eq('field', filters.field)
+      query = query.contains('fields', [filters.field])
     }
 
     if (filters.minAge !== undefined) {
-      query = query.gte('min_age', filters.minAge)
+      query = query.gte('from_age', filters.minAge)
     }
 
     if (filters.maxAge !== undefined) {
-      query = query.lte('max_age', filters.maxAge)
+      query = query.lte('to_age', filters.maxAge)
     }
 
     if (filters.region) {
-      query = query.eq('region', filters.region)
+      query = query.eq('country', filters.region)
     }
 
     if (filters.dateFrom) {
-      query = query.gte('date', filters.dateFrom)
+      query = query.gte('from_date', filters.dateFrom)
     }
 
     if (filters.dateTo) {
-      query = query.lte('date', filters.dateTo)
-    }
-
-    if (filters.isFree !== undefined) {
-      query = query.eq('is_free', filters.isFree)
+      query = query.lte('to_date', filters.dateTo)
     }
 
     // Apply pagination
@@ -388,33 +341,29 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
       
       const eventRow = row as Record<string, unknown>
       
-      // Extract tags from the optimized query result
-      const eventTags = eventRow.event_tags as Array<{ tags: { name: string } }> | undefined
-      const tags = eventTags?.map((et) => et.tags?.name).filter(Boolean) || []
-      
       return {
         id: eventRow.id as string,
-        title: eventRow.title as string,
+        name: eventRow.name as string,
         description: eventRow.description as string,
-        category: (eventRow.event_categories as { name: string } | undefined)?.name?.toLowerCase().replace(/\s+/g, '-') || 'other',
-        field: eventRow.field as string,
-        minAge: (eventRow.min_age as number) || 0,
-        maxAge: (eventRow.max_age as number) || 100,
-        region: eventRow.region as string,
-        date: eventRow.date as string,
-        time: eventRow.time as string,
+        fromDate: eventRow.from_date as string,
+        toDate: eventRow.to_date as string,
         location: eventRow.location as string,
-        isFree: (eventRow.is_free as boolean) || false,
+        country: eventRow.country as string,
+        organizer: eventRow.organizer as string,
+        fromAge: (eventRow.from_age as number) || undefined,
+        toAge: (eventRow.to_age as number) || undefined,
+        youtubeLink: (eventRow.youtube_link as string) || undefined,
+        links: (eventRow.links as string[]) || [],
+        type: eventRow.type as string,
+        fields: (eventRow.fields as string[]) || [],
         status: (eventRow.status as EventStatus) || 'published',
-        organizer: (eventRow.organizer_name as string) || 'Unknown',
         createdAt: (eventRow.created_at as string) || new Date().toISOString(),
         updatedAt: (eventRow.updated_at as string) || new Date().toISOString(),
-        tags,
         
-        // Additional fields from the database
-        category_name: (eventRow.event_categories as { name: string } | undefined)?.name || 'Other',
+        // Additional fields for EventWithDetails
+        category_name: eventRow.type as string,
         average_rating: 0,
-        viewCount: (eventRow.view_count as number) || 0
+        tags: (eventRow.fields as string[]) || []
       }
     })
 
@@ -431,15 +380,11 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
     const { data, error } = await supabase
       .from('events')
       .select(`
-        *,
-        event_categories(name),
-        event_tags(
-          tags(name)
-        )
+        *
       `)
       .eq('id', id)
       .eq('status', 'published')
-      .single() as { data: DatabaseEventWithRelations | null; error: { code?: string; message: string } | null }
+      .single()
 
     if (error) {
       if (error.code === 'PGRST116') {
@@ -455,26 +400,27 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
     // Transform the data
     const event: EventWithDetails = {
       id: data.id,
-      title: data.title,
+      name: data.name,
       description: data.description,
-      category: data.event_categories?.name?.toLowerCase().replace(/\s+/g, '-') || 'other',
-      field: data.field,
-      minAge: data.min_age,
-      maxAge: data.max_age,
-      region: data.region,
-      date: data.date,
-      time: data.time,
+      fromDate: data.from_date,
+      toDate: data.to_date,
       location: data.location,
-      isFree: data.is_free,
+      country: data.country,
+      organizer: data.organizer,
+      fromAge: data.from_age,
+      toAge: data.to_age,
+      youtubeLink: data.youtube_link,
+      links: data.links || [],
+      type: data.type,
+      fields: data.fields || [],
       status: data.status as EventStatus,
-      organizer: data.organizer_name,
       createdAt: data.created_at,
       updatedAt: data.updated_at,
-      tags: data.event_tags?.map((et: { tags: { name: string } }) => et.tags.name) || [],
       
-      // Additional fields
-      category_name: data.event_categories?.name || 'Other',
-      average_rating: 0
+      // Additional fields for EventWithDetails
+      category_name: data.type,
+      average_rating: 0,
+      tags: data.fields || []
     }
 
     return event
@@ -492,20 +438,25 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
       .from('events')
       .select(`
         id,
-        title,
+        name,
         description,
-        field,
-        min_age,
-        max_age,
-        region,
-        date,
-        time,
+        from_date,
+        to_date,
         location,
-        is_free,
-        event_categories(name)
+        country,
+        organizer,
+        from_age,
+        to_age,
+        youtube_link,
+        links,
+        type,
+        fields,
+        status,
+        created_at,
+        updated_at
       `)
       .eq('status', 'published')
-      .order('view_count', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(limit)
 
     if (error) {
@@ -516,26 +467,27 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const events: EventWithDetails[] = (data || []).map((row: any) => ({
       id: row.id,
-      title: row.title,
+      name: row.name,
       description: row.description,
-      category: row.event_categories?.name?.toLowerCase().replace(/\s+/g, '-') || 'other',
-      field: row.field,
-      minAge: row.min_age || 0,
-      maxAge: row.max_age || 100,
-      region: row.region,
-      date: row.date,
-      time: row.time,
+      fromDate: row.from_date,
+      toDate: row.to_date,
       location: row.location,
-      isFree: row.is_free,
-      status: 'published' as EventStatus,
-      organizer: 'Unknown',
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      tags: [],
+      country: row.country,
+      organizer: row.organizer,
+      fromAge: row.from_age,
+      toAge: row.to_age,
+      youtubeLink: row.youtube_link,
+      links: row.links || [],
+      type: row.type,
+      fields: row.fields || [],
+      status: row.status as EventStatus,
+      createdAt: row.created_at,
+      updatedAt: row.updated_at,
       
-      // Additional fields
-      category_name: row.event_categories?.name || 'Other',
-      average_rating: 0
+      // Additional fields for EventWithDetails
+      category_name: row.type,
+      average_rating: 0,
+      tags: row.fields || []
     }))
 
     return events
@@ -546,48 +498,48 @@ export async function getPopularEventsClient(limit: number = 10): Promise<EventW
 }
 
 /**
- * Get event categories (client-side)
+ * Get event types (client-side)
  */
-export async function getEventCategoriesClient() {
+export async function getEventTypesClient() {
   const supabase = createClient()
   
   try {
     const { data, error } = await supabase
-      .from('event_categories')
+      .from('event_types')
       .select('*')
       .eq('is_active', true)
-      .order('sort_order')
+      .order('name')
 
     if (error) {
-      throw createDatabaseError(`Failed to fetch categories: ${error.message}`, 'categories')
+      throw createDatabaseError(`Failed to fetch event types: ${error.message}`, 'event-types')
     }
 
     return data || []
   } catch (error) {
-    console.error('Error in getEventCategoriesClient:', error)
+    console.error('Error in getEventTypesClient:', error)
     throw error
   }
 }
 
 /**
- * Get all tags (client-side)
+ * Get all event fields (client-side)
  */
-export async function getTagsClient() {
+export async function getEventFieldsClient() {
   const supabase = createClient()
   
   try {
     const { data, error } = await supabase
-      .from('tags')
+      .from('event_fields')
       .select('*')
       .order('usage_count', { ascending: false })
 
     if (error) {
-      throw createDatabaseError(`Failed to fetch tags: ${error.message}`, 'tags')
+      throw createDatabaseError(`Failed to fetch event fields: ${error.message}`, 'event-fields')
     }
 
     return data || []
   } catch (error) {
-    console.error('Error in getTagsClient:', error)
+    console.error('Error in getEventFieldsClient:', error)
     throw error
   }
 }

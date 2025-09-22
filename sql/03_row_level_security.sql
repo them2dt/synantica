@@ -1,5 +1,5 @@
 -- =====================================================
--- Row Level Security (RLS) Policies
+-- Row Level Security (RLS) Policies - SIMPLIFIED
 -- =====================================================
 -- This script sets up Row Level Security policies for
 -- the student event platform to ensure proper data
@@ -10,10 +10,10 @@
 ALTER TABLE user_profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_settings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_role_assignments ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_categories ENABLE ROW LEVEL SECURITY;
-ALTER TABLE tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_types ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_fields ENABLE ROW LEVEL SECURITY;
 ALTER TABLE events ENABLE ROW LEVEL SECURITY;
-ALTER TABLE event_tags ENABLE ROW LEVEL SECURITY;
+ALTER TABLE event_field_assignments ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_registrations ENABLE ROW LEVEL SECURITY;
 ALTER TABLE event_reviews ENABLE ROW LEVEL SECURITY;
 ALTER TABLE user_interests ENABLE ROW LEVEL SECURITY;
@@ -70,15 +70,15 @@ CREATE POLICY "Admins can manage roles" ON user_role_assignments
     );
 
 -- =====================================================
--- EVENT CATEGORIES POLICIES
+-- EVENT TYPES POLICIES
 -- =====================================================
 
--- Everyone can view active categories
-CREATE POLICY "Everyone can view active categories" ON event_categories
+-- Everyone can view active event types
+CREATE POLICY "Everyone can view active event types" ON event_types
     FOR SELECT USING (is_active = true);
 
--- Only admins can manage categories
-CREATE POLICY "Admins can manage categories" ON event_categories
+-- Only admins can manage event types
+CREATE POLICY "Admins can manage event types" ON event_types
     FOR ALL USING (
         EXISTS (
             SELECT 1 FROM user_role_assignments 
@@ -89,15 +89,15 @@ CREATE POLICY "Admins can manage categories" ON event_categories
     );
 
 -- =====================================================
--- TAGS POLICIES
+-- EVENT FIELDS POLICIES
 -- =====================================================
 
--- Everyone can view tags
-CREATE POLICY "Everyone can view tags" ON tags
+-- Everyone can view event fields
+CREATE POLICY "Everyone can view event fields" ON event_fields
     FOR SELECT USING (true);
 
--- Only admins can manage tags
-CREATE POLICY "Admins can manage tags" ON tags
+-- Only admins can manage event fields
+CREATE POLICY "Admins can manage event fields" ON event_fields
     FOR ALL USING (
         EXISTS (
             SELECT 1 FROM user_role_assignments 
@@ -156,15 +156,15 @@ CREATE POLICY "Organizers can delete own events" ON events
     );
 
 -- =====================================================
--- EVENT TAGS POLICIES
+-- EVENT FIELD ASSIGNMENTS POLICIES
 -- =====================================================
 
--- Everyone can view event tags
-CREATE POLICY "Everyone can view event tags" ON event_tags
+-- Everyone can view event field assignments
+CREATE POLICY "Everyone can view event field assignments" ON event_field_assignments
     FOR SELECT USING (true);
 
--- Only admins can manage event tags
-CREATE POLICY "Admins can manage event tags" ON event_tags
+-- Only admins can manage event field assignments
+CREATE POLICY "Admins can manage event field assignments" ON event_field_assignments
     FOR ALL USING (
         EXISTS (
             SELECT 1 FROM user_role_assignments 

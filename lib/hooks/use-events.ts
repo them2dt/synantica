@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, EventWithDetails } from '@/lib/database/events-client'
 import { EventDirectory, EventStatus, EventFilters } from '@/types/event'
-import { DatabaseEventCategory, DatabaseTag } from '@/lib/database/types'
 import { handleAsyncError } from '@/lib/utils/error-handling'
 
 /**
@@ -247,22 +246,22 @@ export function usePopularEvents(limit: number = 10) {
 }
 
 /**
- * Custom hook for event categories
+ * Custom hook for event types
  */
-export function useEventCategories() {
-  const [categories, setCategories] = useState<DatabaseEventCategory[]>([])
+export function useEventTypes() {
+  const [eventTypes, setEventTypes] = useState<Array<{ id: string; name: string; is_active: boolean }>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchCategories = useCallback(async () => {
+  const fetchEventTypes = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const { getEventCategoriesClient } = await import('@/lib/database/events-client')
-      const data = await getEventCategoriesClient()
-      setCategories(data)
+      const { getEventTypesClient } = await import('@/lib/database/events-client')
+      const data = await getEventTypesClient()
+      setEventTypes(data)
     } catch (err) {
-      handleAsyncError(err, 'categories', setError, setLoading)
+      handleAsyncError(err, 'event-types', setError, setLoading)
       return // Early return since error is handled
     } finally {
       setLoading(false)
@@ -270,34 +269,34 @@ export function useEventCategories() {
   }, [])
 
   useEffect(() => {
-    fetchCategories()
-  }, [fetchCategories])
+    fetchEventTypes()
+  }, [fetchEventTypes])
 
   return {
-    categories,
+    eventTypes,
     loading,
     error,
-    refetch: fetchCategories
+    refetch: fetchEventTypes
   }
 }
 
 /**
- * Custom hook for tags
+ * Custom hook for event fields
  */
-export function useTags() {
-  const [tags, setTags] = useState<DatabaseTag[]>([])
+export function useEventFields() {
+  const [fields, setFields] = useState<Array<{ id: string; name: string; usage_count: number }>>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchTags = useCallback(async () => {
+  const fetchFields = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
-      const { getTagsClient } = await import('@/lib/database/events-client')
-      const data = await getTagsClient()
-      setTags(data)
+      const { getEventFieldsClient } = await import('@/lib/database/events-client')
+      const data = await getEventFieldsClient()
+      setFields(data)
     } catch (err) {
-      handleAsyncError(err, 'tags', setError, setLoading)
+      handleAsyncError(err, 'event-fields', setError, setLoading)
       return // Early return since error is handled
     } finally {
       setLoading(false)
@@ -305,14 +304,14 @@ export function useTags() {
   }, [])
 
   useEffect(() => {
-    fetchTags()
-  }, [fetchTags])
+    fetchFields()
+  }, [fetchFields])
 
   return {
-    tags,
+    fields,
     loading,
     error,
-    refetch: fetchTags
+    refetch: fetchFields
   }
 }
 
@@ -352,28 +351,22 @@ export function useRealtimeEvents(
                 const dbEvent = payload.new as Record<string, unknown>
                 const event: EventDirectory = {
                   id: dbEvent.id as string,
-                  title: dbEvent.title as string,
+                  name: dbEvent.name as string,
                   description: (dbEvent.description as string) || '',
-                  shortDescription: dbEvent.short_description as string,
-                  category: 'other', // Would need category lookup for full implementation
-                  field: dbEvent.field as string,
-                  minAge: (dbEvent.min_age as number) || 0,
-                  maxAge: (dbEvent.max_age as number) || 100,
-                  region: dbEvent.region as string,
-                  date: dbEvent.date as string,
-                  time: dbEvent.time as string,
-                  endDate: dbEvent.end_date as string,
-                  endTime: dbEvent.end_time as string,
+                  fromDate: dbEvent.from_date as string,
+                  toDate: dbEvent.to_date as string,
                   location: dbEvent.location as string,
-                  isVirtual: (dbEvent.is_virtual as boolean) || false,
-                  isFree: (dbEvent.is_free as boolean) || false,
+                  country: dbEvent.country as string,
+                  organizer: dbEvent.organizer as string,
+                  fromAge: (dbEvent.from_age as number) || undefined,
+                  toAge: (dbEvent.to_age as number) || undefined,
+                  youtubeLink: (dbEvent.youtube_link as string) || undefined,
+                  links: (dbEvent.links as string[]) || [],
+                  type: dbEvent.type as string,
+                  fields: (dbEvent.fields as string[]) || [],
                   status: ((dbEvent.status as string) || 'published') as EventStatus,
-                  isFeatured: (dbEvent.is_featured as boolean) || false,
-                  organizer: (dbEvent.organizer_name as string) || 'Unknown',
-                  viewCount: (dbEvent.view_count as number) || 0,
                   createdAt: dbEvent.created_at as string,
-                  updatedAt: dbEvent.updated_at as string,
-                  tags: [] // Would need tag lookup for full implementation
+                  updatedAt: dbEvent.updated_at as string
                 }
 
                 onEventUpdate(event, payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE')

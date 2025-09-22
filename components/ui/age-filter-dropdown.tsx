@@ -150,7 +150,7 @@ export function CompactAgeFilterDropdown({
     if (val[0] === min && val[1] === max) {
       return placeholder
     }
-    return `${val[0]}-${val[1]}`
+    return `Age: ${val[0]}-${val[1]}`
   }
 
   return (

@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic'
 import { Calendar, Users, TrendingUp, BookOpen, Trophy } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
-import { useEventsDirectoryPaginated, useEventCategories, useRealtimeEvents } from '@/lib/hooks/use-events'
+import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/types/event'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
@@ -42,11 +42,11 @@ export default function DashboardPage() {
   const filters: EventFilters = useMemo(() => {
     const baseFilters: EventFilters = {
       search: debouncedSearchTerm || undefined,
-      category: selectedCategory === 'all' ? undefined : selectedCategory,
-      field: selectedField === 'all' ? undefined : selectedField,
-      region: selectedRegion === 'all' ? undefined : selectedRegion,
-      minAge: selectedAgeRange[0] > 0 ? selectedAgeRange[0] : undefined,
-      maxAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined
+      type: selectedCategory === 'all' ? undefined : selectedCategory,
+      fields: selectedField === 'all' ? undefined : [selectedField],
+      country: selectedRegion === 'all' ? undefined : selectedRegion,
+      fromAge: selectedAgeRange[0] > 0 ? selectedAgeRange[0] : undefined,
+      toAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined
     }
 
     // Add date filtering if not 'all'
@@ -54,42 +54,42 @@ export default function DashboardPage() {
       const now = new Date()
       switch (selectedDate) {
         case 'today':
-          baseFilters.dateFrom = now.toISOString().split('T')[0]
-          baseFilters.dateTo = now.toISOString().split('T')[0]
+          baseFilters.fromDate = now.toISOString().split('T')[0]
+          baseFilters.toDate = now.toISOString().split('T')[0]
           break
         case 'tomorrow':
           const tomorrow = new Date(now)
           tomorrow.setDate(now.getDate() + 1)
-          baseFilters.dateFrom = tomorrow.toISOString().split('T')[0]
-          baseFilters.dateTo = tomorrow.toISOString().split('T')[0]
+          baseFilters.fromDate = tomorrow.toISOString().split('T')[0]
+          baseFilters.toDate = tomorrow.toISOString().split('T')[0]
           break
         case 'this-week':
           const weekStart = new Date(now)
           weekStart.setDate(now.getDate() - now.getDay())
           const weekEnd = new Date(weekStart)
           weekEnd.setDate(weekStart.getDate() + 6)
-          baseFilters.dateFrom = weekStart.toISOString().split('T')[0]
-          baseFilters.dateTo = weekEnd.toISOString().split('T')[0]
+          baseFilters.fromDate = weekStart.toISOString().split('T')[0]
+          baseFilters.toDate = weekEnd.toISOString().split('T')[0]
           break
         case 'next-week':
           const nextWeekStart = new Date(now)
           nextWeekStart.setDate(now.getDate() - now.getDay() + 7)
           const nextWeekEnd = new Date(nextWeekStart)
           nextWeekEnd.setDate(nextWeekStart.getDate() + 6)
-          baseFilters.dateFrom = nextWeekStart.toISOString().split('T')[0]
-          baseFilters.dateTo = nextWeekEnd.toISOString().split('T')[0]
+          baseFilters.fromDate = nextWeekStart.toISOString().split('T')[0]
+          baseFilters.toDate = nextWeekEnd.toISOString().split('T')[0]
           break
         case 'this-month':
           const monthStart = new Date(now.getFullYear(), now.getMonth(), 1)
           const monthEnd = new Date(now.getFullYear(), now.getMonth() + 1, 0)
-          baseFilters.dateFrom = monthStart.toISOString().split('T')[0]
-          baseFilters.dateTo = monthEnd.toISOString().split('T')[0]
+          baseFilters.fromDate = monthStart.toISOString().split('T')[0]
+          baseFilters.toDate = monthEnd.toISOString().split('T')[0]
           break
         case 'next-month':
           const nextMonthStart = new Date(now.getFullYear(), now.getMonth() + 1, 1)
           const nextMonthEnd = new Date(now.getFullYear(), now.getMonth() + 2, 0)
-          baseFilters.dateFrom = nextMonthStart.toISOString().split('T')[0]
-          baseFilters.dateTo = nextMonthEnd.toISOString().split('T')[0]
+          baseFilters.fromDate = nextMonthStart.toISOString().split('T')[0]
+          baseFilters.toDate = nextMonthEnd.toISOString().split('T')[0]
           break
       }
     }
@@ -99,18 +99,18 @@ export default function DashboardPage() {
 
   // Fetch events from database - using paginated optimized directory view for better performance
   const { events: dbEvents, loading, loadingMore, error, hasMore, loadMore, refetch } = useEventsDirectoryPaginated(filters, 20)
-  const { categories: dbCategories, loading: categoriesLoading } = useEventCategories()
+  const { eventTypes: dbCategories, loading: categoriesLoading } = useEventTypes()
 
   // Real-time updates for live event changes
   useRealtimeEvents((event, action) => {
-    console.log(`Event ${action}:`, event.title)
+    console.log(`Event ${action}:`, event.name)
 
     // Show a subtle notification (you could enhance this with a toast notification)
     const notificationMessage = action === 'INSERT'
-      ? `New event added: ${event.title}`
+      ? `New event added: ${event.name}`
       : action === 'UPDATE'
-      ? `Event updated: ${event.title}`
-      : `Event removed: ${event.title}`
+      ? `Event updated: ${event.name}`
+      : `Event removed: ${event.name}`
 
     console.log(notificationMessage)
 
@@ -127,22 +127,10 @@ export default function DashboardPage() {
   // Transform database categories to match our interface
   const eventCategories: CategoryWithIcon[] = useMemo(() => {
     const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-      'contests': Trophy,
-      'hackathons': TrendingUp,
-      'events': Users,
-      'workshops': BookOpen,
-      'seminars': BookOpen,
-      'conferences': Users,
-      'networking': Users,
-      'social': Users,
-      'sports': Users,
-      'cultural': Users,
-      'academic': BookOpen,
-      'career': Users,
-      'volunteer': Users,
       'olympiads': Trophy,
-      'science-fairs': BookOpen,
-      'other': Calendar
+      'contests': Trophy,
+      'events': Users,
+      'workshops': BookOpen
     }
 
     const categories: CategoryWithIcon[] = [
@@ -150,11 +138,11 @@ export default function DashboardPage() {
     ]
 
     if (dbCategories) {
-      dbCategories.forEach(cat => {
-        const slug = cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')
+      dbCategories.forEach(eventType => {
+        const slug = eventType.name.toLowerCase().replace(/\s+/g, '-')
         categories.push({
           value: slug,
-          label: cat.name,
+          label: eventType.name,
           icon: iconMap[slug] || Calendar
         })
       })
@@ -170,17 +158,17 @@ export default function DashboardPage() {
     return [...dbEvents].sort((a, b) => {
       switch (sortBy) {
         case 'date-asc':
-          return new Date(a.date).getTime() - new Date(b.date).getTime()
+          return new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime()
         case 'date-desc':
-          return new Date(b.date).getTime() - new Date(a.date).getTime()
+          return new Date(b.fromDate).getTime() - new Date(a.fromDate).getTime()
         case 'title-asc':
-          return a.title.localeCompare(b.title)
+          return a.name.localeCompare(b.name)
         case 'title-desc':
-          return b.title.localeCompare(a.title)
+          return b.name.localeCompare(a.name)
         case 'age-asc':
-          return (a.minAge || 0) - (b.minAge || 0)
+          return (a.fromAge || 0) - (b.fromAge || 0)
         case 'age-desc':
-          return (b.minAge || 0) - (a.minAge || 0)
+          return (b.fromAge || 0) - (a.fromAge || 0)
         case 'created-desc':
           return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
         case 'created-asc':

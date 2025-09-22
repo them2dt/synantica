@@ -82,21 +82,29 @@ export function MobileFilters({
     { value: 'computer-science', label: 'Computer Science' },
     { value: 'engineering', label: 'Engineering' },
     { value: 'mathematics', label: 'Mathematics' },
-    { value: 'philosophy', label: 'Philosophy' },
     { value: 'physics', label: 'Physics' },
     { value: 'chemistry', label: 'Chemistry' },
     { value: 'biology', label: 'Biology' },
     { value: 'medicine', label: 'Medicine' },
     { value: 'business', label: 'Business' },
     { value: 'economics', label: 'Economics' },
-    { value: 'psychology', label: 'Psychology' }
+    { value: 'psychology', label: 'Psychology' },
+    { value: 'art', label: 'Art' },
+    { value: 'design', label: 'Design' },
+    { value: 'music', label: 'Music' },
+    { value: 'literature', label: 'Literature' },
+    { value: 'history', label: 'History' },
+    { value: 'geography', label: 'Geography' },
+    { value: 'sports', label: 'Sports' },
+    { value: 'environment', label: 'Environment' },
+    { value: 'technology', label: 'Technology' }
   ]
 
   const sortOptions = [
     { value: 'date-asc', label: 'Date (Earliest First)' },
     { value: 'date-desc', label: 'Date (Latest First)' },
-    { value: 'title-asc', label: 'Title (A-Z)' },
-    { value: 'title-desc', label: 'Title (Z-A)' },
+    { value: 'title-asc', label: 'Name (A-Z)' },
+    { value: 'title-desc', label: 'Name (Z-A)' },
     { value: 'age-asc', label: 'Min Age (Lowest First)' },
     { value: 'age-desc', label: 'Min Age (Highest First)' },
     { value: 'created-desc', label: 'Newest First' },

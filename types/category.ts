@@ -42,24 +42,16 @@ export interface CategoryWithIcon {
 }
 
 /**
- * Common event categories
+ * Event types (simplified)
  */
-export const EVENT_CATEGORIES = [
-  'hackathon',
-  'workshop',
-  'seminar',
-  'conference',
-  'networking',
-  'social',
-  'sports',
-  'cultural',
-  'academic',
-  'career',
-  'volunteer',
-  'other'
+export const EVENT_TYPES = [
+  'olympiads',
+  'contests',
+  'events',
+  'workshops'
 ] as const
 
-export type EventCategoryType = typeof EVENT_CATEGORIES[number]
+export type EventType = typeof EVENT_TYPES[number]
 
 /**
  * Common event subjects/topics
