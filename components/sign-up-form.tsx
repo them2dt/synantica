@@ -14,7 +14,6 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema, type SignUpFormData } from "@/lib/validations/auth";
 import { useToast } from "@/components/ui/toast";
-import { Turnstile } from "@marsidev/react-turnstile";
 import {
   validatePassword,
   getStrengthColor,
@@ -27,10 +26,8 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
-  const isDev = process.env.NODE_ENV !== "production";
 
   // React Hook Form setup with Zod validation
   const {
@@ -52,36 +49,16 @@ export function SignUpForm({
   const password = watch("password");
   const passwordValidation = validatePassword(password);
 
-  /**
-   * Handle form submission with enhanced error handling
-   */
   const onSubmit = async (data: SignUpFormData) => {
-    if (isDev) {
-      console.log("Sign-up form submitted with data:", {
-        email: data.email,
-        passwordLength: data.password.length,
-      });
-    }
-
-    if (!turnstileToken) {
-      toastError(
-        "Verification required",
-        "Please complete the verification challenge.",
-      );
-      return;
-    }
+    console.log("Sign-up form submitted with data:", {
+      email: data.email,
+      passwordLength: data.password.length,
+    });
 
     const supabase = createClient();
-    if (isDev) {
-      console.log("Supabase client created");
-    }
 
     try {
-      if (isDev) {
-        console.log("Calling supabase.auth.signUp...");
-        console.log("email:", data.email);
-      }
-      const { data: authData, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
@@ -92,16 +69,9 @@ export function SignUpForm({
           },
         },
       });
-
-      // Log the full response for debugging
-      if (isDev) {
-        console.log("Sign-up response:", { data: authData, error });
-      }
       
       if (error) {
-        if (isDev) {
-          console.error("Sign-up error:", error);
-        }
+        console.log("Sign-up error:", error.message);
         // Handle specific error types
         if (error.message.includes("already registered")) {
           toastError("Email already exists", "This email is already registered. Please try signing in instead.");
@@ -120,9 +90,7 @@ export function SignUpForm({
       await router.replace("/dashboard");
       router.refresh();
     } catch (catchError) {
-      if (isDev) {
-        console.error("Sign-up exception:", catchError);
-      }
+      console.log("Sign-up error:", catchError);
       toastError("Registration failed", "An unexpected error occurred. Please try again.");
     }
   };
@@ -274,29 +242,12 @@ export function SignUpForm({
           )}
         </div>
 
-        <div className="space-y-2">
-          <Label className="text-sm font-medium text-center block">
-            Please complete the verification below
-          </Label>
-          <div className="flex justify-center">
-            <Turnstile
-              siteKey={
-                process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ||
-                "1x00000000000000000000AA"
-              }
-              onSuccess={setTurnstileToken}
-              onError={() => setTurnstileToken(null)}
-              onExpire={() => setTurnstileToken(null)}
-              className="mx-auto"
-            />
-          </div>
-        </div>
 
         {/* Submit Button */}
         <Button
           type="submit"
           className="w-full h-12 text-base bg-primary hover:bg-primary/90"
-          disabled={isSubmitting || !isValid || !turnstileToken}
+          disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </Button>

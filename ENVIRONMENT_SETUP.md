@@ -21,16 +21,6 @@ POSTGRES_URL=your_postgres_database_url
 SUPABASE_DB_PASSWORD=your_supabase_db_password
 ```
 
-### Cloudflare Turnstile (Bot Protection)
-```bash
-# Get your site key from https://dash.cloudflare.com/profile/api-tokens
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=your_turnstile_site_key
-
-# Optional: For server-side validation
-TURNSTILE_SECRET_KEY=your_turnstile_secret_key
-# The following variable is required for the Turnstile captcha. You can get
-# this from your Cloudflare Turnstile settings.
-CLOUDFLARE_TURNSTILE_SECRET_KEY=your_turnstile_secret_key
 ```
 
 ### Optional Variables
@@ -62,17 +52,6 @@ SMTP_PASSWORD=your-smtp-password
    - **Connection string** → `POSTGRES_URL`
      - **Important**: Make sure you get the connection string that starts with `postgresql://` and not `postgres://`. Also, make sure to replace the `[YOUR-PASSWORD]` placeholder with your actual database password.
 
-## How to Get Cloudflare Turnstile Keys
-
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Navigate to **Turnstile** in the sidebar
-3. Click **"Add a site"**
-4. Fill in:
-   - **Site name**: Your app name
-   - **Domain**: `localhost` (for development)
-5. Click **"Create"**
-6. Copy the **Site Key** for `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-7. Copy the **Secret Key** for `TURNSTILE_SECRET_KEY`
 
 ## Testing Environment Setup
 
@@ -99,10 +78,6 @@ Once you've set up the environment variables:
 - Check that the anon key has the correct permissions
 - Ensure your domain is whitelisted in Supabase
 
-### Turnstile not working?
-- Make sure the site key is correct
-- Verify your domain is added to the Turnstile site configuration
-- Check browser console for Turnstile-related errors
 
 ## Admin Panel Configuration
 

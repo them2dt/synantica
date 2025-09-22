@@ -1,6 +1,5 @@
 /**
- * Centralized authentication hooks and utilities
- * Provides consistent authentication patterns across the application
+ * Simplified authentication hooks and utilities
  */
 
 'use client'
@@ -9,7 +8,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
-import { handleAsyncError, handleDatabaseError } from '@/lib/utils/error-handling'
 
 /**
  * Extended user interface with commonly used fields
@@ -32,9 +30,7 @@ export interface AuthState {
 }
 
 /**
- * Hook for managing authentication state with consistent patterns
- * @param redirectTo - Optional path to redirect to when not authenticated
- * @param requireAuth - Whether to require authentication (default: false)
+ * Hook for managing authentication state
  */
 export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
   const [state, setState] = useState<AuthState>({
@@ -55,7 +51,16 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
         const { data: { user }, error } = await supabase.auth.getUser()
 
         if (error) {
-          throw error
+          console.log('Auth error:', error.message)
+          if (mounted) {
+            setState({
+              user: null,
+              loading: false,
+              isAuthenticated: false,
+              error: null,
+            })
+          }
+          return
         }
 
         if (mounted) {
@@ -67,17 +72,14 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
             error: null,
           })
 
-          // Handle authentication requirements
           if (requireAuth && !isAuthenticated && redirectTo) {
             router.push(redirectTo)
           }
         }
       } catch (error) {
+        console.log('Auth check error:', error)
         if (mounted) {
-          handleAsyncError(error, 'auth', (message) => {
-            setState(prev => ({ ...prev, error: message, loading: false }))
-          })
-
+          setState(prev => ({ ...prev, error: 'Authentication error', loading: false }))
           if (requireAuth && redirectTo) {
             router.push(redirectTo)
           }
@@ -102,7 +104,6 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
             error: null,
           })
 
-          // Handle authentication requirements
           if (requireAuth && !isAuthenticated && redirectTo) {
             router.push(redirectTo)
           }
@@ -116,10 +117,6 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
     }
   }, [supabase.auth, router, redirectTo, requireAuth])
 
-  /**
-   * Sign out the current user
-   * @param redirectTo - Optional path to redirect to after sign out
-   */
   const signOut = useCallback(async (redirectTo: string = '/auth/login') => {
     try {
       setState(prev => ({ ...prev, loading: true }))
@@ -127,7 +124,7 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
       const { error } = await supabase.auth.signOut()
 
       if (error) {
-        throw error
+        console.log('Sign out error:', error.message)
       }
 
       setState({
@@ -141,15 +138,11 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
         router.push(redirectTo)
       }
     } catch (error) {
-      handleAsyncError(error, 'auth', (message) => {
-        setState(prev => ({ ...prev, error: message, loading: false }))
-      })
+      console.log('Sign out error:', error)
+      setState(prev => ({ ...prev, error: 'Sign out error', loading: false }))
     }
   }, [supabase.auth, router])
 
-  /**
-   * Refresh the current user data
-   */
   const refreshUser = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, loading: true }))
@@ -157,7 +150,14 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
       const { data: { user }, error } = await supabase.auth.getUser()
 
       if (error) {
-        throw error
+        console.log('Refresh user error:', error.message)
+        setState({
+          user: null,
+          loading: false,
+          isAuthenticated: false,
+          error: null,
+        })
+        return
       }
 
       setState({
@@ -167,9 +167,8 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
         error: null,
       })
     } catch (error) {
-      handleAsyncError(error, 'auth', (message) => {
-        setState(prev => ({ ...prev, error: message, loading: false }))
-      })
+      console.log('Refresh user error:', error)
+      setState(prev => ({ ...prev, error: 'Refresh error', loading: false }))
     }
   }, [supabase.auth])
 
@@ -182,7 +181,6 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
 
 /**
  * Hook for authentication state without requiring auth
- * Useful for components that need to know auth status but don't require it
  */
 export function useAuthState() {
   return useAuth()
@@ -190,14 +188,13 @@ export function useAuthState() {
 
 /**
  * Hook for protected routes that requires authentication
- * @param redirectTo - Path to redirect to if not authenticated (default: '/auth/login')
  */
 export function useProtectedAuth(redirectTo: string = '/auth/login') {
   return useAuth(redirectTo, true)
 }
 
 /**
- * Hook for authentication actions (sign in, sign up, etc.)
+ * Hook for authentication actions
  */
 export function useAuthActions() {
   const [loading, setLoading] = useState(false)
@@ -205,9 +202,6 @@ export function useAuthActions() {
   const supabase = createClient()
   const router = useRouter()
 
-  /**
-   * Sign in with email and password
-   */
   const signIn = useCallback(async (email: string, password: string, redirectTo?: string) => {
     try {
       setLoading(true)
@@ -219,7 +213,10 @@ export function useAuthActions() {
       })
 
       if (error) {
-        throw error
+        console.log('Sign in error:', error.message)
+        setError(error.message)
+        setLoading(false)
+        return { data: null, error: error.message }
       }
 
       if (redirectTo) {
@@ -228,16 +225,13 @@ export function useAuthActions() {
 
       return { data, error: null }
     } catch (error) {
-      const errorResult = handleDatabaseError(error, 'auth')
-      setError(errorResult.message)
+      console.log('Sign in error:', error)
+      setError('Sign in failed')
       setLoading(false)
-      return { data: null, error: errorResult.message }
+      return { data: null, error: 'Sign in failed' }
     }
   }, [supabase.auth, router])
 
-  /**
-   * Sign up with email and password
-   */
   const signUp = useCallback(async (email: string, password: string, redirectTo?: string) => {
     try {
       setLoading(true)
@@ -249,7 +243,10 @@ export function useAuthActions() {
       })
 
       if (error) {
-        throw error
+        console.log('Sign up error:', error.message)
+        setError(error.message)
+        setLoading(false)
+        return { data: null, error: error.message }
       }
 
       if (redirectTo) {
@@ -258,16 +255,13 @@ export function useAuthActions() {
 
       return { data, error: null }
     } catch (error) {
-      const errorResult = handleDatabaseError(error, 'auth')
-      setError(errorResult.message)
+      console.log('Sign up error:', error)
+      setError('Sign up failed')
       setLoading(false)
-      return { data: null, error: errorResult.message }
+      return { data: null, error: 'Sign up failed' }
     }
   }, [supabase.auth, router])
 
-  /**
-   * Reset password
-   */
   const resetPassword = useCallback(async (email: string) => {
     try {
       setLoading(true)
@@ -278,21 +272,21 @@ export function useAuthActions() {
       })
 
       if (error) {
-        throw error
+        console.log('Reset password error:', error.message)
+        setError(error.message)
+        setLoading(false)
+        return { error: error.message }
       }
 
       return { error: null }
     } catch (error) {
-      const errorResult = handleDatabaseError(error, 'auth')
-      setError(errorResult.message)
+      console.log('Reset password error:', error)
+      setError('Reset password failed')
       setLoading(false)
-      return { error: errorResult.message }
+      return { error: 'Reset password failed' }
     }
   }, [supabase.auth])
 
-  /**
-   * Update password
-   */
   const updatePassword = useCallback(async (password: string) => {
     try {
       setLoading(true)
@@ -303,15 +297,18 @@ export function useAuthActions() {
       })
 
       if (error) {
-        throw error
+        console.log('Update password error:', error.message)
+        setError(error.message)
+        setLoading(false)
+        return { error: error.message }
       }
 
       return { error: null }
     } catch (error) {
-      const errorResult = handleDatabaseError(error, 'auth')
-      setError(errorResult.message)
+      console.log('Update password error:', error)
+      setError('Update password failed')
       setLoading(false)
-      return { error: errorResult.message }
+      return { error: 'Update password failed' }
     }
   }, [supabase.auth])
 
@@ -329,44 +326,24 @@ export function useAuthActions() {
  * Common authentication redirect utilities
  */
 export const authRedirects = {
-  /**
-   * Redirect to login page
-   */
   toLogin: (router: ReturnType<typeof useRouter>, from?: string) => {
     const path = from ? `/auth/login?redirect=${encodeURIComponent(from)}` : '/auth/login'
     router.push(path)
   },
 
-  /**
-   * Redirect to dashboard after login
-   */
   toDashboard: (router: ReturnType<typeof useRouter>) => {
     router.push('/dashboard')
   },
 
-  /**
-   * Redirect to profile page
-   */
   toProfile: (router: ReturnType<typeof useRouter>) => {
     router.push('/profile')
   },
 
-  /**
-   * Redirect to forgot password page
-   */
   toForgotPassword: (router: ReturnType<typeof useRouter>) => {
     router.push('/auth/forgot-password')
   },
 
-  /**
-   * Redirect to update password page
-   */
   toUpdatePassword: (router: ReturnType<typeof useRouter>) => {
     router.push('/auth/update-password')
   },
 }
-
-/**
- * Note: AuthGuard component moved to separate file to avoid circular dependencies
- * Use useProtectedAuth hook instead for component-level authentication guards
- */
