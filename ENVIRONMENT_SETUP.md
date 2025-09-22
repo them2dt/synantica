@@ -10,6 +10,8 @@ Create a `.env.local` file in the root of your project with the following variab
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+# Admin panel access control (comma-separated list of admin email addresses)
+ADMIN_EMAILS=admin@yourdomain.com,admin2@yourdomain.com
 # The following variable is required for the Vercel Postgres database, but can
 # be ignored if you're using a different database provider.
 POSTGRES_URL=your_postgres_database_url
@@ -101,3 +103,25 @@ Once you've set up the environment variables:
 - Make sure the site key is correct
 - Verify your domain is added to the Turnstile site configuration
 - Check browser console for Turnstile-related errors
+
+## Admin Panel Configuration
+
+The admin panel uses a separate Supabase client with elevated permissions:
+
+### Service Role Key
+The `SUPABASE_SERVICE_ROLE_KEY` is used for admin operations and:
+- Bypasses Row Level Security (RLS) policies
+- Has full database access
+- Should only be used in server-side admin API routes
+- **Never expose this key to the client-side**
+
+### Admin Client Usage
+The admin client is automatically used in:
+- `/api/admin/events/*` routes
+- All CRUD operations for events management
+- Bypasses user authentication checks for database operations
+
+### Security Notes
+- Admin routes still check user authentication via the regular client
+- Service role key is only used for database operations after auth verification
+- Admin panel is protected by authentication middleware

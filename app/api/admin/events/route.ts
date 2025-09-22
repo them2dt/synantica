@@ -1,19 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { isAdminUser } from '@/lib/supabase/admin-routes'
 
 // GET /api/admin/events - Get all events
 export async function GET() {
   try {
     const supabase = await createClient()
     
-    // Check if user is authenticated (you might want to add admin role check)
+    // Check if user is authenticated and is admin
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { data: events, error } = await supabase
+    if (!isAdminUser(user)) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
+    }
+
+    // Use admin client for elevated permissions and to bypass RLS
+    const adminSupabase = createAdminClient()
+    const { data: events, error } = await adminSupabase
       .from('events')
       .select('*')
       .order('created_at', { ascending: false })
@@ -24,24 +32,24 @@ export async function GET() {
     }
 
     // Transform database field names to frontend field names
-    const transformedEvents = (events || []).map((event: any) => ({
-      id: event.id,
-      name: event.name,
-      description: event.description || '',
-      fromDate: event.from_date,
-      toDate: event.to_date,
-      location: event.location,
-      country: event.country,
-      organizer: event.organizer,
-      fromAge: event.from_age || undefined,
-      toAge: event.to_age || undefined,
-      youtubeLink: event.youtube_link || undefined,
-      links: event.links || [],
-      type: event.type,
-      fields: event.fields || [],
-      status: event.status || 'draft',
-      createdAt: event.created_at || new Date().toISOString(),
-      updatedAt: event.updated_at || new Date().toISOString()
+    const transformedEvents = (events || []).map((event: Record<string, unknown>) => ({
+      id: event.id as string,
+      name: event.name as string,
+      description: (event.description as string) || '',
+      fromDate: event.from_date as string,
+      toDate: event.to_date as string,
+      location: event.location as string,
+      country: event.country as string,
+      organizer: event.organizer as string,
+      fromAge: (event.from_age as number) || undefined,
+      toAge: (event.to_age as number) || undefined,
+      youtubeLink: (event.youtube_link as string) || undefined,
+      links: (event.links as string[]) || [],
+      type: event.type as string,
+      fields: (event.fields as string[]) || [],
+      status: (event.status as string) || 'draft',
+      createdAt: (event.created_at as string) || new Date().toISOString(),
+      updatedAt: (event.updated_at as string) || new Date().toISOString()
     }))
 
     return NextResponse.json({ events: transformedEvents })
@@ -56,11 +64,15 @@ export async function POST(request: NextRequest) {
   try {
     const supabase = await createClient()
     
-    // Check if user is authenticated
+    // Check if user is authenticated and is admin
     const { data: { user }, error: authError } = await supabase.auth.getUser()
     
     if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    if (!isAdminUser(user)) {
+      return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }
 
     const body = await request.json()
@@ -86,7 +98,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    const { data: event, error } = await supabase
+    // Use admin client for elevated permissions
+    const adminSupabase = createAdminClient()
+    const { data: event, error } = await adminSupabase
       .from('events')
       .insert({
         name,
@@ -114,23 +128,23 @@ export async function POST(request: NextRequest) {
 
     // Transform database field names to frontend field names
     const transformedEvent = {
-      id: event.id,
-      name: event.name,
-      description: event.description || '',
-      fromDate: event.from_date,
-      toDate: event.to_date,
-      location: event.location,
-      country: event.country,
-      organizer: event.organizer,
-      fromAge: event.from_age || undefined,
-      toAge: event.to_age || undefined,
-      youtubeLink: event.youtube_link || undefined,
-      links: event.links || [],
-      type: event.type,
-      fields: event.fields || [],
-      status: event.status || 'draft',
-      createdAt: event.created_at || new Date().toISOString(),
-      updatedAt: event.updated_at || new Date().toISOString()
+      id: event.id as string,
+      name: event.name as string,
+      description: (event.description as string) || '',
+      fromDate: event.from_date as string,
+      toDate: event.to_date as string,
+      location: event.location as string,
+      country: event.country as string,
+      organizer: event.organizer as string,
+      fromAge: (event.from_age as number) || undefined,
+      toAge: (event.to_age as number) || undefined,
+      youtubeLink: (event.youtube_link as string) || undefined,
+      links: (event.links as string[]) || [],
+      type: event.type as string,
+      fields: (event.fields as string[]) || [],
+      status: (event.status as string) || 'draft',
+      createdAt: (event.created_at as string) || new Date().toISOString(),
+      updatedAt: (event.updated_at as string) || new Date().toISOString()
     }
 
     return NextResponse.json({ event: transformedEvent }, { status: 201 })
