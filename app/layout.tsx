@@ -4,6 +4,7 @@ import { satoshi } from "@/lib/fonts/satoshi"
 import { clashDisplay } from "@/lib/fonts/clash-display"
 import { generateMetadataWithOG } from "@/lib/og-image"
 import { ToastProvider } from "@/components/ui/toast"
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import "./globals.css"
 
 const defaultUrl = process.env.VERCEL_URL
@@ -44,6 +45,7 @@ export default function RootLayout({
             {children}
           </ToastProvider>
         </ThemeProvider>
+        <SpeedInsights />
       </body>
     </html>
   )

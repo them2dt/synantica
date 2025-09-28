@@ -21,6 +21,7 @@
     "@supabase/ssr": "latest",
     "@supabase/supabase-js": "latest",
     "@vercel/og": "^0.8.5",
+    "@vercel/speed-insights": "^1.2.0",
     "ag-grid-community": "^32.3.9",
     "ag-grid-react": "^32.3.9",
     "class-variance-authority": "^0.7.1",
