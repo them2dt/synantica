@@ -9,8 +9,6 @@ export default function MainLayout({
 }>) {
   return (
     <>
-      <Navigation authComponent={<AuthNav />} />
-      <NavigationSpacer />
       {children}
     </>
   );

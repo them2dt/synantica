@@ -142,10 +142,7 @@ export function LoginForm({
         {/* Remember Me & Forgot Password */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Checkbox
-              id="keepSignedIn"
-              {...register("keepSignedIn")}
-            />
+            <Checkbox/>
             <Label
               htmlFor="keepSignedIn"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

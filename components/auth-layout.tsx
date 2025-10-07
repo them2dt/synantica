@@ -18,7 +18,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
   return (
     <div className="min-h-screen flex">
       {/* Left Side - Auth Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-background">
+      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-background border-r-[1px] border-r-gray-300">
         <div className="w-full max-w-md">
           {/* Header */}
           <div className="text-center mb-8">
@@ -35,22 +35,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
       {/* Right Side - Decorative Pattern */}
       <div className="hidden lg:flex flex-1 bg-slate-900 relative overflow-hidden">
         {/* Decorative Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="grid grid-cols-4 gap-8 h-full w-full p-8">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-blue-400 rounded-full"
-                style={{
-                  width: '60px',
-                  height: '60px',
-                  clipPath: 'polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%)',
-                  transform: 'rotate(45deg)',
-                }}
-              />
-            ))}
-          </div>
-        </div>
+        <img src="/cover2.png" alt="cover" className="w-full h-full object-cover"/>
       </div>
     </div>
   )
