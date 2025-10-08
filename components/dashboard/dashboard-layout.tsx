@@ -66,9 +66,9 @@ export function DashboardLayout({
       <div className="flex-1">
         {/* Add spacing for floating navbar */}
         <div className="h-20" />
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
           {/* Filters Top Bar */}
-          <div className="mb-8">
+          <div className="mb-6 sm:mb-8">
             <FiltersTopBar
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}

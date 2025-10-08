@@ -162,7 +162,7 @@ export function LoginForm({
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full h-12 text-base bg-primary hover:bg-primary/90"
+          className="w-full h-12 text-base bg-primary hover:bg-primary/90 touch-manipulation"
           disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}

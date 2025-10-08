@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { User, Settings, LogOut, Moon, Sun, Home, LayoutDashboard } from 'lucide-react'
+import { User, Settings, LogOut, Moon, Sun, Home, LayoutDashboard, Menu } from 'lucide-react'
 import { useTheme } from 'next-themes'
 import { useAuthContext } from '@/lib/contexts/auth-context'
 import { Logo } from '@/components/ui/logo'
@@ -16,6 +16,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
 
 interface AuthenticatedNavbarProps {
@@ -28,6 +35,7 @@ export function AuthenticatedNavbar({ className }: AuthenticatedNavbarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const handleLogout = async () => {
     setIsLoggingOut(true)
@@ -85,8 +93,79 @@ export function AuthenticatedNavbar({ className }: AuthenticatedNavbarProps) {
           </div>
         </div>
 
-        {/* Right: Theme Toggle and User Menu */}
-        <div className="flex items-center gap-3">
+        {/* Right: Mobile Menu + Theme Toggle and User Menu */}
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Mobile Menu - Only on mobile */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden rounded-full w-9 h-9"
+                aria-label="Open menu"
+              >
+                <Menu className="w-5 h-5" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-80">
+              <SheetHeader>
+                <SheetTitle>Navigation</SheetTitle>
+              </SheetHeader>
+              <div className="flex flex-col gap-4 mt-8">
+                <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+                  <Button
+                    variant={isActive('/') && !isActive('/dashboard') && !isActive('/profile') ? 'default' : 'ghost'}
+                    className="w-full justify-start gap-2"
+                  >
+                    <Home className="w-4 h-4" />
+                    Home
+                  </Button>
+                </Link>
+                <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                  <Button
+                    variant={isActive('/dashboard') ? 'default' : 'ghost'}
+                    className="w-full justify-start gap-2"
+                  >
+                    <LayoutDashboard className="w-4 h-4" />
+                    Dashboard
+                  </Button>
+                </Link>
+                <div className="border-t my-4" />
+                <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
+                    <User className="w-4 h-4" />
+                    Profile
+                  </Button>
+                </Link>
+                <Link href="/settings" onClick={() => setMobileMenuOpen(false)}>
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start gap-2"
+                  >
+                    <Settings className="w-4 h-4" />
+                    Settings
+                  </Button>
+                </Link>
+                <div className="border-t my-4" />
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setMobileMenuOpen(false)
+                    handleLogout()
+                  }}
+                  className="w-full justify-start gap-2 text-red-600"
+                  disabled={isLoggingOut}
+                >
+                  <LogOut className="w-4 h-4" />
+                  {isLoggingOut ? 'Logging out...' : 'Log out'}
+                </Button>
+              </div>
+            </SheetContent>
+          </Sheet>
+
           {/* Theme Toggle */}
           <Button
             variant="ghost"
@@ -102,12 +181,12 @@ export function AuthenticatedNavbar({ className }: AuthenticatedNavbarProps) {
             )}
           </Button>
 
-          {/* User Menu */}
+          {/* User Menu - Desktop Only */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="ghost"
-                className="gap-2 rounded-full px-3"
+                className="hidden md:flex gap-2 rounded-full px-3"
               >
                 <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
                   <User className="w-4 h-4 text-primary" />

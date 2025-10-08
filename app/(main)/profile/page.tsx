@@ -44,28 +44,29 @@ export default function ProfilePage() {
       <div className="flex-1">
         {/* Add spacing for floating navbar */}
         <div className="h-20" />
-        <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button variant="ghost" size="sm" asChild>
+        <div className="flex items-center gap-4 mb-6 sm:mb-8">
+          <Button variant="ghost" size="sm" asChild className="touch-manipulation">
             <Link href="/dashboard">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Dashboard
+              <span className="hidden sm:inline">Back to Dashboard</span>
+              <span className="sm:hidden">Back</span>
             </Link>
           </Button>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-4 sm:gap-6">
           {/* Profile Header */}
           <Card>
             <CardHeader>
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
-                  <User className="w-8 h-8 text-primary" />
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/20 rounded-full flex items-center justify-center">
+                  <User className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-2xl font-heading font-semibold">Profile</CardTitle>
-                  <CardDescription>
+                  <CardTitle className="text-xl sm:text-2xl font-heading font-semibold">Profile</CardTitle>
+                  <CardDescription className="text-sm">
                     Manage your account information and preferences
                   </CardDescription>
                 </div>
@@ -125,24 +126,24 @@ export default function ProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full touch-manipulation"
                   onClick={() => setChangeEmailOpen(true)}
                 >
                   Change Email
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full"
+                  className="w-full touch-manipulation"
                   onClick={() => setChangePasswordOpen(true)}
                 >
                   Change Password
                 </Button>
                 <Button 
                   variant="destructive" 
-                  className="w-full"
+                  className="w-full touch-manipulation sm:col-span-2 md:col-span-1"
                   onClick={() => setDeleteAccountOpen(true)}
                 >
                   Delete Account

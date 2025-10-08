@@ -1,4 +1,4 @@
-import { Clock, X } from "lucide-react";
+import { X } from "lucide-react";
 import React from "react";
 
 export default function AuthPanel({
