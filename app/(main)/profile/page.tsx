@@ -11,14 +11,14 @@ import { ChangeEmailModal } from '@/components/modals/change-email-modal'
 import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
 import { Footer } from '@/components/layout/footer'
 import { formatEventDate } from '@/lib/utils/date-formatting'
-import { useAuth } from '@/lib/hooks/use-auth'
+import { useAuthContext } from '@/lib/contexts/auth-context'
 
 /**
  * User profile page
  * Displays user account information and profile details
  */
 export default function ProfilePage() {
-  const { user, loading } = useAuth('/auth/login', true)
+  const { user, loading } = useAuthContext()
   const [changePasswordOpen, setChangePasswordOpen] = useState(false)
   const [changeEmailOpen, setChangeEmailOpen] = useState(false)
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
@@ -42,6 +42,8 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
+        {/* Add spacing for floating navbar */}
+        <div className="h-20" />
         <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8">

@@ -64,6 +64,8 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
+        {/* Add spacing for floating navbar */}
+        <div className="h-20" />
         <div className="container mx-auto px-4 py-8">
           {/* Filters Top Bar */}
           <div className="mb-8">

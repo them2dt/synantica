@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/lib/hooks/use-auth'
+import { useAuthContext } from '@/lib/contexts/auth-context'
 import { Skeleton } from '@/components/ui/loading'
 
 /**
@@ -35,7 +35,7 @@ interface UserMenuProps {
  */
 export function UserMenu({ className, children, onClick }: UserMenuProps) {
   const router = useRouter()
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, signOut } = useAuthContext()
 
   const handleLogout = async () => {
     await signOut('/auth/login')
