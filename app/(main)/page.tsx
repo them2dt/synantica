@@ -1,12 +1,9 @@
 "use client"
-import { Hero } from "@/components/hero";
-import { CTASection } from "@/components/cta-section";
-import { Footer } from "@/components/layout";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Store, Calendar,Trophy, Users, Network } from "lucide-react";
+import { Store, Trophy, Users, Network } from "lucide-react";
 import Backdrop from "@/components/ui/backdrop";
 import { useState } from "react";
-
+import Image from "next/image";
 import AuthPanel from "@/components/ui/auth-panel";
 
 export default function Home() {
@@ -78,21 +75,23 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="relative flex flex-col w-full h-full rounded-0">
-            <img
-              src="/cover.png"
-              alt="Synantica Cover"
-              className="w-full h-full object-cover"
-            />
+           <div className="relative flex flex-col w-full h-full rounded-0">
+             <Image
+               src="/cover.png"
+               alt="Synantica Cover"
+               fill
+               className="object-cover"
+               priority
+             />
             <div className="absolute top-0 bottom-0 left-0 right-0 flex flex-row justify-center items-end p-0">
               <div className="h-24 w-full flex flex-row justify-center items-center p-4 gap-2 backdrop-blur-sm bg-background/10 border-t-[1px] border-background/20">
-                <button className="flex flex-row items-center justify-center w-full h-full cursor-pointer bg-pink-500 border-[2px] border-foreground/20 rounded-lg" onClick={openSignIn}>
-                  <div className="backgroundspace-nowrap font-sans font-bold text-background">
+                 <button className="flex flex-row items-center justify-center w-full h-full cursor-pointer bg-pink-500 border-[2px] border-foreground/20 rounded-lg" onClick={openSignIn}>
+                   <div className="whitespace-nowrap font-sans font-bold text-background">
                     Log in
                   </div>
                 </button>
-                <button className="flex flex-row items-center justify-center w-full h-full cursor-pointer bg-background border-[2px] border-foreground/20 rounded-lg" onClick={openSignUp}>
-                  <div className="backgroundspace-nowrap font-sans font-bold text-foreground">
+                 <button className="flex flex-row items-center justify-center w-full h-full cursor-pointer bg-background border-[2px] border-foreground/20 rounded-lg" onClick={openSignUp}>
+                   <div className="whitespace-nowrap font-sans font-bold text-foreground">
                     Register
                   </div>
                 </button>

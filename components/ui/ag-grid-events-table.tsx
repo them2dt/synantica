@@ -87,7 +87,7 @@ export function AGGridEventsTable({
     () => [
       {
         headerName: '',
-        field: 'actions',
+        field: undefined,
         width: 70,
         pinned: 'left',
         cellRenderer: (params: { data: Event }) => {
@@ -124,7 +124,7 @@ export function AGGridEventsTable({
         editable: false,
         flex: 4,
         minWidth: 400,
-        cellRenderer: (params: { data: Event }) => {
+        cellRenderer: (params: { data: Event; value: string }) => {
           const desc = params.value || ''
           return (
             <div className="truncate" title={desc}>
@@ -139,7 +139,7 @@ export function AGGridEventsTable({
         editable: false,
         flex: 1.5,
         minWidth: 130,
-        cellRenderer: (params: { data: Event }) => {
+        cellRenderer: (params: { data: Event; value: string }) => {
           const type = params.value || ''
           return (
             <span className="capitalize">
@@ -157,9 +157,9 @@ export function AGGridEventsTable({
         cellStyle: (params: { value: string }) => {
           if (params.value === EventStatus.PUBLISHED) return { color: 'green', fontWeight: 'bold' }
           if (params.value === EventStatus.CANCELLED) return { color: 'red', fontWeight: 'bold' }
-          return { color: 'gray' }
+          return { color: 'gray', fontWeight: 'normal' }
         },
-        cellRenderer: (params: { data: Event }) => {
+        cellRenderer: (params: { data: Event; value: string }) => {
           const status = params.value || ''
           return (
             <span className="capitalize">

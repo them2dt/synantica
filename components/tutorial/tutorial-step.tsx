@@ -10,12 +10,9 @@ export function TutorialStep({
   return (
     <li className="relative">
       <Checkbox
-        id={title}
-        name={title}
         className={`absolute top-[3px] mr-2 peer`}
       />
       <label
-        htmlFor={title}
         className={`relative text-base text-foreground peer-checked:line-through font-medium`}
       >
         <span className="ml-8">{title}</span>
