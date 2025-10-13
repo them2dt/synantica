@@ -4,7 +4,6 @@ import { satoshi } from "@/lib/fonts/satoshi"
 import { clashDisplay } from "@/lib/fonts/clash-display"
 import { generateMetadataWithOG } from "@/lib/og-image"
 import { ToastProvider } from "@/components/ui/toast"
-import { AuthProvider } from "@/lib/contexts/auth-context"
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import "./globals.css"
 
@@ -42,11 +41,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <AuthProvider>
-            <ToastProvider>
-              {children}
-            </ToastProvider>
-          </AuthProvider>
+          <ToastProvider>
+            {children}
+          </ToastProvider>
         </ThemeProvider>
         <SpeedInsights />
       </body>

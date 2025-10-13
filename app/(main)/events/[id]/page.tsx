@@ -241,7 +241,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 size="lg" 
                 className="px-8"
                 onClick={() => {
-                  window.location.href = `mailto:visioncatalyzer@gmail.com?subject=Question about ${event.name}`;
+                  window.location.href = `mailto:contact@visioncatalyzer.com?subject=Question about ${event.name}`;
                 }}
               >
                 <Mail className="w-4 h-4 mr-2" />

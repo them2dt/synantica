@@ -142,7 +142,10 @@ export function LoginForm({
         {/* Remember Me & Forgot Password */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Checkbox/>
+            <Checkbox
+              id="keepSignedIn"
+              {...register("keepSignedIn")}
+            />
             <Label
               htmlFor="keepSignedIn"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -162,7 +165,7 @@ export function LoginForm({
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full h-12 text-base bg-primary hover:bg-primary/90 touch-manipulation"
+          className="w-full h-12 text-base bg-primary hover:bg-primary/90"
           disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Signing in..." : "Sign In"}

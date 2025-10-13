@@ -11,14 +11,14 @@ import { ChangeEmailModal } from '@/components/modals/change-email-modal'
 import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
 import { Footer } from '@/components/layout/footer'
 import { formatEventDate } from '@/lib/utils/date-formatting'
-import { useAuthContext } from '@/lib/contexts/auth-context'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 /**
  * User profile page
  * Displays user account information and profile details
  */
 export default function ProfilePage() {
-  const { user, loading } = useAuthContext()
+  const { user, loading } = useAuth('/auth/login', true)
   const [changePasswordOpen, setChangePasswordOpen] = useState(false)
   const [changeEmailOpen, setChangeEmailOpen] = useState(false)
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
@@ -42,31 +42,28 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
-        {/* Add spacing for floating navbar */}
-        <div className="h-20" />
-        <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8 max-w-4xl">
+        <div className="container mx-auto px-4 py-8 max-w-4xl">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6 sm:mb-8">
-          <Button variant="ghost" size="sm" asChild className="touch-manipulation">
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" size="sm" asChild>
             <Link href="/dashboard">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Back to Dashboard</span>
-              <span className="sm:hidden">Back</span>
+              Back to Dashboard
             </Link>
           </Button>
         </div>
 
-        <div className="grid gap-4 sm:gap-6">
+        <div className="grid gap-6">
           {/* Profile Header */}
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-primary/20 rounded-full flex items-center justify-center">
-                  <User className="w-7 h-7 sm:w-8 sm:h-8 text-primary" />
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center">
+                  <User className="w-8 h-8 text-primary" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl sm:text-2xl font-heading font-semibold">Profile</CardTitle>
-                  <CardDescription className="text-sm">
+                  <CardTitle className="text-2xl font-heading font-semibold">Profile</CardTitle>
+                  <CardDescription>
                     Manage your account information and preferences
                   </CardDescription>
                 </div>
@@ -126,24 +123,24 @@ export default function ProfilePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Button 
                   variant="outline" 
-                  className="w-full touch-manipulation"
+                  className="w-full"
                   onClick={() => setChangeEmailOpen(true)}
                 >
                   Change Email
                 </Button>
                 <Button 
                   variant="outline" 
-                  className="w-full touch-manipulation"
+                  className="w-full"
                   onClick={() => setChangePasswordOpen(true)}
                 >
                   Change Password
                 </Button>
                 <Button 
                   variant="destructive" 
-                  className="w-full touch-manipulation sm:col-span-2 md:col-span-1"
+                  className="w-full"
                   onClick={() => setDeleteAccountOpen(true)}
                 >
                   Delete Account

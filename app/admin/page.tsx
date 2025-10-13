@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { AGGridEventsTable } from '@/components/ui/ag-grid-events-table'
+import { EventsTable } from '@/components/admin/events-table'
 import { Event } from '@/types/event'
 import { AlertCircle } from 'lucide-react'
 
@@ -190,18 +190,18 @@ export default function EventsManagementPage() {
   }
 
   return (
-    <div className="flex flex-col h-[calc(100vh-8rem)] px-5">
-      <div className="flex-shrink-0 mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">Events Management</h1>
-        <p className="text-gray-600">Add, edit, and manage all events using the grid below.</p>
+    <div className="flex flex-col min-h-screen py-8 px-5">
+      <div className="flex-shrink-0 mb-6">
+        <h1 className="text-3xl font-bold text-gray-900">Events Management</h1>
+        <p className="text-gray-600 mt-2">Add, edit, and manage all events. Click on any row to edit.</p>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center h-full">
+        <div className="flex items-center justify-center h-64">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       ) : (
-        <AGGridEventsTable
+        <EventsTable
           events={events}
           onAddEvent={handleAddEvent}
           onUpdateEvent={handleUpdateEvent}

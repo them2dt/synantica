@@ -2,12 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Event, EventStatus } from '@/types/event'
-import { EVENT_TYPES, EVENT_SUBJECTS } from '@/types/category'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
@@ -22,37 +20,101 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { X, Plus } from 'lucide-react'
+import { X, Plus, Save } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 interface EventEditModalProps {
   event: Event | null
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onSave: (eventData: Partial<Event>) => Promise<void>
+  isOpen: boolean
+  onClose: () => void
+  onSave: (id: string, data: Partial<Event>) => Promise<void>
+  mode: 'edit' | 'create'
 }
 
-export function EventEditModal({ event, open, onOpenChange, onSave }: EventEditModalProps) {
-  const [formData, setFormData] = useState<Partial<Event>>({})
-  const [selectedFields, setSelectedFields] = useState<string[]>([])
-  const [links, setLinks] = useState<string[]>([])
-  const [newLink, setNewLink] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [errors, setErrors] = useState<Record<string, string>>({})
+export function EventEditModal({
+  event,
+  isOpen,
+  onClose,
+  onSave,
+  mode,
+}: EventEditModalProps) {
+  const [formData, setFormData] = useState<Partial<Event>>({
+    name: '',
+    description: '',
+    fromDate: '',
+    toDate: '',
+    location: '',
+    country: '',
+    organizer: '',
+    fromAge: undefined,
+    toAge: undefined,
+    youtubeLink: '',
+    links: [],
+    type: 'events',
+    fields: [],
+    status: EventStatus.DRAFT,
+  })
 
-  // Initialize form data when event changes
+  const [newLink, setNewLink] = useState('')
+  const [newField, setNewField] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
+
+  // Event types
+  const eventTypes = [
+    { value: 'olympiads', label: 'Olympiads' },
+    { value: 'contests', label: 'Contests' },
+    { value: 'events', label: 'Events' },
+    { value: 'workshops', label: 'Workshops' },
+  ]
+
+  // Common fields/subjects
+  const commonFields = [
+    'computer-science',
+    'business',
+    'engineering',
+    'design',
+    'marketing',
+    'data-science',
+    'artificial-intelligence',
+    'cybersecurity',
+    'web-development',
+    'mobile-development',
+    'blockchain',
+    'startup',
+    'entrepreneurship',
+    'leadership',
+    'communication',
+    'physics',
+    'mathematics',
+    'biology',
+    'chemistry',
+    'other',
+  ]
+
+  // Load event data when modal opens
   useEffect(() => {
-    if (event) {
-      setFormData(event)
-      setSelectedFields(event.fields || [])
-      setLinks(event.links || [])
-    } else {
-      // Reset for new event
+    if (event && mode === 'edit') {
+      setFormData({
+        name: event.name,
+        description: event.description,
+        fromDate: event.fromDate,
+        toDate: event.toDate,
+        location: event.location,
+        country: event.country,
+        organizer: event.organizer,
+        fromAge: event.fromAge,
+        toAge: event.toAge,
+        youtubeLink: event.youtubeLink || '',
+        links: event.links || [],
+        type: event.type,
+        fields: event.fields || [],
+        status: event.status,
+      })
+    } else if (mode === 'create') {
+      // Reset form for new event
       setFormData({
         name: '',
         description: '',
-        type: 'events',
-        status: EventStatus.DRAFT,
         fromDate: new Date().toISOString().split('T')[0],
         toDate: new Date().toISOString().split('T')[0],
         location: '',
@@ -62,109 +124,79 @@ export function EventEditModal({ event, open, onOpenChange, onSave }: EventEditM
         toAge: undefined,
         youtubeLink: '',
         links: [],
+        type: 'events',
         fields: [],
+        status: EventStatus.DRAFT,
       })
-      setSelectedFields([])
-      setLinks([])
     }
-    setErrors({})
-  }, [event, open])
+  }, [event, mode, isOpen])
 
-  const validateForm = (): boolean => {
-    const newErrors: Record<string, string> = {}
-
-    if (!formData.name?.trim()) {
-      newErrors.name = 'Name is required'
-    }
-    if (!formData.description?.trim()) {
-      newErrors.description = 'Description is required'
-    }
-    if (!formData.fromDate) {
-      newErrors.fromDate = 'Start date is required'
-    }
-    if (!formData.toDate) {
-      newErrors.toDate = 'End date is required'
-    }
-    if (formData.fromDate && formData.toDate && formData.fromDate > formData.toDate) {
-      newErrors.toDate = 'End date must be after start date'
-    }
-    if (!formData.location?.trim()) {
-      newErrors.location = 'Location is required'
-    }
-    if (!formData.country?.trim()) {
-      newErrors.country = 'Country is required'
-    }
-    if (!formData.organizer?.trim()) {
-      newErrors.organizer = 'Organizer is required'
-    }
-    if (formData.fromAge && formData.toAge && formData.fromAge > formData.toAge) {
-      newErrors.toAge = 'Max age must be greater than min age'
-    }
-    if (formData.youtubeLink && !isValidUrl(formData.youtubeLink)) {
-      newErrors.youtubeLink = 'Invalid YouTube URL'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+  const handleInputChange = (field: keyof Event, value: string | number | string[] | EventStatus | undefined) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
   }
 
-  const isValidUrl = (url: string): boolean => {
-    try {
-      new URL(url)
-      return true
-    } catch {
-      return false
-    }
-  }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    if (!validateForm()) {
-      return
-    }
-
-    setLoading(true)
-    try {
-      await onSave({
-        ...formData,
-        fields: selectedFields,
-        links: links.filter(link => link.trim()),
-      })
-      onOpenChange(false)
-    } catch (error) {
-      console.error('Error saving event:', error)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleAddLink = () => {
-    if (newLink.trim() && isValidUrl(newLink.trim())) {
-      setLinks([...links, newLink.trim()])
+  const addLink = () => {
+    if (newLink.trim() && !formData.links?.includes(newLink.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        links: [...(prev.links || []), newLink.trim()],
+      }))
       setNewLink('')
     }
   }
 
-  const handleRemoveLink = (index: number) => {
-    setLinks(links.filter((_, i) => i !== index))
+  const removeLink = (linkToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      links: prev.links?.filter((link) => link !== linkToRemove) || [],
+    }))
   }
 
-  const toggleField = (field: string) => {
-    if (selectedFields.includes(field)) {
-      setSelectedFields(selectedFields.filter(f => f !== field))
-    } else {
-      setSelectedFields([...selectedFields, field])
+  const addField = () => {
+    if (newField.trim() && !formData.fields?.includes(newField.trim())) {
+      setFormData((prev) => ({
+        ...prev,
+        fields: [...(prev.fields || []), newField.trim()],
+      }))
+      setNewField('')
+    }
+  }
+
+  const removeField = (fieldToRemove: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      fields: prev.fields?.filter((field) => field !== fieldToRemove) || [],
+    }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSaving(true)
+    try {
+      const id = mode === 'edit' && event ? event.id : 'new'
+      await onSave(id, formData)
+      onClose()
+    } catch (error) {
+      console.error('Error saving event:', error)
+    } finally {
+      setIsSaving(false)
     }
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{event ? 'Edit Event' : 'Create New Event'}</DialogTitle>
+          <DialogTitle>
+            {mode === 'edit' ? 'Edit Event' : 'Create New Event'}
+          </DialogTitle>
           <DialogDescription>
-            {event ? 'Update event details and save changes.' : 'Fill in the event details below.'}
+            {mode === 'edit'
+              ? 'Update the event details below'
+              : 'Fill in the event details to create a new event'}
           </DialogDescription>
         </DialogHeader>
 
@@ -172,63 +204,67 @@ export function EventEditModal({ event, open, onOpenChange, onSave }: EventEditM
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Basic Information</h3>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="col-span-2">
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="name">Event Name *</Label>
                 <Input
                   id="name"
-                  value={formData.name || ''}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className={errors.name ? 'border-red-500' : ''}
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  placeholder="Enter event name"
+                  required
                 />
-                {errors.name && <p className="text-sm text-red-500 mt-1">{errors.name}</p>}
               </div>
 
-              <div className="col-span-2">
+              <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="description">Description *</Label>
                 <Textarea
                   id="description"
+                  value={formData.description}
+                  onChange={(e) =>
+                    handleInputChange('description', e.target.value)
+                  }
+                  placeholder="Describe the event in detail..."
                   rows={4}
-                  value={formData.description || ''}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={errors.description ? 'border-red-500' : ''}
+                  required
                 />
-                {errors.description && <p className="text-sm text-red-500 mt-1">{errors.description}</p>}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="type">Event Type *</Label>
                 <Select
-                  value={formData.type || 'events'}
-                  onValueChange={(value) => setFormData({ ...formData, type: value })}
+                  value={formData.type}
+                  onValueChange={(value) => handleInputChange('type', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {EVENT_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type.charAt(0).toUpperCase() + type.slice(1)}
+                    {eventTypes.map((type) => (
+                      <SelectItem key={type.value} value={type.value}>
+                        {type.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="status">Status *</Label>
                 <Select
-                  value={formData.status || EventStatus.DRAFT}
-                  onValueChange={(value) => setFormData({ ...formData, status: value as EventStatus })}
+                  value={formData.status}
+                  onValueChange={(value) =>
+                    handleInputChange('status', value as EventStatus)
+                  }
                 >
                   <SelectTrigger>
-                    <SelectValue />
+                    <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={EventStatus.DRAFT}>Draft</SelectItem>
-                    <SelectItem value={EventStatus.PUBLISHED}>Published</SelectItem>
-                    <SelectItem value={EventStatus.CANCELLED}>Cancelled</SelectItem>
+                    <SelectItem value="draft">Draft</SelectItem>
+                    <SelectItem value="published">Published</SelectItem>
+                    <SelectItem value="cancelled">Cancelled</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -238,176 +274,270 @@ export function EventEditModal({ event, open, onOpenChange, onSave }: EventEditM
           {/* Date & Location */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Date & Location</h3>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
                 <Label htmlFor="fromDate">Start Date *</Label>
                 <Input
                   id="fromDate"
                   type="date"
-                  value={formData.fromDate || ''}
-                  onChange={(e) => setFormData({ ...formData, fromDate: e.target.value })}
-                  className={errors.fromDate ? 'border-red-500' : ''}
+                  value={formData.fromDate}
+                  onChange={(e) =>
+                    handleInputChange('fromDate', e.target.value)
+                  }
+                  required
                 />
-                {errors.fromDate && <p className="text-sm text-red-500 mt-1">{errors.fromDate}</p>}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="toDate">End Date *</Label>
                 <Input
                   id="toDate"
                   type="date"
-                  value={formData.toDate || ''}
-                  onChange={(e) => setFormData({ ...formData, toDate: e.target.value })}
-                  className={errors.toDate ? 'border-red-500' : ''}
+                  value={formData.toDate}
+                  onChange={(e) => handleInputChange('toDate', e.target.value)}
+                  required
                 />
-                {errors.toDate && <p className="text-sm text-red-500 mt-1">{errors.toDate}</p>}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="location">Location *</Label>
                 <Input
                   id="location"
-                  value={formData.location || ''}
-                  onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  className={errors.location ? 'border-red-500' : ''}
+                  value={formData.location}
+                  onChange={(e) =>
+                    handleInputChange('location', e.target.value)
+                  }
+                  placeholder="e.g., Main Auditorium, Room 101"
+                  required
                 />
-                {errors.location && <p className="text-sm text-red-500 mt-1">{errors.location}</p>}
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="country">Country *</Label>
                 <Input
                   id="country"
-                  value={formData.country || ''}
-                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                  className={errors.country ? 'border-red-500' : ''}
+                  value={formData.country}
+                  onChange={(e) =>
+                    handleInputChange('country', e.target.value)
+                  }
+                  placeholder="e.g., Switzerland, Germany"
+                  required
                 />
-                {errors.country && <p className="text-sm text-red-500 mt-1">{errors.country}</p>}
-              </div>
-
-              <div className="col-span-2">
-                <Label htmlFor="organizer">Organizer *</Label>
-                <Input
-                  id="organizer"
-                  value={formData.organizer || ''}
-                  onChange={(e) => setFormData({ ...formData, organizer: e.target.value })}
-                  className={errors.organizer ? 'border-red-500' : ''}
-                />
-                {errors.organizer && <p className="text-sm text-red-500 mt-1">{errors.organizer}</p>}
               </div>
             </div>
           </div>
 
-          {/* Age Range */}
+          {/* Organizer & Age Range */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Age Range (Optional)</h3>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div>
+            <h3 className="text-lg font-semibold">Organizer & Target Audience</h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2 md:col-span-3">
+                <Label htmlFor="organizer">Organizer *</Label>
+                <Input
+                  id="organizer"
+                  value={formData.organizer}
+                  onChange={(e) =>
+                    handleInputChange('organizer', e.target.value)
+                  }
+                  placeholder="Organization or person name"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="fromAge">Minimum Age</Label>
                 <Input
                   id="fromAge"
                   type="number"
-                  min="0"
-                  max="99"
                   value={formData.fromAge || ''}
-                  onChange={(e) => setFormData({ ...formData, fromAge: e.target.value ? parseInt(e.target.value) : undefined })}
+                  onChange={(e) =>
+                    handleInputChange(
+                      'fromAge',
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
+                  placeholder="e.g., 18"
+                  min="0"
+                  max="100"
                 />
               </div>
 
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="toAge">Maximum Age</Label>
                 <Input
                   id="toAge"
                   type="number"
-                  min="0"
-                  max="99"
                   value={formData.toAge || ''}
-                  onChange={(e) => setFormData({ ...formData, toAge: e.target.value ? parseInt(e.target.value) : undefined })}
-                  className={errors.toAge ? 'border-red-500' : ''}
+                  onChange={(e) =>
+                    handleInputChange(
+                      'toAge',
+                      e.target.value ? parseInt(e.target.value) : undefined
+                    )
+                  }
+                  placeholder="e.g., 30"
+                  min="0"
+                  max="100"
                 />
-                {errors.toAge && <p className="text-sm text-red-500 mt-1">{errors.toAge}</p>}
               </div>
             </div>
           </div>
 
-          {/* Fields/Categories */}
+          {/* Fields/Subjects */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Categories/Fields</h3>
-            <div className="flex flex-wrap gap-2">
-              {EVENT_SUBJECTS.map((field) => (
-                <Badge
-                  key={field}
-                  variant={selectedFields.includes(field) ? 'default' : 'outline'}
-                  className="cursor-pointer"
-                  onClick={() => toggleField(field)}
-                >
-                  {field.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-                </Badge>
-              ))}
+            <h3 className="text-lg font-semibold">Fields/Subjects</h3>
+
+            <div className="space-y-2">
+              <Label>Quick Add Fields</Label>
+              <div className="flex flex-wrap gap-2">
+                {commonFields.map((field) => (
+                  <Button
+                    key={field}
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      if (!formData.fields?.includes(field)) {
+                        setFormData((prev) => ({
+                          ...prev,
+                          fields: [...(prev.fields || []), field],
+                        }))
+                      }
+                    }}
+                    disabled={formData.fields?.includes(field)}
+                  >
+                    {field}
+                  </Button>
+                ))}
+              </div>
             </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="newField">Add Custom Field</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="newField"
+                  value={newField}
+                  onChange={(e) => setNewField(e.target.value)}
+                  placeholder="Enter field name"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addField()
+                    }
+                  }}
+                />
+                <Button type="button" onClick={addField} size="icon">
+                  <Plus className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
+            {formData.fields && formData.fields.length > 0 && (
+              <div className="space-y-2">
+                <Label>Selected Fields</Label>
+                <div className="flex flex-wrap gap-2">
+                  {formData.fields.map((field) => (
+                    <Badge key={field} variant="secondary">
+                      {field}
+                      <button
+                        type="button"
+                        onClick={() => removeField(field)}
+                        className="ml-2 hover:text-red-500"
+                      >
+                        <X className="h-3 w-3" />
+                      </button>
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Media & Links */}
+          {/* Links & Media */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Media & Links</h3>
-            
-            <div>
+            <h3 className="text-lg font-semibold">Links & Media</h3>
+
+            <div className="space-y-2">
               <Label htmlFor="youtubeLink">YouTube Link</Label>
               <Input
                 id="youtubeLink"
                 type="url"
+                value={formData.youtubeLink}
+                onChange={(e) =>
+                  handleInputChange('youtubeLink', e.target.value)
+                }
                 placeholder="https://youtube.com/watch?v=..."
-                value={formData.youtubeLink || ''}
-                onChange={(e) => setFormData({ ...formData, youtubeLink: e.target.value })}
-                className={errors.youtubeLink ? 'border-red-500' : ''}
               />
-              {errors.youtubeLink && <p className="text-sm text-red-500 mt-1">{errors.youtubeLink}</p>}
             </div>
 
-            <div>
-              <Label>Additional Links</Label>
+            <div className="space-y-2">
+              <Label htmlFor="newLink">External Links</Label>
               <div className="flex gap-2">
                 <Input
+                  id="newLink"
                   type="url"
-                  placeholder="https://example.com"
                   value={newLink}
                   onChange={(e) => setNewLink(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddLink())}
+                  placeholder="https://example.com"
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addLink()
+                    }
+                  }}
                 />
-                <Button type="button" size="sm" onClick={handleAddLink}>
-                  <Plus className="w-4 h-4" />
+                <Button type="button" onClick={addLink} size="icon">
+                  <Plus className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="mt-2 space-y-1">
-                {links.map((link, index) => (
-                  <div key={index} className="flex items-center gap-2 bg-muted p-2 rounded">
-                    <span className="text-sm flex-1 truncate">{link}</span>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleRemoveLink(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  </div>
-                ))}
-              </div>
             </div>
+
+            {formData.links && formData.links.length > 0 && (
+              <div className="space-y-2">
+                <Label>Added Links</Label>
+                <div className="space-y-2">
+                  {formData.links.map((link, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    >
+                      <a
+                        href={link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 hover:underline truncate"
+                      >
+                        {link}
+                      </a>
+                      <button
+                        type="button"
+                        onClick={() => removeLink(link)}
+                        className="ml-2 text-red-500 hover:text-red-700"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
-          <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          {/* Form Actions */}
+          <div className="flex justify-end gap-4 pt-4 border-t">
+            <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Saving...' : 'Save Event'}
+            <Button type="submit" disabled={isSaving}>
+              <Save className="mr-2 h-4 w-4" />
+              {isSaving ? 'Saving...' : mode === 'edit' ? 'Update Event' : 'Create Event'}
             </Button>
-          </DialogFooter>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
   )
 }
+

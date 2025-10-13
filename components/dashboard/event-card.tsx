@@ -91,7 +91,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                 <Button 
                   size="sm" 
                   onClick={() => onLearnMore(event)}
-                  className="w-fit touch-manipulation"
+                  className="w-fit"
                 >
                   Learn More
                 </Button>
@@ -155,7 +155,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
         <CardFooter className="pt-0 mt-auto">
           <Button 
-            className="w-full touch-manipulation" 
+            className="w-full" 
             size="sm" 
             onClick={() => onLearnMore(event)}
           >

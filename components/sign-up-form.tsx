@@ -246,7 +246,7 @@ export function SignUpForm({
         {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full h-12 text-base bg-primary hover:bg-primary/90 touch-manipulation"
+          className="w-full h-12 text-base bg-primary hover:bg-primary/90"
           disabled={isSubmitting || !isValid}
         >
           {isSubmitting ? "Creating account..." : "Create Account"}

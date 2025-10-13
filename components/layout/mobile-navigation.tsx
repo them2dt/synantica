@@ -12,7 +12,7 @@ import { UserMenu } from '@/components/user/user-menu'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { hasEnvVars } from '@/lib/utils'
 import { cn } from '@/lib/utils'
-import { useAuthContext } from '@/lib/contexts/auth-context'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 /**
  * Props for the mobile navigation component
@@ -33,7 +33,7 @@ export function MobileNavigation({
   showThemeSwitcher = true 
 }: MobileNavigationProps) {
   const [open, setOpen] = useState(false)
-  const { user, loading } = useAuthContext()
+  const { user, loading } = useAuth()
   const pathname = usePathname()
   
   const isActive = (path: string) => {
