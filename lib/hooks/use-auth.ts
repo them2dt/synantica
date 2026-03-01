@@ -10,12 +10,10 @@ import {
   User as FirebaseUser,
   onAuthStateChanged,
   signOut as firebaseSignOut,
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
-  sendPasswordResetEmail,
-  updatePassword as firebaseUpdatePassword
+  signInWithPopup,
+  AuthProvider
 } from 'firebase/auth'
-import { auth } from '@/lib/firebase/client'
+import { auth, googleProvider, appleProvider } from '@/lib/firebase/client'
 
 /**
  * Extended user interface with commonly used fields
@@ -169,12 +167,12 @@ export function useAuthActions() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const signIn = useCallback(async (email: string, password: string, redirectTo?: string) => {
+  const signInWithProvider = useCallback(async (provider: AuthProvider, redirectTo?: string) => {
     try {
       setLoading(true)
       setError(null)
 
-      const userCredential = await signInWithEmailAndPassword(auth, email, password)
+      const userCredential = await signInWithPopup(auth, provider)
 
       // Set session cookie
       const idToken = await userCredential.user.getIdToken()
@@ -190,7 +188,7 @@ export function useAuthActions() {
 
       return { data: { user: mapFirebaseUser(userCredential.user) }, error: null }
     } catch (error: unknown) {
-      console.log('Sign in error:', error)
+      console.log('Provider sign in error:', error)
       const err = error as Error
       setError(err.message || 'Sign in failed')
       setLoading(false)
@@ -198,80 +196,17 @@ export function useAuthActions() {
     }
   }, [router])
 
-  const signUp = useCallback(async (email: string, password: string, redirectTo?: string) => {
-    try {
-      setLoading(true)
-      setError(null)
+  const signInWithGoogle = useCallback((redirectTo?: string) =>
+    signInWithProvider(googleProvider, redirectTo),
+    [signInWithProvider])
 
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-
-      // Set session cookie
-      const idToken = await userCredential.user.getIdToken()
-      await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      })
-
-      if (redirectTo) {
-        router.push(redirectTo)
-      }
-
-      return { data: { user: mapFirebaseUser(userCredential.user) }, error: null }
-    } catch (error: unknown) {
-      console.log('Sign up error:', error)
-      const err = error as Error
-      setError(err.message || 'Sign up failed')
-      setLoading(false)
-      return { data: null, error: err.message || 'Sign up failed' }
-    }
-  }, [router])
-
-  const resetPassword = useCallback(async (email: string) => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      await sendPasswordResetEmail(auth, email, {
-        url: `${window.location.origin}/auth/update-password`,
-      })
-
-      return { error: null }
-    } catch (error: unknown) {
-      console.log('Reset password error:', error)
-      const err = error as Error
-      setError(err.message || 'Reset password failed')
-      setLoading(false)
-      return { error: err.message || 'Reset password failed' }
-    }
-  }, [])
-
-  const updatePassword = useCallback(async (password: string) => {
-    try {
-      setLoading(true)
-      setError(null)
-
-      if (!auth.currentUser) {
-        throw new Error('Not authenticated');
-      }
-
-      await firebaseUpdatePassword(auth.currentUser, password)
-
-      return { error: null }
-    } catch (error: unknown) {
-      console.log('Update password error:', error)
-      const err = error as Error
-      setError(err.message || 'Update password failed')
-      setLoading(false)
-      return { error: err.message || 'Update password failed' }
-    }
-  }, [])
+  const signInWithApple = useCallback((redirectTo?: string) =>
+    signInWithProvider(appleProvider, redirectTo),
+    [signInWithProvider])
 
   return {
-    signIn,
-    signUp,
-    resetPassword,
-    updatePassword,
+    signInWithGoogle,
+    signInWithApple,
     loading,
     error,
   }
@@ -292,13 +227,5 @@ export const authRedirects = {
 
   toProfile: (router: ReturnType<typeof useRouter>) => {
     router.push('/profile')
-  },
-
-  toForgotPassword: (router: ReturnType<typeof useRouter>) => {
-    router.push('/auth/forgot-password')
-  },
-
-  toUpdatePassword: (router: ReturnType<typeof useRouter>) => {
-    router.push('/auth/update-password')
   },
 }

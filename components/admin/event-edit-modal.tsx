@@ -78,7 +78,6 @@ export function EventEditModal({
     'artificial-intelligence',
     'cybersecurity',
     'web-development',
-    'mobile-development',
     'blockchain',
     'startup',
     'entrepreneurship',
@@ -205,8 +204,8 @@ export function EventEditModal({
           <div className="space-y-4">
             <h3 className="text-lg">Basic Information</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2 md:col-span-2">
+            <div className="grid grid-cols-1 grid-cols-2 gap-4">
+              <div className="space-y-2 col-span-2">
                 <Label htmlFor="name">Event Name *</Label>
                 <Input
                   id="name"
@@ -217,7 +216,7 @@ export function EventEditModal({
                 />
               </div>
 
-              <div className="space-y-2 md:col-span-2">
+              <div className="space-y-2 col-span-2">
                 <Label htmlFor="description">Description *</Label>
                 <Textarea
                   id="description"
@@ -275,7 +274,7 @@ export function EventEditModal({
           <div className="space-y-4">
             <h3 className="text-lg">Date & Location</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fromDate">Start Date *</Label>
                 <Input
@@ -332,8 +331,8 @@ export function EventEditModal({
           <div className="space-y-4">
             <h3 className="text-lg">Organizer & Target Audience</h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2 md:col-span-3">
+            <div className="grid grid-cols-1 grid-cols-3 gap-4">
+              <div className="space-y-2 col-span-3">
                 <Label htmlFor="organizer">Organizer *</Label>
                 <Input
                   id="organizer"

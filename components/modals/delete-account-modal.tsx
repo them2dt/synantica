@@ -79,7 +79,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-error-foreground">
             <AlertTriangle className="w-5 h-5" />

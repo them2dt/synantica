@@ -16,13 +16,8 @@ interface AuthButtonClientProps {
  */
 export function AuthButtonClient({ fullWidth = false, onClick }: AuthButtonClientProps = {}) {
   return (
-    <>
-      <Button asChild size="sm" variant="outline" className={fullWidth ? "flex-1" : ""}>
-        <Link href="/auth/login" onClick={onClick}>Sign in</Link>
-      </Button>
-      <Button asChild size="sm" className={fullWidth ? "flex-1" : ""}>
-        <Link href="/auth/sign-up" onClick={onClick}>Sign up</Link>
-      </Button>
-    </>
+    <Button asChild size="default" className={fullWidth ? "w-full" : ""}>
+      <Link href="/auth/login" onClick={onClick}>Sign in</Link>
+    </Button>
   );
 }

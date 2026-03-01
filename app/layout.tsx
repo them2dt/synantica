@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
+import { geist } from "@/lib/fonts/geist"
 import { instrumentSerif } from "@/lib/fonts/instrument-serif"
 import { generateMetadataWithOG } from "@/lib/og-image"
 import { ToastProvider } from "@/components/ui/toast"
@@ -33,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${instrumentSerif.variable} font-sans antialiased`}>
+      <body className={`${geist.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

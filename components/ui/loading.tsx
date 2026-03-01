@@ -19,7 +19,7 @@ interface SpinnerProps {
  * Spinner component with consistent styling
  * Replaces various animate-spin implementations
  */
-function Spinner({
+export function Spinner({
   size = 'md',
   className,
   color = 'primary'
@@ -78,7 +78,7 @@ interface PageSpinnerProps {
   className?: string
 }
 
-function PageSpinner({
+export function PageSpinner({
   text = 'Loading...',
   size = 'md',
   className
@@ -189,7 +189,7 @@ export function EventCardSkeleton() {
 /**
  * Skeleton table for event table loading states
  */
-function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
+export function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="border border-border overflow-hidden">
       {/* Header */}
@@ -238,7 +238,7 @@ interface LoadingButtonProps {
   size?: 'default' | 'sm' | 'lg' | 'icon'
 }
 
-function LoadingButton({
+export function LoadingButton({
   loading,
   children,
   loadingText,
@@ -271,7 +271,7 @@ interface LoadingOverlayProps {
   className?: string
 }
 
-function LoadingOverlay({
+export function LoadingOverlay({
   loading,
   children,
   text = 'Loading...',
@@ -295,7 +295,7 @@ function LoadingOverlay({
 /**
  * Loading text with ellipsis animation
  */
-function LoadingText({
+export function LoadingText({
   text = 'Loading',
   className
 }: {
@@ -320,13 +320,13 @@ interface GridSkeletonProps {
   itemComponent?: React.ComponentType<{ className?: string }>
 }
 
-function GridSkeleton({
+export function GridSkeleton({
   count = 6,
   className,
   itemComponent: ItemComponent = EventCardSkeleton
 }: GridSkeletonProps) {
   return (
-    <div className={cn('grid gap-4 md:grid-cols-2 lg:grid-cols-3', className)}>
+    <div className={cn('grid gap-4 grid-cols-2 lg:grid-cols-3', className)}>
       {Array.from({ length: count }).map((_, i) => (
         <ItemComponent key={i} />
       ))}

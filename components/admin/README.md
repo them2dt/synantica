@@ -147,7 +147,6 @@ All fields are properly handled in the modal form and API routes.
 - Uses shadcn/ui components for consistency
 - Tailwind CSS for styling
 - Color-coded badges for status and type
-- Responsive design for mobile and desktop
 
 ## Future Improvements
 

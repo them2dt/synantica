@@ -56,7 +56,7 @@ export function EventsGrid({
           onSortChange={onSortChange}
         />
       ) : (
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 grid-cols-2">
           {events.map((event) => (
             <div key={event.id}>
               <EventCard
