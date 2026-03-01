@@ -11,8 +11,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-satoshi)', 'system-ui', 'sans-serif'],
-        heading: ['var(--font-clash-display)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
+        heading: ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
       },
       colors: {
         background: "hsl(var(--background))",

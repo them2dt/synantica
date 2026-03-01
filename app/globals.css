@@ -109,26 +109,6 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
-    font-family: var(--font-satoshi);
-  }
-}
-
-@layer utilities {
-  /* Font weight utilities for Satoshi */
-  .font-light {
-    font-weight: 300;
-  }
-  
-  .font-medium {
-    font-weight: 500;
-  }
-  
-  .font-bold {
-    font-weight: 700;
-  }
-  
-  .font-black {
-    font-weight: 900;
+    @apply bg-background text-foreground font-sans;
   }
 }

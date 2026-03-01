@@ -1,7 +1,6 @@
 import type { Metadata } from "next"
 import { ThemeProvider } from "next-themes"
-import { satoshi } from "@/lib/fonts/satoshi"
-import { clashDisplay } from "@/lib/fonts/clash-display"
+import { geist } from "@/lib/fonts/geist"
 import { generateMetadataWithOG } from "@/lib/og-image"
 import { ToastProvider } from "@/components/ui/toast"
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -34,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${satoshi.variable} ${clashDisplay.variable} antialiased`}>
+      <body className={`${geist.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
