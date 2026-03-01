@@ -1,9 +1,10 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, EventWithDetails } from '@/lib/database/events-client'
+import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, getMyEventsClient, EventWithDetails } from '@/lib/database/events-client'
 import { EventDirectory, EventStatus, EventFilters } from '@/types/event'
 import { handleAsyncError } from '@/lib/utils/error-handling'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 
 
@@ -182,6 +183,41 @@ export function useEventTypes() {
 }
 
 
+
+/**
+ * Custom hook for fetching the authenticated user's submitted events
+ */
+export function useMyEvents() {
+  const { user } = useAuth()
+  const [events, setEvents] = useState<EventWithDetails[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchMyEvents = useCallback(async () => {
+    if (!user) {
+      setEvents([])
+      return
+    }
+
+    try {
+      setLoading(true)
+      setError(null)
+      const data = await getMyEventsClient(user.id)
+      setEvents(data)
+    } catch (err) {
+      handleAsyncError(err, 'events', setError, setLoading)
+      return
+    } finally {
+      setLoading(false)
+    }
+  }, [user])
+
+  useEffect(() => {
+    fetchMyEvents()
+  }, [fetchMyEvents])
+
+  return { events, loading, error, refetch: fetchMyEvents }
+}
 
 /**
  * Custom hook for real-time event updates

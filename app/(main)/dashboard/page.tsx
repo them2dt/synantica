@@ -13,6 +13,7 @@ import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Button } from '@/components/ui/button'
 import { InlineSpinner } from '@/components/ui/loading'
+import { useAuth } from '@/lib/hooks/use-auth'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
@@ -28,6 +29,7 @@ const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(
 })
 
 const SubmitEventModal = dynamic(() => import('@/components/dashboard/submit-event-modal').then(mod => ({ default: mod.SubmitEventModal })))
+const MyEventsList = dynamic(() => import('@/components/dashboard/my-events-list').then(mod => ({ default: mod.MyEventsList })))
 
 export default function DashboardPage() {
   const router = useRouter()
@@ -35,6 +37,8 @@ export default function DashboardPage() {
   const [selectedType, setSelectedType] = useState('all')
   const [isListView, setIsListView] = useState(false)
   const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState<'all' | 'mine'>('all')
+  const { isAuthenticated } = useAuth()
 
   // Debounce search term to prevent excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
@@ -155,7 +159,25 @@ export default function DashboardPage() {
         onViewChange={setIsListView}
         onAddEventClick={() => setIsSubmitModalOpen(true)}
       >
-        {loading || categoriesLoading ? (
+        {isAuthenticated && (
+          <div className="flex gap-1 px-4 pt-3 border-b border-slate-100">
+            <button
+              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'all' ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+              onClick={() => setActiveTab('all')}
+            >
+              All Events
+            </button>
+            <button
+              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'mine' ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
+              onClick={() => setActiveTab('mine')}
+            >
+              My Events
+            </button>
+          </div>
+        )}
+        {activeTab === 'mine' ? (
+          <MyEventsList />
+        ) : loading || categoriesLoading ? (
           <div className="flex items-center justify-center py-20 text-slate-500">
             <div className="flex flex-col items-center gap-4">
               <InlineSpinner className="w-8 h-8" />

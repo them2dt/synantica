@@ -11,7 +11,6 @@ import {
   onAuthStateChanged,
   signOut as firebaseSignOut,
   signInWithPopup,
-  AuthProvider
 } from 'firebase/auth'
 import { auth, googleProvider } from '@/lib/firebase/client'
 
@@ -155,12 +154,12 @@ export function useAuthActions() {
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
-  const signInWithProvider = useCallback(async (provider: AuthProvider, redirectTo?: string) => {
+  const signInWithGoogle = useCallback(async (redirectTo?: string) => {
     try {
       setLoading(true)
       setError(null)
 
-      const userCredential = await signInWithPopup(auth, provider)
+      const userCredential = await signInWithPopup(auth, googleProvider)
 
       // Set session cookie
       const idToken = await userCredential.user.getIdToken()
@@ -178,17 +177,13 @@ export function useAuthActions() {
 
       return { data: { user: mapFirebaseUser(userCredential.user) }, error: null }
     } catch (error: unknown) {
-      console.log('Provider sign in error:', error)
+      console.log('Google sign in error:', error)
       const err = error as Error
       setError(err.message || 'Sign in failed')
       setLoading(false)
       return { data: null, error: err.message || 'Sign in failed' }
     }
   }, [router])
-
-  const signInWithGoogle = useCallback((redirectTo?: string) =>
-    signInWithProvider(googleProvider, redirectTo),
-    [signInWithProvider])
 
 
   return {
@@ -198,5 +193,4 @@ export function useAuthActions() {
     error,
   }
 }
-
 

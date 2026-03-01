@@ -284,6 +284,32 @@ export async function getPopularEventsClient(limitCount: number = 10): Promise<E
 }
 
 /**
+ * Get events submitted by a specific user (client-side)
+ */
+export async function getMyEventsClient(userId: string): Promise<EventWithDetails[]> {
+  return safeDatabaseOperation(async () => {
+    try {
+      const eventsQuery = query(
+        collection(db, 'events'),
+        where('submitted_by', '==', userId),
+        orderBy('created_at', 'desc')
+      )
+
+      const querySnapshot = await getDocs(eventsQuery)
+      const eventsRows: EventRow[] = []
+      querySnapshot.forEach((doc) => {
+        eventsRows.push(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
+      })
+
+      return eventsRows.map(mapEventRowToEventWithDetails)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      throw createDatabaseError(`Failed to fetch user events: ${errorMessage}`, 'events')
+    }
+  }, 'fetch user events', true, 'events')
+}
+
+/**
  * Get event types (client-side)
  */
 export async function getEventTypesClient() {
@@ -302,6 +328,16 @@ export async function getEventTypesClient() {
     })
 
     types.sort((a, b) => a.name.localeCompare(b.name))
+
+    if (types.length === 0) {
+      return [
+        { id: 'olympiads', name: 'Olympiads', is_active: true },
+        { id: 'contests', name: 'Contests', is_active: true },
+        { id: 'events', name: 'Events', is_active: true },
+        { id: 'workshops', name: 'Workshops', is_active: true },
+      ]
+    }
+
     return types
   } catch (error) {
     console.error('Error in getEventTypesClient:', error)
