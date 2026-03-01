@@ -53,19 +53,18 @@ export function isAdminRoute(pathname: string): boolean {
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function isAdminUser(user: any): boolean {
-  // Option 1: Check user metadata for admin role
-  if (user?.user_metadata?.role === 'admin') {
+  if (!user) return false;
+
+  // Check user custom claims for admin role
+  if (user?.role === 'admin') {
     return true;
   }
-  
-  // Option 2: Check user email against admin list (recommended)
+
+  // Check user email against admin list (recommended)
   const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
   if (adminEmails.includes(user?.email)) {
     return true;
   }
-  
-  // Option 3: Check if user is in admin group (if using Supabase groups)
-  // This would require additional database queries
-  
+
   return false;
 }

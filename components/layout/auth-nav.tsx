@@ -1,12 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
+import { getCurrentUser } from '@/lib/firebase/server'
 import { UserMenu } from '@/components/user/user-menu'
 import { AuthButtonClient } from '@/components/auth-button-client'
 
 export async function AuthNav() {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getCurrentUser()
 
   if (user) {
     return <UserMenu />

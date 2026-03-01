@@ -50,12 +50,6 @@ const nextConfig: NextConfig = {
               chunks: 'all',
               priority: 20,
             },
-            supabase: {
-              test: /[\\/]node_modules[\\/]@supabase[\\/]/,
-              name: 'supabase',
-              chunks: 'all',
-              priority: 20,
-            },
           },
         },
       }

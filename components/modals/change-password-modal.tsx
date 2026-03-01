@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { auth } from '@/lib/firebase/client'
+import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 'firebase/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -69,36 +70,26 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
     }
 
     try {
-      const supabase = createClient()
-      
-      // First, verify the current password by attempting to sign in
-      const { data: { user } } = await supabase.auth.getUser()
+      const user = auth.currentUser
       if (!user?.email) {
         throw new Error('User not found')
       }
 
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: user.email,
-        password: currentPassword
-      })
-
-      if (signInError) {
+      const credential = EmailAuthProvider.credential(user.email, currentPassword)
+      try {
+        await reauthenticateWithCredential(user, credential)
+      } catch {
         throw new Error('Current password is incorrect')
       }
 
-      // Update password using Supabase
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword
-      })
-
-      if (error) throw error
+      await updatePassword(user, newPassword)
 
       setSuccess(true)
       // Reset form
       setCurrentPassword('')
       setNewPassword('')
       setConfirmPassword('')
-      
+
       // Close modal after a short delay
       setTimeout(() => {
         onClose()

@@ -1,14 +1,13 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { useAuthActions } from "@/lib/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Eye, EyeOff, Check, X } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,8 +25,8 @@ export function SignUpForm({
 }: React.ComponentPropsWithoutRef<"div">) {
   const [showPassword, setShowPassword] = useState(false);
   const [showRepeatPassword, setShowRepeatPassword] = useState(false);
-  const router = useRouter();
   const { error: toastError, success: toastSuccess } = useToast();
+  const { signUp } = useAuthActions();
 
   // React Hook Form setup with Zod validation
   const {
@@ -50,49 +49,20 @@ export function SignUpForm({
   const passwordValidation = validatePassword(password);
 
   const onSubmit = async (data: SignUpFormData) => {
-    console.log("Sign-up form submitted with data:", {
-      email: data.email,
-      passwordLength: data.password.length,
-    });
+    const { error } = await signUp(data.email, data.password, "/dashboard");
 
-    const supabase = createClient();
-
-    try {
-      const { error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          // Disable email confirmation for better UX
-          data: {
-            email_confirm: false,
-          },
-        },
-      });
-      
-      if (error) {
-        console.log("Sign-up error:", error.message);
-        // Handle specific error types
-        if (error.message.includes("already registered")) {
-          toastError("Email already exists", "This email is already registered. Please try signing in instead.");
-        } else if (error.message.includes("weak password")) {
-          toastError("Password too weak", "Please choose a stronger password with more variety.");
-        } else {
-          toastError("Registration failed", error.message);
-        }
-        return;
+    if (error) {
+      if (error.includes("email-already-in-use")) {
+        toastError("Email already exists", "This email is already registered. Please try signing in instead.");
+      } else if (error.includes("weak-password")) {
+        toastError("Password too weak", "Please choose a stronger password with more variety.");
+      } else {
+        toastError("Registration failed", error);
       }
-
-      console.log("Sign-up successful, redirecting to dashboard...");
-
-      toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
-
-      await router.replace("/dashboard");
-      router.refresh();
-    } catch (catchError) {
-      console.log("Sign-up error:", catchError);
-      toastError("Registration failed", "An unexpected error occurred. Please try again.");
+      return;
     }
+
+    toastSuccess("Account created!", "Welcome to the platform! You can now start exploring events.");
   };
 
   return (
@@ -158,7 +128,7 @@ export function SignUpForm({
               {errors.password.message}
             </p>
           )}
-          
+
           {/* Password Strength Indicator */}
           {password && (
             <div className="space-y-2">
@@ -168,11 +138,11 @@ export function SignUpForm({
                   {getStrengthDescription(passwordValidation.strength)}
                 </span>
               </div>
-              <Progress 
-                value={passwordValidation.score} 
+              <Progress
+                value={passwordValidation.score}
                 className="h-2"
               />
-              
+
               {/* Password Requirements */}
               <div className="space-y-1 text-xs">
                 {passwordValidation.feedback.map((requirement, index) => (
@@ -192,12 +162,12 @@ export function SignUpForm({
                     ) : (
                       <X className="h-3 w-3 text-red-500" />
                     )}
-                    <span className={requirement.includes('characters') && passwordValidation.requirements.minLength ? 'text-green-600' : 
-                                   requirement.includes('uppercase') && passwordValidation.requirements.hasUppercase ? 'text-green-600' :
-                                   requirement.includes('lowercase') && passwordValidation.requirements.hasLowercase ? 'text-green-600' :
-                                   requirement.includes('numbers') && passwordValidation.requirements.hasNumbers ? 'text-green-600' :
-                                   requirement.includes('special') && passwordValidation.requirements.hasSpecialChars ? 'text-green-600' :
-                                   requirement.includes('common') && passwordValidation.requirements.noCommonPatterns ? 'text-green-600' : 'text-red-600'}>
+                    <span className={requirement.includes('characters') && passwordValidation.requirements.minLength ? 'text-green-600' :
+                      requirement.includes('uppercase') && passwordValidation.requirements.hasUppercase ? 'text-green-600' :
+                        requirement.includes('lowercase') && passwordValidation.requirements.hasLowercase ? 'text-green-600' :
+                          requirement.includes('numbers') && passwordValidation.requirements.hasNumbers ? 'text-green-600' :
+                            requirement.includes('special') && passwordValidation.requirements.hasSpecialChars ? 'text-green-600' :
+                              requirement.includes('common') && passwordValidation.requirements.noCommonPatterns ? 'text-green-600' : 'text-red-600'}>
                       {requirement}
                     </span>
                   </div>

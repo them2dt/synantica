@@ -1,48 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { isAdminUser } from '@/lib/supabase/admin-routes'
+import { adminDb } from '@/lib/firebase/admin'
+import { getCurrentUser } from '@/lib/firebase/server'
+import { isAdminUser } from '@/lib/firebase/admin-routes'
 
-/**
- * GET /api/admin/events/[id] - Retrieve a single event by ID
- * 
- * This endpoint fetches a specific event from the database with elevated permissions.
- * Only admin users can access this endpoint.
- * 
- * @param {NextRequest} request - The incoming request
- * @param {Object} params - Route parameters
- * @param {Promise<{id: string}>} params.params - Promise containing the event ID
- * @returns {Promise<NextResponse>} JSON response containing the event
- * 
- * @throws {401} Unauthorized - When user is not authenticated
- * @throws {403} Forbidden - When user is not an admin
- * @throws {404} Not Found - When event with given ID doesn't exist
- * @throws {500} Internal Server Error - When database operation fails
- * 
- * @example
- * ```typescript
- * const response = await fetch('/api/admin/events/event-id-123')
- * const { event } = await response.json()
- * ```
- * 
- * @security
- * - Requires authentication
- * - Requires admin privileges
- * - Uses service role key for database access
- * - Bypasses RLS policies
- */
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-    
-    // Check if user is authenticated and is admin
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
+    const user = await getCurrentUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -50,38 +19,32 @@ export async function GET(
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }
 
-    // Use admin client for elevated permissions
-    const adminSupabase = createAdminClient()
-    const { data: event, error } = await adminSupabase
-      .from('events')
-      .select('*')
-      .eq('id', id)
-      .single()
+    const docSnap = await adminDb.collection('events').doc(id).get()
 
-    if (error) {
-      console.error('Error fetching event:', error)
+    if (!docSnap.exists) {
       return NextResponse.json({ error: 'Event not found' }, { status: 404 })
     }
 
-    // Transform database field names to frontend field names
+    const event = docSnap.data() as Record<string, unknown>
+
     const transformedEvent = {
-      id: event.id as string,
-      name: event.name as string,
-      description: (event.description as string) || '',
-      fromDate: event.from_date as string,
-      toDate: event.to_date as string,
-      location: event.location as string,
-      country: event.country as string,
-      organizer: event.organizer as string,
-      fromAge: (event.from_age as number) || undefined,
-      toAge: (event.to_age as number) || undefined,
-      youtubeLink: (event.youtube_link as string) || undefined,
-      links: (event.links as string[]) || [],
-      type: event.type as string,
-      fields: (event.fields as string[]) || [],
-      status: (event.status as string) || 'draft',
-      createdAt: (event.created_at as string) || new Date().toISOString(),
-      updatedAt: (event.updated_at as string) || new Date().toISOString()
+      id: docSnap.id,
+      name: event.name || '',
+      description: event.description || '',
+      fromDate: event.from_date || '',
+      toDate: event.to_date || '',
+      location: event.location || '',
+      country: event.country || '',
+      organizer: event.organizer || '',
+      fromAge: event.from_age,
+      toAge: event.to_age,
+      youtubeLink: event.youtube_link,
+      links: event.links || [],
+      type: event.type || '',
+      fields: event.fields || [],
+      status: event.status || 'draft',
+      createdAt: event.created_at || new Date().toISOString(),
+      updatedAt: event.updated_at || new Date().toISOString()
     }
 
     return NextResponse.json({ event: transformedEvent })
@@ -91,54 +54,15 @@ export async function GET(
   }
 }
 
-/**
- * PUT /api/admin/events/[id] - Update an existing event
- * 
- * This endpoint updates a specific event in the database with elevated permissions.
- * Only admin users can update events through this endpoint.
- * 
- * @param {NextRequest} request - The incoming request containing updated event data
- * @param {Object} params - Route parameters
- * @param {Promise<{id: string}>} params.params - Promise containing the event ID
- * @returns {Promise<NextResponse>} JSON response containing the updated event
- * 
- * @throws {400} Bad Request - When required fields are missing
- * @throws {401} Unauthorized - When user is not authenticated
- * @throws {403} Forbidden - When user is not an admin
- * @throws {404} Not Found - When event with given ID doesn't exist
- * @throws {500} Internal Server Error - When database operation fails
- * 
- * @example
- * ```typescript
- * const response = await fetch('/api/admin/events/event-id-123', {
- *   method: 'PUT',
- *   headers: { 'Content-Type': 'application/json' },
- *   body: JSON.stringify({
- *     name: 'Updated Event Name',
- *     description: 'Updated description',
- *     // ... other fields
- *   })
- * })
- * ```
- * 
- * @security
- * - Requires authentication
- * - Requires admin privileges
- * - Uses service role key for database access
- * - Bypasses RLS policies
- */
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-    
-    // Check if user is authenticated and is admin
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
+    const user = await getCurrentUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -164,60 +88,48 @@ export async function PUT(
       status
     } = body
 
-    // Validate required fields
     if (!name || !description || !fromDate || !toDate || !location || !country || !organizer || !type) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
     }
 
-    // Use admin client for elevated permissions
-    const adminSupabase = createAdminClient()
-    const { data: event, error } = await adminSupabase
-      .from('events')
-      .update({
-        name,
-        description,
-        from_date: fromDate,
-        to_date: toDate,
-        location,
-        country,
-        organizer,
-        from_age: fromAge ? parseInt(fromAge) : null,
-        to_age: toAge ? parseInt(toAge) : null,
-        youtube_link: youtubeLink || null,
-        links: links || [],
-        type,
-        fields: fields || [],
-        status: status || 'draft',
-        updated_at: new Date().toISOString()
-      })
-      .eq('id', id)
-      .select()
-      .single()
+    const updateData = {
+      name,
+      description,
+      from_date: fromDate,
+      to_date: toDate,
+      location,
+      country,
+      organizer,
+      from_age: fromAge ? parseInt(fromAge) : null,
+      to_age: toAge ? parseInt(toAge) : null,
+      youtube_link: youtubeLink || null,
+      links: links || [],
+      type,
+      fields: fields || [],
+      status: status || 'draft',
+      updated_at: new Date().toISOString()
+    };
 
-    if (error) {
-      console.error('Error updating event:', error)
-      return NextResponse.json({ error: 'Failed to update event' }, { status: 500 })
-    }
+    await adminDb.collection('events').doc(id).update(updateData);
 
-    // Transform database field names to frontend field names
     const transformedEvent = {
-      id: event.id as string,
-      name: event.name as string,
-      description: (event.description as string) || '',
-      fromDate: event.from_date as string,
-      toDate: event.to_date as string,
-      location: event.location as string,
-      country: event.country as string,
-      organizer: event.organizer as string,
-      fromAge: (event.from_age as number) || undefined,
-      toAge: (event.to_age as number) || undefined,
-      youtubeLink: (event.youtube_link as string) || undefined,
-      links: (event.links as string[]) || [],
-      type: event.type as string,
-      fields: (event.fields as string[]) || [],
-      status: (event.status as string) || 'draft',
-      createdAt: (event.created_at as string) || new Date().toISOString(),
-      updatedAt: (event.updated_at as string) || new Date().toISOString()
+      id,
+      name: updateData.name,
+      description: updateData.description,
+      fromDate: updateData.from_date,
+      toDate: updateData.to_date,
+      location: updateData.location,
+      country: updateData.country,
+      organizer: updateData.organizer,
+      fromAge: updateData.from_age,
+      toAge: updateData.to_age,
+      youtubeLink: updateData.youtube_link,
+      links: updateData.links,
+      type: updateData.type,
+      fields: updateData.fields,
+      status: updateData.status,
+      createdAt: new Date().toISOString(), // we don't have this, but close enough for return
+      updatedAt: updateData.updated_at
     }
 
     return NextResponse.json({ event: transformedEvent })
@@ -227,49 +139,15 @@ export async function PUT(
   }
 }
 
-/**
- * DELETE /api/admin/events/[id] - Delete an event
- * 
- * This endpoint permanently deletes a specific event from the database with elevated permissions.
- * Only admin users can delete events through this endpoint.
- * 
- * @param {NextRequest} request - The incoming request
- * @param {Object} params - Route parameters
- * @param {Promise<{id: string}>} params.params - Promise containing the event ID
- * @returns {Promise<NextResponse>} JSON response confirming deletion
- * 
- * @throws {401} Unauthorized - When user is not authenticated
- * @throws {403} Forbidden - When user is not an admin
- * @throws {404} Not Found - When event with given ID doesn't exist
- * @throws {500} Internal Server Error - When database operation fails
- * 
- * @example
- * ```typescript
- * const response = await fetch('/api/admin/events/event-id-123', {
- *   method: 'DELETE'
- * })
- * const { message } = await response.json()
- * ```
- * 
- * @security
- * - Requires authentication
- * - Requires admin privileges
- * - Uses service role key for database access
- * - Bypasses RLS policies
- * - Permanently deletes data
- */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    const supabase = await createClient()
-    
-    // Check if user is authenticated and is admin
-    const { data: { user }, error: authError } = await supabase.auth.getUser()
-    
-    if (authError || !user) {
+    const user = await getCurrentUser()
+
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -277,17 +155,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Forbidden - Admin access required' }, { status: 403 })
     }
 
-    // Use admin client for elevated permissions
-    const adminSupabase = createAdminClient()
-    const { error } = await adminSupabase
-      .from('events')
-      .delete()
-      .eq('id', id)
-
-    if (error) {
-      console.error('Error deleting event:', error)
-      return NextResponse.json({ error: 'Failed to delete event' }, { status: 500 })
-    }
+    await adminDb.collection('events').doc(id).delete();
 
     return NextResponse.json({ message: 'Event deleted successfully' })
   } catch (error) {

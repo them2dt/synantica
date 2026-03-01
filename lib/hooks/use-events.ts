@@ -327,66 +327,58 @@ export function useRealtimeEvents(
   useEffect(() => {
     if (!enabled || !onEventUpdate) return
 
+    let unsubscribe: () => void
+
     const setupRealtimeSubscription = async () => {
       try {
-        // Import supabase client dynamically to avoid SSR issues
-        const { createClient } = await import('@/lib/supabase/client')
-        const supabase = createClient()
+        const { db } = await import('@/lib/firebase/client')
+        const { collection, query, where, onSnapshot } = await import('firebase/firestore')
 
-        const subscription = supabase
-          .channel('events_changes')
-          .on(
-            'postgres_changes',
-            {
-              event: '*',
-              schema: 'public',
-              table: 'events',
-              filter: 'status=eq.published'
-            },
-            (payload) => {
-              console.log('Real-time event update:', payload)
+        const eventsQuery = query(collection(db, 'events'), where('status', '==', 'published'))
 
-              // Transform the database event to EventDirectory format
-              if (payload.new && typeof payload.new === 'object') {
-                const dbEvent = payload.new as Record<string, unknown>
-                const event: EventDirectory = {
-                  id: dbEvent.id as string,
-                  name: dbEvent.name as string,
-                  description: (dbEvent.description as string) || '',
-                  fromDate: dbEvent.from_date as string,
-                  toDate: dbEvent.to_date as string,
-                  location: dbEvent.location as string,
-                  country: dbEvent.country as string,
-                  organizer: dbEvent.organizer as string,
-                  fromAge: (dbEvent.from_age as number) || undefined,
-                  toAge: (dbEvent.to_age as number) || undefined,
-                  youtubeLink: (dbEvent.youtube_link as string) || undefined,
-                  links: (dbEvent.links as string[]) || [],
-                  type: dbEvent.type as string,
-                  fields: (dbEvent.fields as string[]) || [],
-                  status: ((dbEvent.status as string) || 'published') as EventStatus,
-                  createdAt: dbEvent.created_at as string,
-                  updatedAt: dbEvent.updated_at as string
-                }
-
-                onEventUpdate(event, payload.eventType as 'INSERT' | 'UPDATE' | 'DELETE')
-              }
+        unsubscribe = onSnapshot(eventsQuery, (snapshot) => {
+          snapshot.docChanges().forEach((change) => {
+            const dbEvent = change.doc.data()
+            const event: EventDirectory = {
+              id: change.doc.id,
+              name: dbEvent.name || '',
+              description: dbEvent.description || '',
+              fromDate: dbEvent.from_date || '',
+              toDate: dbEvent.to_date || '',
+              location: dbEvent.location || '',
+              country: dbEvent.country || '',
+              organizer: dbEvent.organizer || '',
+              fromAge: dbEvent.from_age || undefined,
+              toAge: dbEvent.to_age || undefined,
+              youtubeLink: dbEvent.youtube_link || undefined,
+              links: dbEvent.links || [],
+              type: dbEvent.type || '',
+              fields: dbEvent.fields || [],
+              status: (dbEvent.status || 'published') as EventStatus,
+              createdAt: dbEvent.created_at || new Date().toISOString(),
+              updatedAt: dbEvent.updated_at || new Date().toISOString()
             }
-          )
-          .subscribe()
 
-        return () => {
-          subscription.unsubscribe()
-        }
+            if (change.type === 'added') {
+              onEventUpdate(event, 'INSERT')
+            } else if (change.type === 'modified') {
+              onEventUpdate(event, 'UPDATE')
+            } else if (change.type === 'removed') {
+              onEventUpdate(event, 'DELETE')
+            }
+          })
+        })
       } catch (error) {
         console.error('Failed to setup real-time subscription:', error)
       }
     }
 
-    const cleanup = setupRealtimeSubscription()
+    setupRealtimeSubscription()
 
     return () => {
-      cleanup?.then(cleanupFn => cleanupFn?.())
+      if (unsubscribe) {
+        unsubscribe()
+      }
     }
   }, [enabled, onEventUpdate])
 }

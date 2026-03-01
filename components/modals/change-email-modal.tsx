@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { auth } from '@/lib/firebase/client'
+import { verifyBeforeUpdateEmail } from 'firebase/auth'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -54,18 +55,14 @@ export function ChangeEmailModal({ isOpen, onClose, currentEmail }: ChangeEmailM
     }
 
     try {
-      const supabase = createClient()
-      
-      // Update email using Supabase
-      const { error } = await supabase.auth.updateUser({
-        email: newEmail
-      })
+      const user = auth.currentUser
+      if (!user) throw new Error('User not found')
 
-      if (error) throw error
+      await verifyBeforeUpdateEmail(user, newEmail)
 
       setSuccess(true)
       setNewEmail('')
-      
+
       // Close modal after a short delay
       setTimeout(() => {
         onClose()

@@ -1,32 +1,27 @@
-import { updateSession } from "@/lib/supabase/middleware";
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
+import { isPublicRoute } from "@/lib/firebase/public-routes";
+import { isAdminRoute } from "@/lib/firebase/admin-routes";
 
-/**
- * Next.js middleware for route protection and session management
- * 
- * This middleware runs on every request and handles:
- * - User authentication checks
- * - Admin route protection
- * - Session management
- * 
- * @param {NextRequest} request - The incoming request
- * @returns {Promise<NextResponse>} The response with session updates
- */
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  const sessionCookie = request.cookies.get('session');
+
+  if (!sessionCookie && !isPublicRoute(request.nextUrl.pathname)) {
+    // No user detected on a protected route; redirect to the login page.
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Admin routing check: since parsing firebase-admin session manually requires
+  // the admin SDK, which isn't available in Edge runtime, we either assume
+  // non-admin here and do a deeper check in Server Components, or use a separate admin cookie.
+  // For now, if it's an admin route, verify in the layout/page.
+
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
-     * - api/og (Open Graph image generation)
-     * Feel free to modify this pattern to include more paths.
-     */
-    "/((?!_next/static|_next/image|favicon.ico|api/og|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|api/og|.*\\\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

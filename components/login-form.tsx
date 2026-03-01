@@ -1,13 +1,12 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { useAuthActions } from "@/lib/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signInSchema, type SignInFormData } from "@/lib/validations/auth";
@@ -17,8 +16,8 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const router = useRouter();
   const { error: toastError } = useToast();
+  const { signIn } = useAuthActions();
 
   // React Hook Form setup with Zod validation
   const {
@@ -36,51 +35,14 @@ export function LoginForm({
   });
 
   const onSubmit = async (data: SignInFormData) => {
-    console.log("Login form submitted with data:", {
-      email: data.email,
-      passwordLength: data.password.length,
-    });
+    const { error } = await signIn(data.email, data.password, "/dashboard");
 
-    const supabase = createClient();
-
-    try {
-      const { data: authData, error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      });
-
-      if (error) {
-        console.log("Login error:", error.message);
-        if (error.message.includes("Invalid login credentials")) {
-          toastError("Login Failed", "Invalid email or password. Please try again.");
-        } else {
-          toastError("Login Failed", "Could not authenticate. Please try again later.");
-        }
-        return;
+    if (error) {
+      if (error.includes("invalid-credential")) {
+        toastError("Login Failed", "Invalid email or password. Please try again.");
+      } else {
+        toastError("Login Failed", error);
       }
-
-      // Persist session based on user preference
-      if (authData.session) {
-        const expiresIn = data.keepSignedIn ? 60 * 60 * 24 * 30 : 60 * 60;
-        await supabase.auth.setSession({
-          access_token: authData.session.access_token,
-          refresh_token: authData.session.refresh_token,
-          expires_in: expiresIn,
-        } as {
-          access_token: string;
-          refresh_token: string;
-          expires_in: number;
-        });
-      }
-
-      console.log('Login successful, redirecting to dashboard...');
-
-      // Navigate to the dashboard and refresh to update server-side auth state
-      await router.replace("/dashboard");
-      router.refresh();
-    } catch (err) {
-      console.log("Login error:", err);
-      toastError("Login failed", "An unexpected error occurred. Please try again.");
     }
   };
 

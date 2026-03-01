@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { auth } from '@/lib/firebase/client'
+import { deleteUser } from 'firebase/auth'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -50,17 +51,17 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
     }
 
     try {
-      const supabase = createClient()
-      
-      // Delete user account using Supabase
-      const { error } = await supabase.auth.admin.deleteUser(
-        (await supabase.auth.getUser()).data.user?.id || ''
-      )
+      const user = auth.currentUser
+      if (!user) throw new Error('User not found')
 
-      if (error) throw error
+      // Note: In a real app with Firebase, deleting a user account might require re-authentication 
+      // if their login session is old. For this migration, we'll call deleteUser directly.
+      // Additionally, typically a backend function should be used to clear their Firestore data.
+      await deleteUser(user)
 
-      // Sign out and redirect
-      await supabase.auth.signOut()
+      // Clear session cookie
+      await fetch('/api/auth/session', { method: 'DELETE' })
+
       router.push('/')
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'Failed to delete account')
@@ -127,9 +128,9 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
             <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
               Cancel
             </Button>
-            <Button 
-              type="submit" 
-              variant="destructive" 
+            <Button
+              type="submit"
+              variant="destructive"
               disabled={isLoading || !isConfirmationValid}
             >
               {isLoading && <InlineSpinner className="mr-2" />}

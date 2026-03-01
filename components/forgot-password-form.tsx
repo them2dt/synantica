@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { createClient } from '@/lib/supabase/client'
+import { useAuthActions } from '@/lib/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form-field'
 import { useToast } from '@/components/ui/toast'
@@ -16,8 +16,8 @@ type ForgotPasswordFormValues = z.infer<typeof commonSchemas.forgotPassword>
 export function ForgotPasswordForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
-  const supabase = createClient()
   const { error: toastError, success: toastSuccess } = useToast()
+  const { resetPassword } = useAuthActions()
 
   const form = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(commonSchemas.forgotPassword),
@@ -26,13 +26,9 @@ export function ForgotPasswordForm() {
 
   const onSubmit = async (data: ForgotPasswordFormValues) => {
     setIsSubmitting(true)
-    
-    // Get the current URL to construct the redirect path
-    const redirectURL = new URL('/auth/update-password', window.location.origin).toString();
 
-    const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-      redirectTo: redirectURL,
-    })
+    // Firebase sends an email with a link to reset password.
+    const { error } = await resetPassword(data.email)
 
     if (error) {
       toastError("Error", "Could not send password reset email. Please try again.")
@@ -40,7 +36,7 @@ export function ForgotPasswordForm() {
       toastSuccess("Check your email", "A password reset link has been sent to your email address.")
       setIsSuccess(true)
     }
-    
+
     setIsSubmitting(false)
   }
 

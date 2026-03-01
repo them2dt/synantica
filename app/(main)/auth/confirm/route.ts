@@ -1,30 +1,24 @@
-import { createClient } from "@/lib/supabase/server";
-import { type EmailOtpType } from "@supabase/supabase-js";
-import { redirect } from "next/navigation";
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const token_hash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as EmailOtpType | null;
-  const next = searchParams.get("next") ?? "/";
+  // With Firebase, email confirmation is usually handled purely on the client side using SDK functions 
+  // like checkActionCode and applyActionCode.
+  // The email template should be configured in Firebase to point to a client-side route, not an API route.
+  // If this route is hit, we likely need to redirect the user to a client page that handles the action code.
 
-  if (token_hash && type) {
-    const supabase = await createClient();
+  const mode = searchParams.get('mode');
+  const oobCode = searchParams.get('oobCode');
 
-    const { error } = await supabase.auth.verifyOtp({
-      type,
-      token_hash,
-    });
-    if (!error) {
-      // redirect user to specified redirect URL or root of app
-      redirect(next);
-    } else {
-      // redirect the user to an error page with some instructions
-      redirect(`/auth/error?error=${error?.message}`);
+  if (mode && oobCode) {
+    // For password resets:
+    if (mode === 'resetPassword') {
+      return NextResponse.redirect(new URL(`/auth/update-password?code=${oobCode}`, request.url));
     }
+    // For email verification:
+    // ...
   }
 
-  // redirect the user to an error page with some instructions
-  redirect(`/auth/error?error=No token hash or type`);
+  // Fallback
+  return NextResponse.redirect(new URL('/', request.url));
 }
