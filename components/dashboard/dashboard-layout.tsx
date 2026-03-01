@@ -6,7 +6,6 @@ import { ReactNode } from 'react'
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
-import { DateRange } from 'react-day-picker'
 
 /**
  * Props for the dashboard layout component
@@ -52,7 +51,7 @@ export function DashboardLayout({
         </section>
 
         {/* Filters Top Bar */}
-        <section className="border-t border-slate-200 px-6 py-6 pb-0">
+        <section className="border-t border-slate-200">
           <FiltersTopBar
             searchTerm={searchTerm}
             onSearchChange={onSearchChange}

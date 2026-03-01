@@ -50,10 +50,10 @@ export function EventsGrid({
           <table className="w-full text-left text-sm whitespace-nowrap">
             <thead>
               <tr className="border-b border-slate-200">
-                <th className="p-4 font-medium text-slate-500">Event</th>
-                <th className="p-4 font-medium text-slate-500">Date Range</th>
-                <th className="p-4 font-medium text-slate-500">Location</th>
-                <th className="p-4 font-medium text-slate-500">Type</th>
+                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Event</th>
+                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Date Range</th>
+                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Location</th>
+                <th className="p-4 text-xs uppercase font-medium text-slate-500">Type</th>
               </tr>
             </thead>
             <tbody>
