@@ -49,7 +49,7 @@ export function AgeRangeSlider({
         onValueChange={handleValueChange}
         disabled={disabled}
       />
-      <div className="flex items-center justify-between text-sm text-neutral-950">
+      <div className="flex items-center justify-between text-sm text-slate-950">
         <span>{localValue[0]} years</span>
         <span>{localValue[1]} years</span>
       </div>

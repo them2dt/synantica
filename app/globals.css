@@ -14,7 +14,7 @@
   }
 
   body {
-    @apply bg-slate-50 text-neutral-950 font-sans;
+    @apply bg-slate-50 text-slate-950 font-sans;
   }
 
   h1,
@@ -23,6 +23,6 @@
   h4,
   h5,
   h6 {
-    @apply font-heading text-neutral-950;
+    @apply font-heading text-slate-950;
   }
 }

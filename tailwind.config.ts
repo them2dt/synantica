@@ -17,17 +17,17 @@ export default {
       },
       colors: {
         background: colors.slate[50],
-        foreground: colors.neutral[950],
+        foreground: colors.slate[950],
         card: {
           DEFAULT: colors.white,
-          foreground: colors.neutral[950],
+          foreground: colors.slate[950],
         },
         popover: {
           DEFAULT: colors.white,
-          foreground: colors.neutral[950],
+          foreground: colors.slate[950],
         },
         primary: {
-          DEFAULT: colors.black,
+          DEFAULT: colors.slate[950],
           foreground: colors.white,
         },
         secondary: {
@@ -40,7 +40,7 @@ export default {
         },
         accent: {
           DEFAULT: colors.slate[100],
-          foreground: colors.black,
+          foreground: colors.slate[950],
         },
         success: colors.emerald[600],
         processing: {
@@ -57,7 +57,7 @@ export default {
         },
         border: colors.slate[200],
         input: colors.slate[200],
-        ring: colors.black,
+        ring: colors.slate[950],
         chart: {
           "1": colors.slate[900],
           "2": colors.slate[700],

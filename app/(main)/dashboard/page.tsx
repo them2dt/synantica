@@ -203,7 +203,7 @@ export default function DashboardPage() {
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
             <div className="text-red-600 text-5xl mb-4">⚠️</div>
-            <h3 className="text-lg text-neutral-950 mb-2">Error Loading Events</h3>
+            <h3 className="text-lg text-slate-950 mb-2">Error Loading Events</h3>
             <p className="text-slate-500 mb-4">{error}</p>
             <Button onClick={() => window.location.reload()}>
               Try Again

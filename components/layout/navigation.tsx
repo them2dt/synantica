@@ -42,7 +42,7 @@ export function Navigation({
               href="/"
               className={cn(
                 'text-sm transition-colors',
-                isActive('/') ? 'text-neutral-950' : 'text-slate-500 hover:text-neutral-950'
+                isActive('/') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
               )}
             >
               Home
@@ -51,7 +51,7 @@ export function Navigation({
               href="/dashboard"
               className={cn(
                 'text-sm transition-colors',
-                isActive('/dashboard') ? 'text-neutral-950' : 'text-slate-500 hover:text-neutral-950'
+                isActive('/dashboard') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
               )}
             >
               Dashboard

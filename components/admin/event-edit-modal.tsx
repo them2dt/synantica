@@ -506,7 +506,7 @@ export function EventEditModal({
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-neutral-950 hover:underline truncate"
+                        className="text-sm text-slate-950 hover:underline truncate"
                       >
                         {link}
                       </a>

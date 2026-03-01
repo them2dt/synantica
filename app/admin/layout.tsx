@@ -10,11 +10,11 @@ export default function AdminLayout({
 }) {
   return (
     <div className="min-h-screen bg-slate-50">
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-slate-50">
         <div className="mx-auto flex h-16 w-full max-w-[1100px] items-center px-6">
           <div className="flex items-center space-x-4">
             <Logo />
-            <h1 className="text-lg text-neutral-950">Admin Panel</h1>
+            <h1 className="text-lg text-slate-950">Admin Panel</h1>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <UserMenu />

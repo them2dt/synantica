@@ -92,10 +92,10 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="bg-red-600 border border-red-600 rounded-none p-4">
-            <div className="text-sm text-white">
+            <div className="text-sm text-slate-50">
               <strong>Warning:</strong> This will permanently delete:
             </div>
-            <ul className="text-sm text-white mt-2 space-y-1">
+            <ul className="text-sm text-slate-50 mt-2 space-y-1">
               <li>• Your account and profile</li>
               <li>• All event participation history</li>
               <li>• All event history</li>
@@ -119,7 +119,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
           </div>
 
           {error && (
-            <div className="text-sm text-white bg-red-600 p-3 rounded-none">
+            <div className="text-sm text-slate-50 bg-red-600 p-3 rounded-none">
               {error}
             </div>
           )}

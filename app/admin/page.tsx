@@ -84,7 +84,7 @@ export default function EventsManagementPage() {
     return (
       <div className="text-center py-8">
         <AlertCircle className="w-12 h-12 text-red-600 mx-auto mb-4" />
-        <h2 className="text-xl text-neutral-950 mb-2">Error Loading Events</h2>
+        <h2 className="text-xl text-slate-950 mb-2">Error Loading Events</h2>
         <p className="text-slate-500 mb-4">{error}</p>
         <Button onClick={loadEvents}>Try Again</Button>
       </div>
@@ -94,13 +94,13 @@ export default function EventsManagementPage() {
   return (
     <div className="flex flex-col min-h-screen py-10 px-6 bg-slate-50">
       <div className="flex-shrink-0 mb-6 max-w-[1100px] w-full mx-auto">
-        <h1 className="text-3xl text-neutral-950">Events Management</h1>
+        <h1 className="text-3xl text-slate-950">Events Management</h1>
         <p className="text-slate-500 mt-2">Add, edit, and manage all events. Click on any row to edit.</p>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-black"></div>
+          <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950"></div>
         </div>
       ) : (
         <div className="max-w-[1100px] w-full mx-auto">

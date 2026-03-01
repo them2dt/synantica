@@ -113,10 +113,10 @@ export function EventsTable({
           <tbody>
             {events.map((event) => (
               <tr key={event.id} className="border-b hover:bg-slate-100/40 transition-colors">
-                <td className="p-3 border-r border-slate-200 sticky left-0 bg-white z-10">
+                <td className="p-3 border-r border-slate-200 sticky left-0 bg-slate-50 z-10">
                   <button
                     onClick={() => onEventClick(event)}
-                    className="text-neutral-950 text-base max-w-[200px] truncate text-left hover:text-black hover:underline transition-colors cursor-pointer"
+                    className="text-slate-950 text-base max-w-[200px] truncate text-left hover:text-slate-950 hover:underline transition-colors cursor-pointer"
                   >
                     {event.name}
                   </button>

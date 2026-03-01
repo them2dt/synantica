@@ -43,7 +43,7 @@ export function Skeleton({
  */
 function EventCardSkeleton() {
   return (
-    <div className="border border-slate-200 bg-white text-neutral-950 overflow-hidden">
+    <div className="border border-slate-200 bg-slate-50 text-slate-950 overflow-hidden">
       <div className="p-6 space-y-4">
         <Skeleton className="h-6 w-20" />
         <div className="space-y-2">
@@ -91,7 +91,7 @@ export function EventListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="border border-slate-200 bg-white text-neutral-950 overflow-hidden">
+        <div key={index} className="border border-slate-200 bg-slate-50 text-slate-950 overflow-hidden">
           <div className="flex p-4 space-x-4">
             <div className="flex-1 space-y-3">
               <div className="flex items-center gap-2">

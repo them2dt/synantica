@@ -33,9 +33,9 @@ export function Spinner({
   }
 
   const colorClasses = {
-    primary: 'text-black',
+    primary: 'text-slate-950',
     muted: 'text-slate-500',
-    accent: 'text-neutral-950',
+    accent: 'text-slate-950',
     current: 'text-current'
   }
 
@@ -61,7 +61,7 @@ export function InlineSpinner({ className, color = 'current' }: Omit<SpinnerProp
     <Loader2
       className={cn(
         'h-4 w-4 animate-spin',
-        color === 'current' ? 'text-current' : color === 'primary' ? 'text-black' : color === 'muted' ? 'text-slate-500' : 'text-neutral-950',
+        color === 'current' ? 'text-current' : color === 'primary' ? 'text-slate-950' : color === 'muted' ? 'text-slate-500' : 'text-slate-950',
         className
       )}
       aria-hidden="true"
@@ -281,7 +281,7 @@ export function LoadingOverlay({
     <div className={cn('relative', className)}>
       {children}
       {loading && (
-        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-none">
+        <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-sm flex items-center justify-center rounded-none">
           <div className="flex flex-col items-center gap-2">
             <Spinner size="md" />
             <p className="text-sm text-slate-500">{text}</p>

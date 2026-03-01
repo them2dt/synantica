@@ -54,7 +54,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="text-error-foreground text-5xl mb-4">⚠️</div>
-                <h3 className="text-lg text-neutral-950 mb-2">Event Not Found</h3>
+                <h3 className="text-lg text-slate-950 mb-2">Event Not Found</h3>
                 <p className="text-muted-foreground mb-4">
                   {error || 'The event you are looking for does not exist or has been removed.'}
                 </p>
@@ -170,7 +170,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                       className="flex items-center gap-3 p-3 border border-border hover:bg-muted/60 transition-colors"
                     >
                       <ExternalLink className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-neutral-950">Resource {index + 1}</span>
+                      <span className="text-sm text-slate-950">Resource {index + 1}</span>
                       <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
                     </a>
                   ))}

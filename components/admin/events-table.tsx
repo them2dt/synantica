@@ -140,7 +140,7 @@ export function EventsTable({
             </div>
 
             {/* Table */}
-            <div className="border border-slate-200 rounded-none overflow-hidden bg-white">
+            <div className="border border-slate-200 rounded-none overflow-hidden bg-slate-50">
                 <div className="overflow-x-auto">
                     <table className="w-full">
                         <thead className="bg-slate-50 border-b border-slate-200">
@@ -208,7 +208,7 @@ export function EventsTable({
                                             />
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="text-neutral-950">{event.name}</div>
+                                            <div className="text-slate-950">{event.name}</div>
                                             <div className="text-sm text-slate-500 truncate max-w-xs">
                                                 {event.description}
                                             </div>

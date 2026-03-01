@@ -88,11 +88,11 @@ export function LoginForm({
 
             <p className="text-center text-xs text-slate-500 px-4 leading-relaxed">
                 By continuing, you agree to our{" "}
-                <a href="/terms" className="underline underline-offset-2 hover:text-black">
+                <a href="/terms" className="underline underline-offset-2 hover:text-slate-950">
                     Terms of Service
                 </a>{" "}
                 and{" "}
-                <a href="/privacy" className="underline underline-offset-2 hover:text-black">
+                <a href="/privacy" className="underline underline-offset-2 hover:text-slate-950">
                     Privacy Policy
                 </a>
                 .

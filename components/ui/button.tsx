@@ -5,17 +5,17 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-slate-950 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
-                default: "bg-black text-white hover:opacity-90 active:opacity-85",
-                destructive: "bg-red-600 text-white hover:opacity-90 active:opacity-85",
-                outline: "border border-slate-200 bg-white text-neutral-950 hover:bg-slate-100/60",
+                default: "bg-slate-950 text-slate-50 hover:opacity-90 active:opacity-85",
+                destructive: "bg-red-600 text-slate-50 hover:opacity-90 active:opacity-85",
+                outline: "border border-slate-200 bg-slate-50 text-slate-950 hover:bg-slate-100/60",
                 secondary: "bg-slate-50 text-slate-600 hover:bg-slate-100/70",
-                ghost: "text-neutral-950 hover:bg-slate-100/60",
-                link: "text-neutral-950 underline-offset-4 hover:underline",
-                black: "bg-black text-white hover:opacity-90",
+                ghost: "text-slate-950 hover:bg-slate-100/60",
+                link: "text-slate-950 underline-offset-4 hover:underline",
+                black: "bg-slate-950 text-slate-50 hover:opacity-90",
             },
             size: {
                 default: "h-11 px-4 py-2",

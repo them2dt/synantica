@@ -55,7 +55,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                     {getCountryFlag(event.country)}
                   </div>
                 </div>
-                <CardTitle className="text-lg text-balance text-neutral-950 mb-2">{event.name}</CardTitle>
+                <CardTitle className="text-lg text-balance text-slate-950 mb-2">{event.name}</CardTitle>
                 <CardDescription className="text-pretty text-sm mb-3 line-clamp-2">{event.description}</CardDescription>
 
                 <div className="space-y-2">
@@ -125,7 +125,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
               {getCountryFlag(event.country)}
             </div>
           </div>
-          <CardTitle className="text-lg text-balance text-neutral-950">{event.name}</CardTitle>
+          <CardTitle className="text-lg text-balance text-slate-950">{event.name}</CardTitle>
           <CardDescription className="text-pretty">{event.description}</CardDescription>
         </CardHeader>
 

@@ -63,7 +63,7 @@ export function AgeFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-slate-50 px-3 py-2 text-sm ring-offset-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
             localValue[0] === min && localValue[1] === max && "text-slate-500",
             className
           )}
@@ -157,7 +157,7 @@ export function CompactAgeFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-slate-50 px-3 py-2 text-sm ring-offset-slate-50 placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-950 disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
             localValue[0] === min && localValue[1] === max && "text-slate-500",
             className
           )}

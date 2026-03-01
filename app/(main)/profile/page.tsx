@@ -23,7 +23,7 @@ export default function ProfilePage() {
         return (
             <div className="min-h-screen bg-slate-50 flex items-center justify-center">
                 <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-black border-t-transparent rounded-none animate-spin mx-auto mb-4" />
+                    <div className="w-8 h-8 border-2 border-slate-950 border-t-transparent rounded-none animate-spin mx-auto mb-4" />
                     <p className="text-slate-500">Loading profile...</p>
                 </div>
             </div>
@@ -54,7 +54,7 @@ export default function ProfilePage() {
                             <CardHeader>
                                 <div className="flex items-center gap-4">
                                     <div className="w-14 h-14 bg-slate-100 rounded-none flex items-center justify-center">
-                                        <User className="w-7 h-7 text-neutral-950" />
+                                        <User className="w-7 h-7 text-slate-950" />
                                     </div>
                                     <div>
                                         <CardTitle className="text-xl">Profile</CardTitle>
@@ -81,17 +81,17 @@ export default function ProfilePage() {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label className="text-xs text-slate-500">Email</label>
-                                        <p className="text-sm text-neutral-950">{user.email}</p>
+                                        <p className="text-sm text-slate-950">{user.email}</p>
                                     </div>
                                     <div>
                                         <label className="text-xs text-slate-500">Account Created</label>
-                                        <p className="text-sm text-neutral-950">
+                                        <p className="text-sm text-slate-950">
                                             {user.created_at ? formatEventDate(user.created_at, 'full') : 'Unknown'}
                                         </p>
                                     </div>
                                     <div>
                                         <label className="text-xs text-slate-500">Last Sign In</label>
-                                        <p className="text-sm text-neutral-950">
+                                        <p className="text-sm text-slate-950">
                                             {user.last_sign_in_at ? formatEventDate(user.last_sign_in_at, 'full') : 'Never'}
                                         </p>
                                     </div>
@@ -151,7 +151,7 @@ export default function ProfilePage() {
                                         { label: "Days Active", value: "0" },
                                     ].map((item) => (
                                         <div key={item.label} className="text-center p-4 border border-slate-200 rounded-none">
-                                            <div className="text-2xl text-neutral-950">{item.value}</div>
+                                            <div className="text-2xl text-slate-950">{item.value}</div>
                                             <div className="text-xs text-slate-500">{item.label}</div>
                                         </div>
                                     ))}

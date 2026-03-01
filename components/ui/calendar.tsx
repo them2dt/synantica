@@ -24,7 +24,7 @@ function Calendar({
     <DayPicker
       showOutsideDays={showOutsideDays}
       className={cn(
-        "bg-white group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
+        "bg-slate-50 group/calendar p-3 [--cell-size:2rem] [[data-slot=card-content]_&]:bg-transparent [[data-slot=popover-content]_&]:bg-transparent",
         String.raw`rtl:**:[.rdp-button\_next>svg]:rotate-180`,
         String.raw`rtl:**:[.rdp-button\_previous>svg]:rotate-180`,
         className
@@ -58,10 +58,10 @@ function Calendar({
           defaultClassNames.dropdowns
         ),
         dropdown_root: cn(
-          "relative has-focus:border-black border border-slate-200 bg-white has-focus:ring-black/50 has-focus:ring-[3px] rounded-none",
+          "relative has-focus:border-slate-950 border border-slate-200 bg-slate-50 has-focus:ring-slate-950/50 has-focus:ring-[3px] rounded-none",
           defaultClassNames.dropdown_root
         ),
-        dropdown: cn("absolute bg-white inset-0 opacity-0", defaultClassNames.dropdown),
+        dropdown: cn("absolute bg-slate-50 inset-0 opacity-0", defaultClassNames.dropdown),
         caption_label: cn(
           "select-none",
           captionLayout === "label"
@@ -76,10 +76,10 @@ function Calendar({
         week_number_header: cn("select-none w-(--cell-size)", defaultClassNames.week_number_header),
         week_number: cn("text-[0.8rem] select-none text-slate-500", defaultClassNames.week_number),
         day: cn("relative w-full h-full p-0 text-center group/day aspect-square select-none", defaultClassNames.day),
-        range_start: cn("rounded-none bg-black text-white", defaultClassNames.range_start),
+        range_start: cn("rounded-none bg-slate-950 text-slate-50", defaultClassNames.range_start),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
-        range_end: cn("rounded-none bg-black text-white", defaultClassNames.range_end),
-        today: cn("bg-slate-100 text-neutral-950 rounded-none data-[selected=true]:rounded-none", defaultClassNames.today),
+        range_end: cn("rounded-none bg-slate-950 text-slate-50", defaultClassNames.range_end),
+        today: cn("bg-slate-100 text-slate-950 rounded-none data-[selected=true]:rounded-none", defaultClassNames.today),
         outside: cn("text-slate-500 aria-selected:text-slate-500", defaultClassNames.outside),
         disabled: cn("text-slate-500 opacity-50", defaultClassNames.disabled),
         hidden: cn("invisible", defaultClassNames.hidden),
@@ -134,7 +134,7 @@ function CalendarDayButton({ className, day, modifiers, ...props }: React.Compon
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "data-[selected-single=true]:bg-black data-[selected-single=true]:text-white data-[range-middle=true]:bg-slate-100 data-[range-middle=true]:text-neutral-950 data-[range-start=true]:bg-black data-[range-start=true]:text-white data-[range-end=true]:bg-black data-[range-end=true]:text-white group-data-[focused=true]/day:border-black group-data-[focused=true]/day:ring-black/50 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-none data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-none [&>span]:text-xs [&>span]:opacity-70",
+        "data-[selected-single=true]:bg-slate-950 data-[selected-single=true]:text-slate-50 data-[range-middle=true]:bg-slate-100 data-[range-middle=true]:text-slate-950 data-[range-start=true]:bg-slate-950 data-[range-start=true]:text-slate-50 data-[range-end=true]:bg-slate-950 data-[range-end=true]:text-slate-50 group-data-[focused=true]/day:border-slate-950 group-data-[focused=true]/day:ring-slate-950/50 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-none data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-none [&>span]:text-xs [&>span]:opacity-70",
         defaultClassNames.day,
         className
       )}

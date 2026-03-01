@@ -80,16 +80,16 @@ function Toast({
 
     const getToastStyles = () => {
         const baseStyles =
-            "relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-none border border-slate-200 bg-white p-5 pr-8 transition-all";
+            "relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-none border border-slate-200 bg-slate-50 p-5 pr-8 transition-all";
         switch (type) {
             case "success":
                 return cn(baseStyles, "border-emerald-600/40");
             case "error":
-                return cn(baseStyles, "border-red-600 text-white bg-red-600");
+                return cn(baseStyles, "border-red-600 text-slate-50 bg-red-600");
             case "warning":
                 return cn(
                     baseStyles,
-                    "border-amber-500/60 bg-amber-500 text-white"
+                    "border-amber-500/60 bg-amber-500 text-slate-50"
                 );
             case "info":
                 return cn(baseStyles, "border-slate-200");
@@ -109,14 +109,14 @@ function Toast({
                 return (
                     <AlertCircle
                         {...iconProps}
-                        className={cn(iconProps.className, "text-white")}
+                        className={cn(iconProps.className, "text-slate-50")}
                     />
                 );
             case "warning":
                 return (
                     <AlertTriangle
                         {...iconProps}
-                        className={cn(iconProps.className, "text-white")}
+                        className={cn(iconProps.className, "text-slate-50")}
                     />
                 );
             case "info":
