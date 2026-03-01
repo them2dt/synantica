@@ -8,7 +8,9 @@
 export enum EventStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
-  CANCELLED = 'cancelled'
+  CANCELLED = 'cancelled',
+  PENDING_REVIEW = 'pending_review',
+  REJECTED = 'rejected'
 }
 
 /**
@@ -45,6 +47,10 @@ export interface Event {
 
   // Status
   status: EventStatus
+
+  // Submission tracking
+  submittedBy?: string
+  submittedByEmail?: string
 
   // Timestamps
   createdAt: string
@@ -100,6 +106,10 @@ export interface EventDirectory {
 
   // Status
   status: EventStatus
+
+  // Submission tracking
+  submittedBy?: string
+  submittedByEmail?: string
 
   // Organizer (simplified)
   organizer: string

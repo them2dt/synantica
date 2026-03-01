@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { Calendar, Users, BookOpen, Trophy } from 'lucide-react'
+import { Calendar, Users, BookOpen, Trophy, Plus } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
@@ -26,11 +26,14 @@ const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(
   loading: () => <div className="animate-pulse h-64 bg-slate-100 rounded-none"></div>
 })
 
+const SubmitEventModal = dynamic(() => import('@/components/dashboard/submit-event-modal').then(mod => ({ default: mod.SubmitEventModal })))
+
 export default function DashboardPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState('all')
   const [isListView, setIsListView] = useState(false)
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false)
 
   // Debounce search term to prevent excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
@@ -179,6 +182,21 @@ export default function DashboardPage() {
           onLoadMore={loadMore}
           loadingMore={loadingMore}
           hasMore={hasMore}
+        />
+        {/* Floating Action Button */}
+        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
+          <Button
+            onClick={() => setIsSubmitModalOpen(true)}
+            size="lg"
+            className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
+          >
+            <Plus className="mr-2 h-5 w-5" />
+            Submit Event
+          </Button>
+        </div>
+        <SubmitEventModal
+          isOpen={isSubmitModalOpen}
+          onClose={() => setIsSubmitModalOpen(false)}
         />
       </DashboardLayout>
     </ErrorBoundary>

@@ -11,6 +11,12 @@ const normalizeStatus = (status?: string): EventStatus => {
       return EventStatus.CANCELLED
     case EventStatus.PUBLISHED:
       return EventStatus.PUBLISHED
+    case EventStatus.PENDING_REVIEW:
+    case 'pending_review':
+      return EventStatus.PENDING_REVIEW
+    case EventStatus.REJECTED:
+    case 'rejected':
+      return EventStatus.REJECTED
     default:
       return EventStatus.PUBLISHED
   }
@@ -37,6 +43,8 @@ export function mapEventRowToEvent(row: EventRow): Event {
     type: row.type || '',
     fields: row.fields || [],
     status: normalizeStatus(row.status),
+    submittedBy: row.submitted_by,
+    submittedByEmail: row.submitted_by_email,
     createdAt: row.created_at || defaultTimestamp(),
     updatedAt: row.updated_at || defaultTimestamp(),
   }
@@ -58,6 +66,8 @@ export function mapEventRowToEventDirectory(row: EventRow): EventDirectory {
     toDate: base.toDate,
     location: base.location,
     status: base.status,
+    submittedBy: base.submittedBy,
+    submittedByEmail: base.submittedByEmail,
     organizer: base.organizer,
     youtubeLink: base.youtubeLink,
     links: base.links,

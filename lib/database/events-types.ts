@@ -26,6 +26,8 @@ export interface EventRow {
   type?: string
   fields?: string[]
   status?: string
+  submitted_by?: string
+  submitted_by_email?: string
   created_at?: string
   updated_at?: string
 }
