@@ -86,13 +86,13 @@ export default function ProfilePage() {
                                     <div>
                                         <label className="text-xs text-slate-500">Account Created</label>
                                         <p className="text-sm text-slate-950">
-                                            {user.created_at ? formatEventDate(user.created_at, 'full') : 'Unknown'}
+                                            {user.created_at ? formatEventDate(user.created_at, 'medium') : 'Unknown'}
                                         </p>
                                     </div>
                                     <div>
                                         <label className="text-xs text-slate-500">Last Sign In</label>
                                         <p className="text-sm text-slate-950">
-                                            {user.last_sign_in_at ? formatEventDate(user.last_sign_in_at, 'full') : 'Never'}
+                                            {user.last_sign_in_at ? formatEventDate(user.last_sign_in_at, 'medium') : 'Never'}
                                         </p>
                                     </div>
                                 </div>

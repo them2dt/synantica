@@ -3,24 +3,7 @@
  * Provides helper functions to create dynamic social preview images
  */
 
-/**
- * Generates an Open Graph image URL for general pages
- * @param title - The title to display on the image
- * @param description - The description to display on the image
- * @returns The URL for the generated OG image
- */
-export function generateOGImageUrl(title: string, description?: string): string {
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
-    : 'http://localhost:3000';
-  
-  const params = new URLSearchParams({
-    title,
-    ...(description && { description }),
-  });
 
-  return `${baseUrl}/api/og?${params.toString()}`;
-}
 
 /**
  * Generates an Open Graph image URL for event pages
@@ -38,10 +21,10 @@ export function generateEventOGImageUrl(
   location?: string,
   category?: string
 ): string {
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
     : 'http://localhost:3000';
-  
+
   const params = new URLSearchParams({
     type: 'event',
     title,
@@ -72,13 +55,11 @@ export function generateMetadataWithOG(
     category?: string;
   }
 ) {
-  const baseUrl = process.env.VERCEL_URL 
-    ? `https://${process.env.VERCEL_URL}` 
+  const baseUrl = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
     : 'http://localhost:3000';
 
-  const ogImageUrl = type === 'event' 
-    ? generateEventOGImageUrl(title, description, additionalParams?.eventDate, additionalParams?.location, additionalParams?.category)
-    : generateOGImageUrl(title, description);
+  const ogImageUrl = generateEventOGImageUrl(title, description, additionalParams?.eventDate, additionalParams?.location, additionalParams?.category);
 
   return {
     title,

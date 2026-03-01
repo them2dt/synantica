@@ -303,27 +303,4 @@ export async function getEventTypesClient() {
   }
 }
 
-/**
- * Get all event fields (client-side)
- */
-export async function getEventFieldsClient() {
-  try {
-    const fieldsQuery = query(collection(db, 'event_fields'), orderBy('usage_count', 'desc'))
-    const querySnapshot = await getDocs(fieldsQuery)
 
-    const fields: { id: string, name: string, usage_count: number }[] = []
-    querySnapshot.forEach((doc) => {
-      const data = doc.data()
-      fields.push({
-        id: doc.id,
-        name: (data.name as string) || doc.id,
-        usage_count: (data.usage_count as number) || 0
-      })
-    })
-
-    return fields
-  } catch (error) {
-    console.error('Error in getEventFieldsClient:', error)
-    throw error
-  }
-}

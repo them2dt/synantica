@@ -19,53 +19,39 @@ export interface Event {
   id: string
   name: string
   description: string
-  
+
   // Date range
   fromDate: string
   toDate: string
-  
+
   // Location
   location: string
   country: string
-  
+
   // Organizer
   organizer: string
-  
+
   // Age range
   fromAge?: number
   toAge?: number
-  
+
   // Media and links
   youtubeLink?: string
   links: string[]
-  
+
   // Categorization
   type: string
   fields: string[]
-  
+
   // Status
   status: EventStatus
-  
+
   // Timestamps
   createdAt: string
   updatedAt: string
 }
 
-/**
- * Event review interface
- */
-export interface EventReview {
-  id: string
-  eventId: string
-  userId: string
-  rating: number // 1-5 stars
-  title?: string
-  comment?: string
-  isVerified: boolean
-  isPublic: boolean
-  createdAt: string
-  updatedAt: string
-}
+
 
 /**
  * Event filter options - Updated for new structure
@@ -84,23 +70,7 @@ export interface EventFilters {
   offset?: number
 }
 
-/**
- * Event sort options - Updated for new structure
- */
-export type EventSortBy = 
-  | 'fromDate-asc' 
-  | 'fromDate-desc' 
-  | 'name-asc' 
-  | 'name-desc' 
-  | 'fromAge-asc'
-  | 'fromAge-desc'
-  | 'created-asc'
-  | 'created-desc'
 
-/**
- * Event view mode
- */
-export type EventViewMode = 'grid' | 'list'
 
 /**
  * Optimized Event interface for directory/listing views
@@ -141,24 +111,4 @@ export interface EventDirectory {
   // Timestamps
   createdAt: string
   updatedAt: string
-}
-
-/**
- * Event form data for creating/editing events - Simplified
- */
-export interface EventFormData {
-  name: string
-  description: string
-  fromDate: string
-  toDate: string
-  location: string
-  country: string
-  organizer: string
-  fromAge?: number
-  toAge?: number
-  youtubeLink?: string
-  links: string[]
-  type: string
-  fields: string[]
-  status: EventStatus
 }

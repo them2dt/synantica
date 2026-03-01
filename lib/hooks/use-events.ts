@@ -5,74 +5,7 @@ import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsD
 import { EventDirectory, EventStatus, EventFilters } from '@/types/event'
 import { handleAsyncError } from '@/lib/utils/error-handling'
 
-/**
- * Custom hook for managing events data - Full details for individual views
- */
-export function useEvents(filters: EventFilters = {}) {
-  const [events, setEvents] = useState<EventWithDetails[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchEvents = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await getEventsClient(filters)
-      setEvents(data)
-    } catch (err) {
-      handleAsyncError(err, 'events', setError, setLoading)
-      return // Early return since error is handled
-    } finally {
-      setLoading(false)
-    }
-  }, [filters])
-
-  useEffect(() => {
-    fetchEvents()
-  }, [fetchEvents])
-
-  return {
-    events,
-    loading,
-    error,
-    refetch: fetchEvents
-  }
-}
-
-/**
- * Custom hook for managing directory-optimized events data
- * @param filters - Optional filters to apply
- */
-export function useEventsDirectory(filters: EventFilters = {}) {
-  const [events, setEvents] = useState<EventDirectory[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  const fetchEvents = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await getEventsDirectory(filters)
-      setEvents(data)
-    } catch (err) {
-      handleAsyncError(err, 'events', setError, setLoading)
-      return // Early return since error is handled
-    } finally {
-      setLoading(false)
-    }
-  }, [filters])
-
-  useEffect(() => {
-    fetchEvents()
-  }, [fetchEvents])
-
-  return {
-    events,
-    loading,
-    error,
-    refetch: fetchEvents
-  }
-}
 
 /**
  * Custom hook for paginated directory-optimized events data
@@ -211,39 +144,7 @@ export function useEvent(eventId: string) {
   }
 }
 
-/**
- * Custom hook for popular events
- */
-export function usePopularEvents(limit: number = 10) {
-  const [events, setEvents] = useState<EventWithDetails[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchPopularEvents = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const data = await getPopularEventsClient(limit)
-      setEvents(data)
-    } catch (err) {
-      handleAsyncError(err, 'popular-events', setError, setLoading)
-      return // Early return since error is handled
-    } finally {
-      setLoading(false)
-    }
-  }, [limit])
-
-  useEffect(() => {
-    fetchPopularEvents()
-  }, [fetchPopularEvents])
-
-  return {
-    events,
-    loading,
-    error,
-    refetch: fetchPopularEvents
-  }
-}
 
 /**
  * Custom hook for event types
@@ -280,40 +181,7 @@ export function useEventTypes() {
   }
 }
 
-/**
- * Custom hook for event fields
- */
-export function useEventFields() {
-  const [fields, setFields] = useState<Array<{ id: string; name: string; usage_count: number }>>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
 
-  const fetchFields = useCallback(async () => {
-    try {
-      setLoading(true)
-      setError(null)
-      const { getEventFieldsClient } = await import('@/lib/database/events-client')
-      const data = await getEventFieldsClient()
-      setFields(data)
-    } catch (err) {
-      handleAsyncError(err, 'events', setError, setLoading)
-      return // Early return since error is handled
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchFields()
-  }, [fetchFields])
-
-  return {
-    fields,
-    loading,
-    error,
-    refetch: fetchFields
-  }
-}
 
 /**
  * Custom hook for real-time event updates

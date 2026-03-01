@@ -25,7 +25,7 @@ interface AgeFilterDropdownProps {
 /**
  * Age filter dropdown that contains a slider for range selection
  */
-export function AgeFilterDropdown({
+function AgeFilterDropdown({
   value = [18, 65],
   onChange,
   min = 0,

@@ -27,4 +27,4 @@ if (typeof window !== 'undefined') {
     }
 }
 
-export { app, auth, db, storage, analytics, googleProvider, appleProvider };
+export { auth, db, googleProvider, appleProvider };

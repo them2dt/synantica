@@ -7,7 +7,7 @@
 /**
  * Error context types for different parts of the application
  */
-export type ErrorContext =
+type ErrorContext =
   | 'events'
   | 'event'
   | 'popular-events'
@@ -21,7 +21,7 @@ export type ErrorContext =
 /**
  * Standardized error response interface
  */
-export interface ErrorResult {
+interface ErrorResult {
   message: string;
   originalError?: Error;
   context: ErrorContext;
@@ -109,7 +109,7 @@ const DEFAULT_MESSAGES: Record<ErrorContext, string> = {
  * @param shouldLog - Whether to log the error to console (default: true in development)
  * @returns Standardized error result with user-friendly message
  */
-export function handleDatabaseError(
+function handleDatabaseError(
   error: unknown,
   context: ErrorContext,
   shouldLog: boolean = process.env.NODE_ENV !== 'production'
@@ -204,7 +204,7 @@ export function handleAsyncError(
  * @param maxRetries - Maximum allowed retries
  * @returns Whether the operation should be retried
  */
-export function shouldRetry(
+function shouldRetry(
   error: unknown,
   retryCount: number,
   maxRetries: number = 3
@@ -235,7 +235,7 @@ export function shouldRetry(
 /**
  * Retry function with exponential backoff.
  */
-export async function withRetry<T>(
+async function withRetry<T>(
   fn: () => Promise<T>,
   maxRetries: number = 3,
   baseDelay: number = 1000

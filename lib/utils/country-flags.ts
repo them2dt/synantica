@@ -4,7 +4,7 @@
  * Based on ISO 3166-1 alpha-2 country codes
  */
 
-export const COUNTRY_FLAGS: Record<string, string> = {
+const COUNTRY_FLAGS: Record<string, string> = {
   // Major countries
   'afghanistan': '🇦🇫',
   'albania': '🇦🇱',
@@ -208,7 +208,7 @@ export function getCountryDisplayName(country: string): string {
     'zimbabwe': 'Zimbabwe',
     'other': 'Other'
   }
-  
+
   const normalizedCountry = country.toLowerCase().replace(/\s+/g, '-')
   return displayNames[normalizedCountry] || country
 }

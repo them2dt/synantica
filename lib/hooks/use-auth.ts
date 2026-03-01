@@ -18,7 +18,7 @@ import { auth, googleProvider, appleProvider } from '@/lib/firebase/client'
 /**
  * Extended user interface with commonly used fields
  */
-export interface AuthUser {
+interface AuthUser {
   id: string
   email: string | null
   created_at: string
@@ -41,7 +41,7 @@ const mapFirebaseUser = (user: FirebaseUser | null): AuthUser | null => {
 /**
  * Authentication state interface
  */
-export interface AuthState {
+interface AuthState {
   user: AuthUser | null
   loading: boolean
   isAuthenticated: boolean
@@ -145,19 +145,7 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
   }
 }
 
-/**
- * Hook for authentication state without requiring auth
- */
-export function useAuthState() {
-  return useAuth()
-}
 
-/**
- * Hook for protected routes that requires authentication
- */
-export function useProtectedAuth(redirectTo: string = '/') {
-  return useAuth(redirectTo, true)
-}
 
 /**
  * Hook for authentication actions
@@ -212,20 +200,4 @@ export function useAuthActions() {
   }
 }
 
-/**
- * Common authentication redirect utilities
- */
-export const authRedirects = {
-  toLogin: (router: ReturnType<typeof useRouter>, from?: string) => {
-    const path = '/'
-    router.push(path)
-  },
 
-  toDashboard: (router: ReturnType<typeof useRouter>) => {
-    router.push('/dashboard')
-  },
-
-  toProfile: (router: ReturnType<typeof useRouter>) => {
-    router.push('/profile')
-  },
-}

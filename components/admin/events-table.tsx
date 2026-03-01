@@ -224,10 +224,10 @@ export function EventsTable({
                                             </Badge>
                                         </td>
                                         <td className="px-4 py-3 text-sm text-slate-600">
-                                            <div>{formatEventDate(event.fromDate, 'date-only')}</div>
+                                            <div>{formatEventDate(event.fromDate, 'short')}</div>
                                             {event.fromDate !== event.toDate && (
                                                 <div className="text-xs text-slate-500">
-                                                    to {formatEventDate(event.toDate, 'date-only')}
+                                                    to {formatEventDate(event.toDate, 'short')}
                                                 </div>
                                             )}
                                         </td>

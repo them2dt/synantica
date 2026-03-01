@@ -41,49 +41,4 @@ export function useDebounce<T>(value: T, delay: number): T {
   return debouncedValue;
 }
 
-/**
- * Custom hook for debouncing callback functions
- * Useful for debouncing search input handlers
- * 
- * @param callback - The callback function to debounce
- * @param delay - The delay in milliseconds
- * @returns The debounced callback function
- * 
- * @example
- * ```tsx
- * const debouncedSearch = useDebouncedCallback((value: string) => {
- *   onSearchChange(value);
- * }, 300);
- * 
- * <Input onChange={(e) => debouncedSearch(e.target.value)} />
- * ```
- */
-export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
-  callback: T,
-  delay: number
-): T {
-  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
 
-  const debouncedCallback = ((...args: Parameters<T>) => {
-    if (debounceTimer) {
-      clearTimeout(debounceTimer);
-    }
-
-    const newTimer = setTimeout(() => {
-      callback(...args);
-    }, delay);
-
-    setDebounceTimer(newTimer);
-  }) as T;
-
-  // Cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
-      }
-    };
-  }, [debounceTimer]);
-
-  return debouncedCallback;
-}

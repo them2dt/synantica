@@ -19,12 +19,12 @@ import {
 /**
  * Toast types for different notification styles
  */
-export type ToastType = "success" | "error" | "warning" | "info";
+type ToastType = "success" | "error" | "warning" | "info";
 
 /**
  * Toast configuration interface
  */
-export interface ToastConfig {
+interface ToastConfig {
     id: string;
     type: ToastType;
     title: string;
@@ -165,7 +165,7 @@ interface ToastContainerProps {
     onDismiss: (id: string) => void;
 }
 
-export function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
+function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
     if (toasts.length === 0) return null;
     return (
         <div className="fixed top-4 right-4 z-50 flex max-h-screen w-full max-w-sm flex-col space-y-2 overflow-hidden">

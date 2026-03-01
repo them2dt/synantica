@@ -19,7 +19,7 @@ interface SpinnerProps {
  * Spinner component with consistent styling
  * Replaces various animate-spin implementations
  */
-export function Spinner({
+function Spinner({
   size = 'md',
   className,
   color = 'primary'
@@ -69,39 +69,6 @@ export function InlineSpinner({ className, color = 'current' }: Omit<SpinnerProp
   )
 }
 
-/**
- * Page-level loading spinner with text
- */
-interface PageSpinnerProps {
-  text?: string
-  size?: 'sm' | 'md' | 'lg'
-  className?: string
-}
-
-export function PageSpinner({
-  text = 'Loading...',
-  size = 'md',
-  className
-}: PageSpinnerProps) {
-  const containerSize = {
-    sm: 'py-4',
-    md: 'py-8',
-    lg: 'py-12'
-  }
-
-  const spinnerSize = {
-    sm: 'md' as const,
-    md: 'lg' as const,
-    lg: 'xl' as const
-  }
-
-  return (
-    <div className={cn('flex flex-col items-center justify-center', containerSize[size], className)}>
-      <Spinner size={spinnerSize[size]} className="mb-4" />
-      <p className="text-sm text-slate-500">{text}</p>
-    </div>
-  )
-}
 
 /**
  * Skeleton loading component for placeholder content
@@ -186,150 +153,4 @@ export function EventCardSkeleton() {
   )
 }
 
-/**
- * Skeleton table for event table loading states
- */
-export function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
-  return (
-    <div className="border border-slate-200 overflow-hidden">
-      {/* Header */}
-      <div className="border-b bg-slate-50 p-4">
-        <div className="grid grid-cols-6 gap-4">
-          <Skeleton className="h-4 w-16" />
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-14" />
-          <Skeleton className="h-4 w-12" />
-          <Skeleton className="h-4 w-18" />
-          <Skeleton className="h-4 w-16" />
-        </div>
-      </div>
 
-      {/* Rows */}
-      {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="border-b p-4 last:border-b-0">
-          <div className="grid grid-cols-6 gap-4">
-            <div className="col-span-2">
-              <Skeleton className="h-5 w-3/4 mb-1" />
-              <Skeleton className="h-4 w-1/2" />
-            </div>
-            <Skeleton className="h-4 w-16" />
-            <Skeleton className="h-4 w-12" />
-            <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-8 w-20 rounded-none" />
-          </div>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-/**
- * Loading button component with spinner
- */
-interface LoadingButtonProps {
-  loading: boolean
-  children: React.ReactNode
-  loadingText?: string
-  className?: string
-  disabled?: boolean
-  onClick?: () => void
-  type?: 'button' | 'submit' | 'reset'
-  variant?: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
-  size?: 'default' | 'sm' | 'lg' | 'icon'
-}
-
-export function LoadingButton({
-  loading,
-  children,
-  loadingText,
-  className,
-  disabled,
-  ...props
-}: LoadingButtonProps) {
-  return (
-    <button
-      className={cn(
-        'inline-flex items-center justify-center gap-2',
-        className
-      )}
-      disabled={disabled || loading}
-      {...props}
-    >
-      {loading && <InlineSpinner />}
-      {loading && loadingText ? loadingText : children}
-    </button>
-  )
-}
-
-/**
- * Loading overlay for modals and forms
- */
-interface LoadingOverlayProps {
-  loading: boolean
-  children: React.ReactNode
-  text?: string
-  className?: string
-}
-
-export function LoadingOverlay({
-  loading,
-  children,
-  text = 'Loading...',
-  className
-}: LoadingOverlayProps) {
-  return (
-    <div className={cn('relative', className)}>
-      {children}
-      {loading && (
-        <div className="absolute inset-0 bg-slate-50/80 backdrop-blur-sm flex items-center justify-center rounded-none">
-          <div className="flex flex-col items-center gap-2">
-            <Spinner size="md" />
-            <p className="text-sm text-slate-500">{text}</p>
-          </div>
-        </div>
-      )}
-    </div>
-  )
-}
-
-/**
- * Loading text with ellipsis animation
- */
-export function LoadingText({
-  text = 'Loading',
-  className
-}: {
-  text?: string
-  className?: string
-}) {
-  return (
-    <span className={cn('inline-flex items-center gap-1', className)} role="status">
-      <span className="sr-only">Loading</span>
-      {text}
-      <span className="animate-pulse" aria-hidden="true">...</span>
-    </span>
-  )
-}
-
-/**
- * Grid skeleton for multiple items
- */
-interface GridSkeletonProps {
-  count?: number
-  className?: string
-  itemComponent?: React.ComponentType<{ className?: string }>
-}
-
-export function GridSkeleton({
-  count = 6,
-  className,
-  itemComponent: ItemComponent = EventCardSkeleton
-}: GridSkeletonProps) {
-  return (
-    <div className={cn('grid gap-4 grid-cols-2 lg:grid-cols-3', className)}>
-      {Array.from({ length: count }).map((_, i) => (
-        <ItemComponent key={i} />
-      ))}
-    </div>
-  )
-}

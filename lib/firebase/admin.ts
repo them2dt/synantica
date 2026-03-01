@@ -3,7 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getFirestore } from 'firebase-admin/firestore';
 import { firebaseConfig } from './config';
 
-export function getFirebaseAdminApp() {
+function getFirebaseAdminApp() {
     if (getApps().length > 0) {
         return getApp();
     }
