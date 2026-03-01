@@ -3,6 +3,10 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import type { EventWithDetails } from '@/lib/database/events-client'
+import { auth, db } from '@/lib/firebase/client'
+import { onAuthStateChanged } from 'firebase/auth'
+import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { mapEventRowToEventWithDetails, mapFirestoreDataToEventRow } from '@/lib/database/events-mappers'
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   pending_review: { label: 'Pending Review', className: 'bg-yellow-100 text-yellow-800' },
@@ -17,18 +21,42 @@ export function MyEventsList() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetch('/api/events/mine')
-      .then(async (res) => {
-        if (res.status === 401) {
-          setEvents([])
-          return
-        }
-        if (!res.ok) throw new Error('Failed to fetch events')
-        const data = await res.json()
-        setEvents(data.events)
-      })
-      .catch(() => setError('Failed to load your events'))
-      .finally(() => setLoading(false))
+    let mounted = true
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!mounted) return
+      setLoading(true)
+      setError(null)
+
+      if (!user) {
+        setEvents([])
+        setLoading(false)
+        return
+      }
+
+      try {
+        const eventsQuery = query(
+          collection(db, 'events'),
+          where('submitted_by', '==', user.uid),
+          orderBy('created_at', 'desc')
+        )
+        const snapshot = await getDocs(eventsQuery)
+        const mapped = snapshot.docs.map((doc) => {
+          const row = mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>)
+          return mapEventRowToEventWithDetails(row)
+        })
+        if (mounted) setEvents(mapped)
+      } catch {
+        if (mounted) setError('Failed to load your events')
+      } finally {
+        if (mounted) setLoading(false)
+      }
+    })
+
+    return () => {
+      mounted = false
+      unsubscribe()
+    }
   }, [])
 
   if (loading) {

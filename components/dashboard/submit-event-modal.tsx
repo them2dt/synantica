@@ -22,6 +22,8 @@ import {
 } from '@/components/ui/select'
 import { X, Plus, Send, CheckCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { auth, db } from '@/lib/firebase/client'
+import { addDoc, collection } from 'firebase/firestore'
 
 interface SubmitEventModalProps {
   isOpen: boolean
@@ -117,16 +119,34 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
     setError(null)
 
     try {
-      const res = await fetch('/api/events', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (!res.ok) {
-        const data = await res.json()
-        throw new Error(data.error || 'Failed to submit event')
+      const user = auth.currentUser
+      if (!user) {
+        throw new Error('Please sign in to submit an event')
       }
+
+      const now = new Date().toISOString()
+      const payload = {
+        name: formData.name || '',
+        description: formData.description || '',
+        from_date: formData.fromDate || '',
+        to_date: formData.toDate || '',
+        location: formData.location || '',
+        country: formData.country || '',
+        organizer: formData.organizer || '',
+        from_age: formData.fromAge ?? null,
+        to_age: formData.toAge ?? null,
+        youtube_link: formData.youtubeLink || null,
+        links: formData.links || [],
+        type: formData.type || '',
+        fields: formData.fields || [],
+        status: 'pending_review',
+        submitted_by: user.uid,
+        submitted_by_email: user.email || undefined,
+        created_at: now,
+        updated_at: now,
+      }
+
+      await addDoc(collection(db, 'events'), payload)
 
       setIsSuccess(true)
     } catch (err) {

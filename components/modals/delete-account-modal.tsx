@@ -60,7 +60,6 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
       await deleteUser(user)
 
       // Clear session cookie
-      await fetch('/api/auth/session', { method: 'DELETE' })
 
       router.push('/')
     } catch (error: unknown) {

@@ -100,7 +100,6 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
       setState(prev => ({ ...prev, loading: true }))
 
       await firebaseSignOut(auth)
-      await fetch('/api/auth/session', { method: 'DELETE' })
 
       setState({
         user: null,
@@ -161,14 +160,6 @@ export function useAuthActions() {
 
       const userCredential = await signInWithPopup(auth, googleProvider)
 
-      // Set session cookie
-      const idToken = await userCredential.user.getIdToken()
-      await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ idToken }),
-      })
-
       setLoading(false)
 
       if (redirectTo) {
@@ -193,4 +184,3 @@ export function useAuthActions() {
     error,
   }
 }
-
