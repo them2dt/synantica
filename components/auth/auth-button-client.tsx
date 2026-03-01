@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 
 interface AuthButtonClientProps {
   /** Whether to make buttons full width */

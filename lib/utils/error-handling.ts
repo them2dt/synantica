@@ -233,22 +233,61 @@ export function shouldRetry(
 }
 
 /**
- * Utility for consistent error logging
+ * Retry function with exponential backoff.
  */
-export const errorLogger = {
-  database: (error: unknown, operation: string) => {
-    console.error(`Database operation failed: ${operation}`, error);
-  },
+export async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> {
+  let lastError: unknown;
 
-  network: (error: unknown, endpoint: string) => {
-    console.error(`Network request failed: ${endpoint}`, error);
-  },
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error) {
+      lastError = error;
 
-  auth: (error: unknown, action: string) => {
-    console.error(`Authentication failed: ${action}`, error);
-  },
+      if (!shouldRetry(error, attempt, maxRetries)) {
+        throw error;
+      }
 
-  validation: (error: unknown, field: string) => {
-    console.warn(`Validation failed for field: ${field}`, error);
-  },
-};
+      if (attempt === maxRetries) {
+        break;
+      }
+
+      const delay = baseDelay * Math.pow(2, attempt);
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError;
+}
+
+/**
+ * Safe database operation wrapper.
+ */
+export async function safeDatabaseOperation<T>(
+  operation: () => Promise<T>,
+  operationName: string = 'database operation',
+  retryable: boolean = true,
+  context: ErrorContext = 'database'
+): Promise<T> {
+  try {
+    if (retryable) {
+      return await withRetry(operation, 3, 1000);
+    }
+    return await operation();
+  } catch (error) {
+    const errorResult = handleDatabaseError(error, context);
+
+    if (process.env.NODE_ENV !== 'production') {
+      console.error(`Database operation failed: ${operationName}`, {
+        error: errorResult,
+        originalError: error,
+      });
+    }
+
+    throw new Error(errorResult.message);
+  }
+}

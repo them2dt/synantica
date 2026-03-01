@@ -31,11 +31,11 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
  * <Skeleton variant="circular" className="h-12 w-12" />
  * ```
  */
-export function Skeleton({ 
-  className, 
-  animate = true, 
+export function Skeleton({
+  className,
+  animate = true,
   variant = "default",
-  ...props 
+  ...props
 }: SkeletonProps) {
   return (
     <div
@@ -58,42 +58,42 @@ export function Skeleton({
  * Event card skeleton component
  * Pre-built skeleton for event cards
  */
-export function EventCardSkeleton() {
+function EventCardSkeleton() {
   return (
     <div className="rounded-xl border bg-card text-card-foreground overflow-hidden">
       <div className="p-6 space-y-4">
         {/* Category badge skeleton */}
         <Skeleton className="h-6 w-20" />
-        
+
         {/* Title skeleton */}
         <div className="space-y-2">
           <Skeleton className="h-6 w-3/4" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-2/3" />
         </div>
-        
+
         {/* Description skeleton */}
         <div className="space-y-2">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
         </div>
-        
+
         {/* Date and time skeleton */}
         <div className="flex items-center gap-4">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-20" />
         </div>
-        
+
         {/* Location skeleton */}
         <Skeleton className="h-4 w-32" />
-        
+
         {/* Tags skeleton */}
         <div className="flex gap-2">
           <Skeleton className="h-6 w-16" />
           <Skeleton className="h-6 w-20" />
           <Skeleton className="h-6 w-14" />
         </div>
-        
+
         {/* Button skeleton */}
         <Skeleton className="h-9 w-full" />
       </div>
@@ -105,7 +105,7 @@ export function EventCardSkeleton() {
  * Event grid skeleton component
  * Pre-built skeleton for event grids
  */
-export function EventGridSkeleton({ count = 6 }: { count?: number }) {
+function EventGridSkeleton({ count = 6 }: { count?: number }) {
   return (
     <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: count }).map((_, index) => (
@@ -119,7 +119,7 @@ export function EventGridSkeleton({ count = 6 }: { count?: number }) {
  * Event list skeleton component
  * Pre-built skeleton for event lists
  */
-export function EventListSkeleton({ count = 5 }: { count?: number }) {
+function EventListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, index) => (
@@ -132,13 +132,13 @@ export function EventListSkeleton({ count = 5 }: { count?: number }) {
                 <Skeleton className="h-5 w-16" />
               </div>
               <Skeleton className="h-6 w-3/4" />
-              
+
               {/* Description */}
               <div className="space-y-2">
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-2/3" />
               </div>
-              
+
               {/* Date, time, location */}
               <div className="space-y-2">
                 <div className="flex items-center gap-4">
@@ -147,7 +147,7 @@ export function EventListSkeleton({ count = 5 }: { count?: number }) {
                 </div>
                 <Skeleton className="h-4 w-32" />
               </div>
-              
+
               {/* Tags */}
               <div className="flex gap-2">
                 <Skeleton className="h-5 w-12" />
@@ -155,7 +155,7 @@ export function EventListSkeleton({ count = 5 }: { count?: number }) {
                 <Skeleton className="h-5 w-10" />
               </div>
             </div>
-            
+
             {/* Button skeleton */}
             <div className="flex items-end">
               <Skeleton className="h-8 w-20" />
@@ -180,7 +180,7 @@ export function DashboardSkeleton() {
           <div className="space-y-6 mb-8">
             {/* Search bar skeleton */}
             <Skeleton className="h-10 w-full" />
-            
+
             {/* Filter controls skeleton */}
             <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
               <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
@@ -200,7 +200,7 @@ export function DashboardSkeleton() {
               <Skeleton className="h-6 w-24" />
             </div>
           </div>
-          
+
           {/* Events grid skeleton */}
           <EventGridSkeleton count={6} />
         </div>
@@ -213,12 +213,12 @@ export function DashboardSkeleton() {
  * Table skeleton component
  * Pre-built skeleton for data tables
  */
-export function TableSkeleton({ 
-  rows = 5, 
-  columns = 4 
-}: { 
-  rows?: number; 
-  columns?: number; 
+function TableSkeleton({
+  rows = 5,
+  columns = 4
+}: {
+  rows?: number;
+  columns?: number;
 }) {
   return (
     <div className="w-full">
@@ -228,7 +228,7 @@ export function TableSkeleton({
           <Skeleton key={index} className="h-4 flex-1" />
         ))}
       </div>
-      
+
       {/* Table rows skeleton */}
       <div className="space-y-3">
         {Array.from({ length: rows }).map((_, rowIndex) => (

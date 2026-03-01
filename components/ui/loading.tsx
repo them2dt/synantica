@@ -19,7 +19,7 @@ interface SpinnerProps {
  * Spinner component with consistent styling
  * Replaces various animate-spin implementations
  */
-export function Spinner({
+function Spinner({
   size = 'md',
   className,
   color = 'primary'
@@ -78,7 +78,7 @@ interface PageSpinnerProps {
   className?: string
 }
 
-export function PageSpinner({
+function PageSpinner({
   text = 'Loading...',
   size = 'md',
   className
@@ -189,7 +189,7 @@ export function EventCardSkeleton() {
 /**
  * Skeleton table for event table loading states
  */
-export function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
+function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
     <div className="border rounded-lg overflow-hidden">
       {/* Header */}
@@ -238,7 +238,7 @@ interface LoadingButtonProps {
   size?: 'default' | 'sm' | 'lg' | 'icon'
 }
 
-export function LoadingButton({
+function LoadingButton({
   loading,
   children,
   loadingText,
@@ -271,7 +271,7 @@ interface LoadingOverlayProps {
   className?: string
 }
 
-export function LoadingOverlay({
+function LoadingOverlay({
   loading,
   children,
   text = 'Loading...',
@@ -295,7 +295,7 @@ export function LoadingOverlay({
 /**
  * Loading text with ellipsis animation
  */
-export function LoadingText({
+function LoadingText({
   text = 'Loading',
   className
 }: {
@@ -320,7 +320,7 @@ interface GridSkeletonProps {
   itemComponent?: React.ComponentType<{ className?: string }>
 }
 
-export function GridSkeleton({
+function GridSkeleton({
   count = 6,
   className,
   itemComponent: ItemComponent = EventCardSkeleton

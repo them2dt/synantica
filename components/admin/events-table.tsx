@@ -5,6 +5,7 @@ import { Event } from '@/types/event'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
+import { formatEventDate } from '@/lib/utils/date-formatting'
 import { Plus, Search, Trash2 } from 'lucide-react'
 import { EventEditModal } from './event-edit-modal'
 
@@ -236,10 +237,10 @@ export function EventsTable({
                       </Badge>
                     </td>
                     <td className="px-4 py-3 text-sm text-gray-600">
-                      <div>{new Date(event.fromDate).toLocaleDateString()}</div>
+                      <div>{formatEventDate(event.fromDate, 'date-only')}</div>
                       {event.fromDate !== event.toDate && (
                         <div className="text-xs text-gray-500">
-                          to {new Date(event.toDate).toLocaleDateString()}
+                          to {formatEventDate(event.toDate, 'date-only')}
                         </div>
                       )}
                     </td>
@@ -284,4 +285,3 @@ export function EventsTable({
     </div>
   )
 }
-

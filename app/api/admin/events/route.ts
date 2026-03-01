@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { getCurrentUser } from '@/lib/firebase/server'
 import { isAdminUser } from '@/lib/firebase/admin-routes'
+import { mapEventRowToEvent, mapFirestoreDataToEventRow } from '@/lib/database/events-mappers'
 
 export async function GET() {
   try {
@@ -18,28 +19,9 @@ export async function GET() {
     // Fetch all events
     const snapshot = await adminDb.collection('events').orderBy('created_at', 'desc').get();
 
-    const transformedEvents = snapshot.docs.map(doc => {
-      const event = doc.data() as Record<string, unknown>;
-      return {
-        id: doc.id,
-        name: event.name || '',
-        description: event.description || '',
-        fromDate: event.from_date || '',
-        toDate: event.to_date || '',
-        location: event.location || '',
-        country: event.country || '',
-        organizer: event.organizer || '',
-        fromAge: event.from_age,
-        toAge: event.to_age,
-        youtubeLink: event.youtube_link,
-        links: event.links || [],
-        type: event.type || '',
-        fields: event.fields || [],
-        status: event.status || 'draft',
-        createdAt: event.created_at || new Date().toISOString(),
-        updatedAt: event.updated_at || new Date().toISOString()
-      };
-    });
+    const transformedEvents = snapshot.docs.map((doc) =>
+      mapEventRowToEvent(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
+    );
 
     return NextResponse.json({ events: transformedEvents })
   } catch (error) {
@@ -104,25 +86,7 @@ export async function POST(request: NextRequest) {
     const docRef = await adminDb.collection('events').add(newEvent);
 
     // Transform database field names to frontend field names
-    const transformedEvent = {
-      id: docRef.id,
-      name: newEvent.name,
-      description: newEvent.description,
-      fromDate: newEvent.from_date,
-      toDate: newEvent.to_date,
-      location: newEvent.location,
-      country: newEvent.country,
-      organizer: newEvent.organizer,
-      fromAge: newEvent.from_age,
-      toAge: newEvent.to_age,
-      youtubeLink: newEvent.youtube_link,
-      links: newEvent.links,
-      type: newEvent.type,
-      fields: newEvent.fields,
-      status: newEvent.status,
-      createdAt: newEvent.created_at,
-      updatedAt: newEvent.updated_at
-    }
+    const transformedEvent = mapEventRowToEvent({ id: docRef.id, ...newEvent })
 
     return NextResponse.json({ event: transformedEvent }, { status: 201 })
   } catch (error) {

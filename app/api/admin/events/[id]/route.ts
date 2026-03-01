@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase/admin'
 import { getCurrentUser } from '@/lib/firebase/server'
 import { isAdminUser } from '@/lib/firebase/admin-routes'
+import { mapEventRowToEvent, mapFirestoreDataToEventRow } from '@/lib/database/events-mappers'
 
 export async function GET(
   request: NextRequest,
@@ -26,26 +27,7 @@ export async function GET(
     }
 
     const event = docSnap.data() as Record<string, unknown>
-
-    const transformedEvent = {
-      id: docSnap.id,
-      name: event.name || '',
-      description: event.description || '',
-      fromDate: event.from_date || '',
-      toDate: event.to_date || '',
-      location: event.location || '',
-      country: event.country || '',
-      organizer: event.organizer || '',
-      fromAge: event.from_age,
-      toAge: event.to_age,
-      youtubeLink: event.youtube_link,
-      links: event.links || [],
-      type: event.type || '',
-      fields: event.fields || [],
-      status: event.status || 'draft',
-      createdAt: event.created_at || new Date().toISOString(),
-      updatedAt: event.updated_at || new Date().toISOString()
-    }
+    const transformedEvent = mapEventRowToEvent(mapFirestoreDataToEventRow(docSnap.id, event))
 
     return NextResponse.json({ event: transformedEvent })
   } catch (error) {
@@ -112,25 +94,11 @@ export async function PUT(
 
     await adminDb.collection('events').doc(id).update(updateData);
 
-    const transformedEvent = {
+    const transformedEvent = mapEventRowToEvent({
       id,
-      name: updateData.name,
-      description: updateData.description,
-      fromDate: updateData.from_date,
-      toDate: updateData.to_date,
-      location: updateData.location,
-      country: updateData.country,
-      organizer: updateData.organizer,
-      fromAge: updateData.from_age,
-      toAge: updateData.to_age,
-      youtubeLink: updateData.youtube_link,
-      links: updateData.links,
-      type: updateData.type,
-      fields: updateData.fields,
-      status: updateData.status,
-      createdAt: new Date().toISOString(), // we don't have this, but close enough for return
-      updatedAt: updateData.updated_at
-    }
+      ...updateData,
+      created_at: new Date().toISOString()
+    })
 
     return NextResponse.json({ event: transformedEvent })
   } catch (error) {

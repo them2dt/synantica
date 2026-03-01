@@ -1,5 +1,5 @@
-import { Hero } from "@/components/hero";
-import { CTASection } from "@/components/cta-section";
+import { Hero } from "@/components/marketing/hero";
+import { CTASection } from "@/components/marketing/cta-section";
 import { Footer } from "@/components/layout";
 
 export default function Home() {

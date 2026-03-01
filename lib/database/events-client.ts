@@ -2,9 +2,12 @@
 
 import { db } from '@/lib/firebase/client'
 import { collection, query, where, getDocs, getDoc, doc, limit, orderBy, Query } from 'firebase/firestore'
-import { Event, EventStatus, EventDirectory, EventFilters } from '@/types/event'
-import { safeDatabaseOperation } from './error-handler'
-import { createDatabaseError } from '@/lib/utils/error-handling'
+import { EventDirectory, EventFilters } from '@/types/event'
+import { createDatabaseError, safeDatabaseOperation } from '@/lib/utils/error-handling'
+import { applyEventFilters, mapEventRowToEventDirectory, mapEventRowToEventWithDetails, mapFirestoreDataToEventRow } from './events-mappers'
+import type { EventRow, EventWithDetails } from './events-types'
+
+export type { EventWithDetails } from './events-types'
 
 // Simple cache implementation
 interface CacheEntry<T = unknown> {
@@ -75,37 +78,6 @@ function getRequestKey(filters: EventFilters): string {
  */
 
 
-export interface EventWithDetails extends Event {
-  category_name: string
-  average_rating: number
-  tags: string[]
-  // Database-specific fields
-  support_pdfs?: Array<{ name: string; url: string }>
-  organization_homepage?: string
-  youtube_videos?: string[]
-  alumni_contact_email?: string
-}
-
-export interface EventRow {
-  id: string;
-  name?: string;
-  description?: string;
-  from_date?: string;
-  to_date?: string;
-  location?: string;
-  country?: string;
-  organizer?: string;
-  from_age?: number;
-  to_age?: number;
-  youtube_link?: string;
-  links?: string[];
-  type?: string;
-  fields?: string[];
-  status?: string;
-  created_at?: string;
-  updated_at?: string;
-}
-
 /**
  * Get all events with optional filters (client-side) - Optimized for directory views
  * Includes caching and request deduplication for better performance
@@ -154,69 +126,15 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
 
       const querySnapshot = await getDocs(eventsQuery)
 
-      let eventsRows: EventRow[] = []
+      const eventsRows: EventRow[] = []
       querySnapshot.forEach((doc) => {
-        eventsRows.push({ id: doc.id, ...doc.data() } as EventRow)
+        eventsRows.push(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
       })
 
-      // In-memory advanced filtering (since Firestore query limitations)
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase()
-        eventsRows = eventsRows.filter(ev =>
-          (ev.name && ev.name.toLowerCase().includes(searchLower)) ||
-          (ev.description && ev.description.toLowerCase().includes(searchLower)) ||
-          (ev.organizer && ev.organizer.toLowerCase().includes(searchLower))
-        )
-      }
-
-      if (filters.fields && filters.fields.length > 0) {
-        eventsRows = eventsRows.filter(ev =>
-          ev.fields && filters.fields!.some((f: string) => ev.fields!.includes(f))
-        )
-      }
-
-      if (filters.fromAge !== undefined || filters.toAge !== undefined) {
-        const minAge = filters.fromAge || 0
-        const maxAge = filters.toAge || 99
-        eventsRows = eventsRows.filter(ev =>
-          (ev.from_age || 0) <= maxAge && (ev.to_age || 99) >= minAge
-        )
-      }
-
-      if (filters.fromDate) {
-        eventsRows = eventsRows.filter(ev => ev.from_date && ev.from_date >= filters.fromDate!)
-      }
-
-      if (filters.toDate) {
-        eventsRows = eventsRows.filter(ev => ev.to_date && ev.to_date <= filters.toDate!)
-      }
-
-      if (filters.offset) {
-        eventsRows = eventsRows.slice(filters.offset, filters.offset + (filters.limit || 20))
-      }
+      const filteredRows = applyEventFilters(eventsRows, filters)
 
       // Transform to optimized EventDirectory objects
-      const events: EventDirectory[] = eventsRows.map((eventRow) => {
-        return {
-          id: eventRow.id as string,
-          name: (eventRow.name as string) || '',
-          description: (eventRow.description as string) || '',
-          fromDate: (eventRow.from_date as string) || '',
-          toDate: (eventRow.to_date as string) || '',
-          location: (eventRow.location as string) || '',
-          country: (eventRow.country as string) || '',
-          organizer: (eventRow.organizer as string) || '',
-          fromAge: eventRow.from_age as number | undefined,
-          toAge: eventRow.to_age as number | undefined,
-          youtubeLink: eventRow.youtube_link as string | undefined,
-          links: (eventRow.links as string[]) || [],
-          type: (eventRow.type as string) || '',
-          fields: (eventRow.fields as string[]) || [],
-          status: (eventRow.status as EventStatus) || 'published',
-          createdAt: (eventRow.created_at as string) || new Date().toISOString(),
-          updatedAt: (eventRow.updated_at as string) || new Date().toISOString()
-        }
-      })
+      const events: EventDirectory[] = filteredRows.map(mapEventRowToEventDirectory)
 
       // Cache the results for future use
       eventsCache.set(filters, events)
@@ -226,22 +144,19 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw createDatabaseError(`Failed to fetch directory events: ${errorMessage}`, 'events')
     }
-    // Clean up the pending request
-    pendingRequests.delete(requestKey)
-  })
+  }, 'fetch directory events', true, 'events')
 
   // Store the promise to prevent duplicate requests
   pendingRequests.set(requestKey, requestPromise)
 
+  requestPromise.finally(() => {
+    pendingRequests.delete(requestKey)
+  })
+
   return requestPromise
 }
 
-/**
- * Clear the events cache (useful when data might have changed)
- */
-export function clearEventsCache(): void {
-  eventsCache.clear()
-}
+
 
 /**
  * Preload next page of events for smoother user experience
@@ -288,81 +203,22 @@ export async function getEventsClient(filters: EventFilters = {}): Promise<Event
 
       const querySnapshot = await getDocs(eventsQuery)
 
-      let eventsRows: EventRow[] = []
+      const eventsRows: EventRow[] = []
       querySnapshot.forEach((doc) => {
-        eventsRows.push({ id: doc.id, ...doc.data() } as EventRow)
+        eventsRows.push(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
       })
 
-      // In-memory advanced filtering
-      if (filters.search) {
-        const searchLower = filters.search.toLowerCase()
-        eventsRows = eventsRows.filter(ev =>
-          (ev.name && ev.name.toLowerCase().includes(searchLower)) ||
-          (ev.description && ev.description.toLowerCase().includes(searchLower)) ||
-          (ev.organizer && ev.organizer.toLowerCase().includes(searchLower))
-        )
-      }
-
-      if (filters.fields && filters.fields.length > 0) {
-        eventsRows = eventsRows.filter(ev =>
-          ev.fields && filters.fields!.some((f: string) => ev.fields!.includes(f))
-        )
-      }
-
-      if (filters.fromAge !== undefined || filters.toAge !== undefined) {
-        const minAge = filters.fromAge || 0
-        const maxAge = filters.toAge || 99
-        eventsRows = eventsRows.filter(ev =>
-          (ev.from_age || 0) <= maxAge && (ev.to_age || 99) >= minAge
-        )
-      }
-
-      if (filters.fromDate) {
-        eventsRows = eventsRows.filter(ev => ev.from_date && ev.from_date >= filters.fromDate!)
-      }
-
-      if (filters.toDate) {
-        eventsRows = eventsRows.filter(ev => ev.to_date && ev.to_date <= filters.toDate!)
-      }
-
-      if (filters.offset) {
-        eventsRows = eventsRows.slice(filters.offset, filters.offset + (filters.limit || 20))
-      }
+      const filteredRows = applyEventFilters(eventsRows, filters)
 
       // Transform the data to match our Event interface
-      const events: EventWithDetails[] = eventsRows.map((eventRow) => {
-        return {
-          id: eventRow.id as string,
-          name: (eventRow.name as string) || '',
-          description: (eventRow.description as string) || '',
-          fromDate: (eventRow.from_date as string) || '',
-          toDate: (eventRow.to_date as string) || '',
-          location: (eventRow.location as string) || '',
-          country: (eventRow.country as string) || '',
-          organizer: (eventRow.organizer as string) || '',
-          fromAge: eventRow.from_age as number | undefined,
-          toAge: eventRow.to_age as number | undefined,
-          youtubeLink: eventRow.youtube_link as string | undefined,
-          links: (eventRow.links as string[]) || [],
-          type: (eventRow.type as string) || '',
-          fields: (eventRow.fields as string[]) || [],
-          status: (eventRow.status as EventStatus) || 'published',
-          createdAt: (eventRow.created_at as string) || new Date().toISOString(),
-          updatedAt: (eventRow.updated_at as string) || new Date().toISOString(),
-
-          // Additional fields for EventWithDetails
-          category_name: (eventRow.type as string) || '',
-          average_rating: 0,
-          tags: (eventRow.fields as string[]) || []
-        }
-      })
+      const events: EventWithDetails[] = filteredRows.map(mapEventRowToEventWithDetails)
 
       return events
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw createDatabaseError(`Failed to fetch events: ${errorMessage}`, 'events')
     }
-  }, 'fetch events', true)
+  }, 'fetch events', true, 'events')
 }
 
 /**
@@ -384,38 +240,13 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
         return null;
       }
 
-      // Transform the data
-      const event: EventWithDetails = {
-        id: docSnap.id,
-        name: data.name || '',
-        description: data.description || '',
-        fromDate: data.from_date || '',
-        toDate: data.to_date || '',
-        location: data.location || '',
-        country: data.country || '',
-        organizer: data.organizer || '',
-        fromAge: data.from_age,
-        toAge: data.to_age,
-        youtubeLink: data.youtube_link,
-        links: data.links || [],
-        type: data.type || '',
-        fields: data.fields || [],
-        status: (data.status as EventStatus) || 'published',
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-
-        // Additional fields for EventWithDetails
-        category_name: data.type || '',
-        average_rating: 0,
-        tags: data.fields || []
-      }
-
-      return event
+      const eventRow = mapFirestoreDataToEventRow(docSnap.id, data as Record<string, unknown>)
+      return mapEventRowToEventWithDetails(eventRow)
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw createDatabaseError(`Failed to fetch event by ID: ${errorMessage}`, 'event')
     }
-  }, 'fetch event by ID', true)
+  }, 'fetch event by ID', true, 'event')
 }
 
 /**
@@ -433,34 +264,11 @@ export async function getPopularEventsClient(limitCount: number = 10): Promise<E
     const querySnapshot = await getDocs(eventsQuery)
     const eventsRows: EventRow[] = []
     querySnapshot.forEach((doc) => {
-      eventsRows.push({ id: doc.id, ...(doc.data() as Omit<EventRow, 'id'>) })
+      eventsRows.push(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
     })
 
     // Transform the data
-    const events: EventWithDetails[] = eventsRows.map((row) => ({
-      id: row.id as string,
-      name: (row.name as string) || '',
-      description: (row.description as string) || '',
-      fromDate: (row.from_date as string) || '',
-      toDate: (row.to_date as string) || '',
-      location: (row.location as string) || '',
-      country: (row.country as string) || '',
-      organizer: (row.organizer as string) || '',
-      fromAge: row.from_age as number | undefined,
-      toAge: row.to_age as number | undefined,
-      youtubeLink: row.youtube_link as string | undefined,
-      links: (row.links as string[]) || [],
-      type: (row.type as string) || '',
-      fields: (row.fields as string[]) || [],
-      status: (row.status as EventStatus) || 'published',
-      createdAt: row.created_at as string,
-      updatedAt: row.updated_at as string,
-
-      // Additional fields for EventWithDetails
-      category_name: (row.type as string) || '',
-      average_rating: 0,
-      tags: (row.fields as string[]) || []
-    }))
+    const events: EventWithDetails[] = eventsRows.map(mapEventRowToEventWithDetails)
 
     return events
   } catch (error) {

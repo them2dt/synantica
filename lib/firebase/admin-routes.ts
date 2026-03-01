@@ -11,7 +11,7 @@
  * @constant {string[]} ADMIN_ROUTES
  * @description Routes that should only be accessible to admin users
  */
-export const ADMIN_ROUTES = ["/admin"];
+const ADMIN_ROUTES = ["/admin"];
 
 /**
  * Checks if a given pathname is an admin route
