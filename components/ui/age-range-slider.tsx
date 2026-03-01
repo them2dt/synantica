@@ -37,7 +37,7 @@ export function AgeRangeSlider({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="flex items-center justify-between text-xs text-muted-foreground">
+      <div className="flex items-center justify-between text-xs text-slate-500">
         <span>{min}</span>
         <span>{max}</span>
       </div>
@@ -49,7 +49,7 @@ export function AgeRangeSlider({
         onValueChange={handleValueChange}
         disabled={disabled}
       />
-      <div className="flex items-center justify-between text-sm text-foreground">
+      <div className="flex items-center justify-between text-sm text-neutral-950">
         <span>{localValue[0]} years</span>
         <span>{localValue[1]} years</span>
       </div>

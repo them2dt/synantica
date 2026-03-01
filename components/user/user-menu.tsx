@@ -58,11 +58,11 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
           </Button>
         )}
       </DropdownMenuTrigger>
-      
+
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        
+
         <DropdownMenuItem onClick={() => {
           onClick?.()
           router.push('/profile')
@@ -70,11 +70,11 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
           <User className="w-4 h-4 mr-2" />
           Profile
         </DropdownMenuItem>
-        
-        
+
+
         <DropdownMenuSeparator />
-        
-        <DropdownMenuItem onClick={handleLogout} className="text-error-foreground">
+
+        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
           <LogOut className="w-4 h-4 mr-2" />
           Log out
         </DropdownMenuItem>

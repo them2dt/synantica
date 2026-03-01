@@ -34,7 +34,7 @@ export function EventsGrid({
   onEventClick,
   isListView = false,
   sortBy = 'date-asc',
-  onSortChange = () => {},
+  onSortChange = () => { },
   showLoadMore = false,
   onLoadMore,
   loadingMore = false,
@@ -93,7 +93,7 @@ export function EventsGrid({
 
       {events.length === 0 && (
         <div className="text-center py-12">
-          <div className="text-muted-foreground mb-4">
+          <div className="text-slate-500 mb-4">
             <div className="w-12 h-12 mx-auto mb-4 opacity-50">
               <svg
                 className="w-full h-full"

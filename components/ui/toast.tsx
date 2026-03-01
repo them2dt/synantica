@@ -80,21 +80,21 @@ function Toast({
 
     const getToastStyles = () => {
         const baseStyles =
-            "relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-none border border-border bg-card p-5 pr-8 transition-all";
+            "relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-none border border-slate-200 bg-white p-5 pr-8 transition-all";
         switch (type) {
             case "success":
-                return cn(baseStyles, "border-success/40");
+                return cn(baseStyles, "border-emerald-600/40");
             case "error":
-                return cn(baseStyles, "border-error text-error-foreground bg-error");
+                return cn(baseStyles, "border-red-600 text-white bg-red-600");
             case "warning":
                 return cn(
                     baseStyles,
-                    "border-processing/60 bg-processing text-processing-foreground"
+                    "border-amber-500/60 bg-amber-500 text-white"
                 );
             case "info":
-                return cn(baseStyles, "border-border");
+                return cn(baseStyles, "border-slate-200");
             default:
-                return cn(baseStyles, "border-border");
+                return cn(baseStyles, "border-slate-200");
         }
     };
 
@@ -103,26 +103,26 @@ function Toast({
         switch (type) {
             case "success":
                 return (
-                    <CheckCircle {...iconProps} className={cn(iconProps.className, "text-success")} />
+                    <CheckCircle {...iconProps} className={cn(iconProps.className, "text-emerald-600")} />
                 );
             case "error":
                 return (
                     <AlertCircle
                         {...iconProps}
-                        className={cn(iconProps.className, "text-error-foreground")}
+                        className={cn(iconProps.className, "text-white")}
                     />
                 );
             case "warning":
                 return (
                     <AlertTriangle
                         {...iconProps}
-                        className={cn(iconProps.className, "text-processing-foreground")}
+                        className={cn(iconProps.className, "text-white")}
                     />
                 );
             case "info":
-                return <Info {...iconProps} className={cn(iconProps.className, "text-muted-foreground")} />;
+                return <Info {...iconProps} className={cn(iconProps.className, "text-slate-500")} />;
             default:
-                return <Info {...iconProps} className={cn(iconProps.className, "text-muted-foreground")} />;
+                return <Info {...iconProps} className={cn(iconProps.className, "text-slate-500")} />;
         }
     };
 
@@ -148,7 +148,7 @@ function Toast({
                 </div>
                 <button
                     onClick={handleDismiss}
-                    className="absolute right-2 top-2 rounded-none p-1 hover:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                    className="absolute right-2 top-2 rounded-none p-1 hover:bg-slate-100/60 focus:outline-none focus:ring-2 focus:ring-offset-2"
                 >
                     <X className="h-4 w-4" />
                 </button>

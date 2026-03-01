@@ -74,16 +74,16 @@ export function Logo({
   return (
     <div
       className={cn(
-        "flex items-center font-bold tracking-tighter text-foreground",
+        "flex items-center font-bold tracking-tighter text-neutral-950",
         currentSize.container,
         onClick && "cursor-pointer select-none",
         className
       )}
       onClick={onClick}
     >
-      <div className="flex items-center justify-center bg-primary p-1">
+      <div className="flex items-center justify-center bg-black p-1">
         <Zap
-          className={cn("text-primary-foreground fill-current", currentSize.icon)}
+          className={cn("text-white fill-current", currentSize.icon)}
           strokeWidth={2.5}
         />
       </div>

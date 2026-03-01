@@ -99,29 +99,18 @@ export function EventsTable({
     const getStatusColor = (status: string) => {
         switch (status) {
             case 'published':
-                return 'bg-success/15 text-success'
+                return 'bg-emerald-500/15 text-emerald-600'
             case 'draft':
-                return 'bg-processing text-processing-foreground'
+                return 'bg-amber-100 text-amber-800'
             case 'cancelled':
-                return 'bg-error text-error-foreground'
+                return 'bg-red-50 text-red-600'
             default:
-                return 'bg-muted text-secondary-foreground'
+                return 'bg-slate-100 text-slate-600'
         }
     }
 
     const getTypeColor = (type: string) => {
-        switch (type) {
-            case 'olympiads':
-                return 'bg-muted text-secondary-foreground'
-            case 'contests':
-                return 'bg-muted text-secondary-foreground'
-            case 'workshops':
-                return 'bg-muted text-secondary-foreground'
-            case 'events':
-                return 'bg-muted text-secondary-foreground'
-            default:
-                return 'bg-muted text-secondary-foreground'
-        }
+        return 'bg-slate-100 text-slate-600'
     }
 
     return (
@@ -129,7 +118,7 @@ export function EventsTable({
             {/* Toolbar */}
             <div className="flex items-center justify-between gap-4">
                 <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-500" />
                     <Input
                         type="text"
                         placeholder="Search events..."
@@ -151,10 +140,10 @@ export function EventsTable({
             </div>
 
             {/* Table */}
-            <div className="border border-border rounded-none overflow-hidden bg-card">
+            <div className="border border-slate-200 rounded-none overflow-hidden bg-white">
                 <div className="overflow-x-auto">
                     <table className="w-full">
-                        <thead className="bg-muted/40 border-b border-border">
+                        <thead className="bg-slate-50 border-b border-slate-200">
                             <tr>
                                 <th className="px-4 py-3 text-left">
                                     <input
@@ -164,38 +153,38 @@ export function EventsTable({
                                             filteredEvents.length > 0
                                         }
                                         onChange={toggleSelectAll}
-                                        className="rounded-none border-border"
+                                        className="rounded-none border-slate-200"
                                     />
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Name
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Type
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Status
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Date
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Location
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Organizer
                                 </th>
-                                <th className="px-4 py-3 text-left text-sm text-muted-foreground">
+                                <th className="px-4 py-3 text-left text-sm text-slate-500">
                                     Actions
                                 </th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-border">
+                        <tbody className="divide-y divide-slate-200">
                             {filteredEvents.length === 0 ? (
                                 <tr>
                                     <td
                                         colSpan={8}
-                                        className="px-4 py-8 text-center text-muted-foreground"
+                                        className="px-4 py-8 text-center text-slate-500"
                                     >
                                         {searchQuery
                                             ? 'No events found matching your search'
@@ -207,7 +196,7 @@ export function EventsTable({
                                     <tr
                                         key={event.id}
                                         onClick={() => handleRowClick(event)}
-                                        className="hover:bg-muted/40 cursor-pointer transition-colors"
+                                        className="hover:bg-slate-50/40 cursor-pointer transition-colors"
                                     >
                                         <td className="px-4 py-3">
                                             <input
@@ -215,12 +204,12 @@ export function EventsTable({
                                                 checked={selectedIds.includes(event.id)}
                                                 onChange={() => toggleSelection(event.id)}
                                                 onClick={(e) => e.stopPropagation()}
-                                                className="rounded-none border-border"
+                                                className="rounded-none border-slate-200"
                                             />
                                         </td>
                                         <td className="px-4 py-3">
-                                            <div className="text-foreground">{event.name}</div>
-                                            <div className="text-sm text-muted-foreground truncate max-w-xs">
+                                            <div className="text-neutral-950">{event.name}</div>
+                                            <div className="text-sm text-slate-500 truncate max-w-xs">
                                                 {event.description}
                                             </div>
                                         </td>
@@ -234,21 +223,21 @@ export function EventsTable({
                                                 {event.status}
                                             </Badge>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-secondary-foreground">
+                                        <td className="px-4 py-3 text-sm text-slate-600">
                                             <div>{formatEventDate(event.fromDate, 'date-only')}</div>
                                             {event.fromDate !== event.toDate && (
-                                                <div className="text-xs text-muted-foreground">
+                                                <div className="text-xs text-slate-500">
                                                     to {formatEventDate(event.toDate, 'date-only')}
                                                 </div>
                                             )}
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-secondary-foreground">
+                                        <td className="px-4 py-3 text-sm text-slate-600">
                                             <div>{event.location}</div>
-                                            <div className="text-xs text-muted-foreground">
+                                            <div className="text-xs text-slate-500">
                                                 {event.country}
                                             </div>
                                         </td>
-                                        <td className="px-4 py-3 text-sm text-secondary-foreground">
+                                        <td className="px-4 py-3 text-sm text-slate-600">
                                             {event.organizer}
                                         </td>
                                         <td className="px-4 py-3">
@@ -256,7 +245,7 @@ export function EventsTable({
                                                 variant="ghost"
                                                 size="sm"
                                                 onClick={(e) => handleDelete(event.id, e)}
-                                                className="text-error-foreground hover:bg-error"
+                                                className="text-red-600 hover:bg-red-50"
                                             >
                                                 <Trash2 className="h-4 w-4" />
                                             </Button>
@@ -269,7 +258,7 @@ export function EventsTable({
                 </div>
             </div>
             {/* Results count */}
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-slate-500">
                 Showing {filteredEvents.length} of {events.length} events
             </div>
             {/* Edit Modal */}

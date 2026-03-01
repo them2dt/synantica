@@ -34,7 +34,7 @@ export function Navigation({
 
   return (
     <header className={cn('fixed top-4 left-0 right-0 z-[60]', className)}>
-      <div className={cn('mx-auto flex h-14 w-full max-w-[1100px] items-center justify-between border border-border bg-background px-5')}>
+      <div className={cn('mx-auto flex h-14 w-full max-w-[1100px] items-center justify-between border border-slate-200 bg-slate-50 px-5')}>
         <div className="flex items-center gap-6">
           {showLogo && <Logo size={logoSize} />}
           <div className="flex items-center gap-4">
@@ -42,7 +42,7 @@ export function Navigation({
               href="/"
               className={cn(
                 'text-sm transition-colors',
-                isActive('/') ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                isActive('/') ? 'text-neutral-950' : 'text-slate-500 hover:text-neutral-950'
               )}
             >
               Home
@@ -51,7 +51,7 @@ export function Navigation({
               href="/dashboard"
               className={cn(
                 'text-sm transition-colors',
-                isActive('/dashboard') ? 'text-foreground' : 'text-muted-foreground hover:text-foreground'
+                isActive('/dashboard') ? 'text-neutral-950' : 'text-slate-500 hover:text-neutral-950'
               )}
             >
               Dashboard

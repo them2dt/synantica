@@ -94,7 +94,7 @@ export function DateRangePicker({
         <Button
           id="date"
           variant="outline"
-          className={cn("w-full justify-start text-left min-w-0", !value && "text-muted-foreground", className)}
+          className={cn("w-full justify-start text-left min-w-0", !value && "text-slate-500", className)}
           disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4 flex-none" />
@@ -102,7 +102,7 @@ export function DateRangePicker({
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-auto p-0 border border-border bg-popover"
+        className="w-auto p-0 border border-slate-200 bg-white"
         align="start"
         side="bottom"
         sideOffset={4}
@@ -110,7 +110,7 @@ export function DateRangePicker({
         alignOffset={0}
       >
         <div className="flex">
-          <div className="p-3 border-r border-border">
+          <div className="p-3 border-r border-slate-200">
             <div className="text-sm text-center mb-2">Start Date</div>
             <Calendar
               mode="single"
@@ -133,13 +133,13 @@ export function DateRangePicker({
             />
           </div>
         </div>
-        <div className="flex items-center justify-between p-3 border-t border-border gap-2">
+        <div className="flex items-center justify-between p-3 border-t border-slate-200 gap-2">
           <Button variant="outline" size="sm" onClick={handleClear} className="text-xs">
             Clear
           </Button>
           <div className="flex items-center gap-2">
             {startDate && !endDate && (
-              <span className="text-xs text-muted-foreground">Select end date</span>
+              <span className="text-xs text-slate-500">Select end date</span>
             )}
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={() => setOpen(false)} className="text-xs">

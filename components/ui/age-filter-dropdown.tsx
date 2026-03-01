@@ -24,7 +24,6 @@ interface AgeFilterDropdownProps {
 
 /**
  * Age filter dropdown that contains a slider for range selection
- * Similar to the image reference - dropdown opens to reveal slider interface
  */
 export function AgeFilterDropdown({
   value = [18, 65],
@@ -64,8 +63,8 @@ export function AgeFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-border bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-            localValue[0] === min && localValue[1] === max && "text-muted-foreground",
+            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            localValue[0] === min && localValue[1] === max && "text-slate-500",
             className
           )}
           disabled={disabled}
@@ -74,9 +73,9 @@ export function AgeFilterDropdown({
           <ChevronDown className="h-4 w-4 opacity-50" />
         </button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        className="w-80 p-4" 
+
+      <DropdownMenuContent
+        className="w-80 p-4"
         align="start"
         side="bottom"
       >
@@ -158,8 +157,8 @@ export function CompactAgeFilterDropdown({
       <DropdownMenuTrigger asChild>
         <button
           className={cn(
-            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-border bg-white px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
-            localValue[0] === min && localValue[1] === max && "text-muted-foreground",
+            "flex w-full items-center justify-between whitespace-nowrap rounded-none border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus:outline-none focus:ring-1 focus:ring-black disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1",
+            localValue[0] === min && localValue[1] === max && "text-slate-500",
             className
           )}
           disabled={disabled}
@@ -168,9 +167,9 @@ export function CompactAgeFilterDropdown({
           <ChevronDown className="h-4 w-4 opacity-50" />
         </button>
       </DropdownMenuTrigger>
-      
-      <DropdownMenuContent 
-        className="w-72 p-3" 
+
+      <DropdownMenuContent
+        className="w-72 p-3"
         align="start"
         side="bottom"
       >

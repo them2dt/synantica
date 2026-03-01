@@ -23,7 +23,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
             <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
               Account
             </div>
-            <h1 className="text-3xl text-foreground">
+            <h1 className="text-3xl text-neutral-950">
               {title}
             </h1>
           </div>

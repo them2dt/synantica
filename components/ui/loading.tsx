@@ -33,9 +33,9 @@ export function Spinner({
   }
 
   const colorClasses = {
-    primary: 'text-primary',
-    muted: 'text-muted-foreground',
-    accent: 'text-foreground',
+    primary: 'text-black',
+    muted: 'text-slate-500',
+    accent: 'text-neutral-950',
     current: 'text-current'
   }
 
@@ -61,7 +61,7 @@ export function InlineSpinner({ className, color = 'current' }: Omit<SpinnerProp
     <Loader2
       className={cn(
         'h-4 w-4 animate-spin',
-        color === 'current' ? 'text-current' : `text-${color}`,
+        color === 'current' ? 'text-current' : color === 'primary' ? 'text-black' : color === 'muted' ? 'text-slate-500' : 'text-neutral-950',
         className
       )}
       aria-hidden="true"
@@ -98,7 +98,7 @@ export function PageSpinner({
   return (
     <div className={cn('flex flex-col items-center justify-center', containerSize[size], className)}>
       <Spinner size={spinnerSize[size]} className="mb-4" />
-      <p className="text-sm text-muted-foreground">{text}</p>
+      <p className="text-sm text-slate-500">{text}</p>
     </div>
   )
 }
@@ -120,7 +120,7 @@ export function Skeleton({
   animate = true
 }: SkeletonProps) {
   const baseClasses = cn(
-    'bg-muted',
+    'bg-slate-100',
     animate && 'animate-pulse',
     className
   )
@@ -159,7 +159,7 @@ export function Skeleton({
  */
 export function EventCardSkeleton() {
   return (
-    <div className="border border-border p-4 space-y-3">
+    <div className="border border-slate-200 p-4 space-y-3">
       <div className="flex items-start justify-between">
         <Skeleton className="h-5 w-20" />
         <Skeleton className="h-6 w-16 rounded-none" />
@@ -191,9 +191,9 @@ export function EventCardSkeleton() {
  */
 export function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="border border-border overflow-hidden">
+    <div className="border border-slate-200 overflow-hidden">
       {/* Header */}
-      <div className="border-b bg-muted/50 p-4">
+      <div className="border-b bg-slate-50 p-4">
         <div className="grid grid-cols-6 gap-4">
           <Skeleton className="h-4 w-16" />
           <Skeleton className="h-4 w-20" />
@@ -281,10 +281,10 @@ export function LoadingOverlay({
     <div className={cn('relative', className)}>
       {children}
       {loading && (
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-none">
+        <div className="absolute inset-0 bg-white/80 backdrop-blur-sm flex items-center justify-center rounded-none">
           <div className="flex flex-col items-center gap-2">
             <Spinner size="md" />
-            <p className="text-sm text-muted-foreground">{text}</p>
+            <p className="text-sm text-slate-500">{text}</p>
           </div>
         </div>
       )}

@@ -5,16 +5,16 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-black disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
-                default: "bg-primary text-primary-foreground hover:opacity-90 active:opacity-85",
-                destructive: "bg-destructive text-destructive-foreground hover:opacity-90 active:opacity-85",
-                outline: "border border-border bg-white text-foreground hover:bg-muted/60",
-                secondary: "bg-secondary text-secondary-foreground hover:bg-muted/70",
-                ghost: "text-foreground hover:bg-muted/60",
-                link: "text-foreground underline-offset-4 hover:underline",
+                default: "bg-black text-white hover:opacity-90 active:opacity-85",
+                destructive: "bg-red-600 text-white hover:opacity-90 active:opacity-85",
+                outline: "border border-slate-200 bg-white text-neutral-950 hover:bg-slate-100/60",
+                secondary: "bg-slate-50 text-slate-600 hover:bg-slate-100/70",
+                ghost: "text-neutral-950 hover:bg-slate-100/60",
+                link: "text-neutral-950 underline-offset-4 hover:underline",
                 black: "bg-black text-white hover:opacity-90",
             },
             size: {

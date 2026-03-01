@@ -46,7 +46,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                     </Badge>
                     <Badge
                       variant="outline"
-                      className="text-muted-foreground"
+                      className="text-slate-500"
                     >
                       Age: {event.fromAge || 0}-{event.toAge || 99}
                     </Badge>
@@ -55,29 +55,29 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                     {getCountryFlag(event.country)}
                   </div>
                 </div>
-                <CardTitle className="text-lg text-balance text-primary mb-2">{event.name}</CardTitle>
+                <CardTitle className="text-lg text-balance text-neutral-950 mb-2">{event.name}</CardTitle>
                 <CardDescription className="text-pretty text-sm mb-3 line-clamp-2">{event.description}</CardDescription>
-                
+
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <Calendar className="w-4 h-4 text-slate-500" />
                     {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
                   </div>
 
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 text-sm text-slate-500">
+                    <MapPin className="w-4 h-4 text-slate-500" />
                     {event.location}
                   </div>
 
 
                   <div className="flex flex-wrap gap-1">
                     {event.fields.slice(0, 3).map((field) => (
-                      <Badge key={field} variant="outline" className="text-muted-foreground">
+                      <Badge key={field} variant="outline" className="text-slate-500">
                         {field}
                       </Badge>
                     ))}
                     {event.fields.length > 3 && (
-                      <Badge variant="outline" className="text-muted-foreground">
+                      <Badge variant="outline" className="text-slate-500">
                         +{event.fields.length - 3}
                       </Badge>
                     )}
@@ -86,8 +86,8 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
               </div>
 
               <div className="mt-4">
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={() => onLearnMore(event)}
                   className="w-fit"
                 >
@@ -108,15 +108,15 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
         <CardHeader>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-                <Badge
-                  className="capitalize"
-                  variant="default"
-                >
-                  {event.type}
-                </Badge>
+              <Badge
+                className="capitalize"
+                variant="default"
+              >
+                {event.type}
+              </Badge>
               <Badge
                 variant="outline"
-                className="text-muted-foreground"
+                className="text-slate-500"
               >
                 Age: {event.fromAge || 0}-{event.toAge || 99}
               </Badge>
@@ -125,25 +125,25 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
               {getCountryFlag(event.country)}
             </div>
           </div>
-          <CardTitle className="text-lg text-balance text-primary">{event.name}</CardTitle>
+          <CardTitle className="text-lg text-balance text-neutral-950">{event.name}</CardTitle>
           <CardDescription className="text-pretty">{event.description}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-3 flex-grow">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <Calendar className="w-4 h-4 text-slate-500" />
             {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 text-sm text-slate-500">
+            <MapPin className="w-4 h-4 text-slate-500" />
             {event.location}
           </div>
 
 
           <div className="flex flex-wrap gap-1">
             {event.fields.map((field) => (
-              <Badge key={field} variant="outline" className="text-muted-foreground">
+              <Badge key={field} variant="outline" className="text-slate-500">
                 {field}
               </Badge>
             ))}
@@ -151,9 +151,9 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
         </CardContent>
 
         <CardFooter className="pt-0 mt-auto">
-          <Button 
-            className="w-full" 
-            size="sm" 
+          <Button
+            className="w-full"
+            size="sm"
             onClick={() => onLearnMore(event)}
           >
             Learn More

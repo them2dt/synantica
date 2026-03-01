@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+const colors = require('tailwindcss/colors');
 
 export default {
   darkMode: ["class"],
@@ -15,54 +16,54 @@ export default {
         heading: ['var(--font-instrument-serif)', '"Instrument Serif"', 'serif'],
       },
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        background: colors.slate[50],
+        foreground: colors.neutral[950],
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: colors.white,
+          foreground: colors.neutral[950],
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: colors.white,
+          foreground: colors.neutral[950],
         },
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: colors.black,
+          foreground: colors.white,
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: colors.slate[50],
+          foreground: colors.slate[600],
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: colors.slate[50],
+          foreground: colors.slate[500],
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: colors.slate[100],
+          foreground: colors.black,
         },
-        success: "hsl(var(--success))",
+        success: colors.emerald[600],
         processing: {
-          DEFAULT: "hsl(var(--processing))",
-          foreground: "hsl(var(--processing-foreground))",
+          DEFAULT: colors.amber[500],
+          foreground: colors.amber[950],
         },
         error: {
-          DEFAULT: "hsl(var(--error))",
-          foreground: "hsl(var(--error-foreground))",
+          DEFAULT: colors.red[50],
+          foreground: colors.red[600],
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: colors.red[600],
+          foreground: colors.white,
         },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
+        border: colors.slate[200],
+        input: colors.slate[200],
+        ring: colors.black,
         chart: {
-          "1": "hsl(var(--chart-1))",
-          "2": "hsl(var(--chart-2))",
-          "3": "hsl(var(--chart-3))",
-          "4": "hsl(var(--chart-4))",
-          "5": "hsl(var(--chart-5))",
+          "1": colors.slate[900],
+          "2": colors.slate[700],
+          "3": colors.slate[500],
+          "4": colors.slate[300],
+          "5": colors.slate[100],
         },
       },
       borderRadius: {

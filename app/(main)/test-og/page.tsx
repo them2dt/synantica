@@ -33,21 +33,21 @@ export default function TestOGPage() {
     <div className="min-h-screen bg-background py-10">
       <div className="max-w-[1100px] mx-auto px-6">
         <div className="bg-card rounded-none border border-border p-8">
-          <h1 className="text-3xl text-foreground mb-8">
+          <h1 className="text-3xl text-neutral-950 mb-8">
             Open Graph Image Testing
           </h1>
           
           <div className="space-y-8">
             {/* Default OG Image */}
             <div>
-              <h2 className="text-2xl text-foreground mb-4">
+              <h2 className="text-2xl text-neutral-950 mb-4">
                 Default OG Image
               </h2>
               <p className="text-secondary-foreground mb-4">
                 This is the default layout for general pages:
               </p>
               <div className="bg-muted/50 p-4 rounded-none border border-border">
-                <code className="text-sm text-foreground break-all">
+                <code className="text-sm text-neutral-950 break-all">
                   {defaultOGUrl}
                 </code>
               </div>
@@ -64,14 +64,14 @@ export default function TestOGPage() {
 
             {/* Event OG Image */}
             <div>
-              <h2 className="text-2xl text-foreground mb-4">
+              <h2 className="text-2xl text-neutral-950 mb-4">
                 Event OG Image
               </h2>
               <p className="text-secondary-foreground mb-4">
                 This is the specialized layout for event pages:
               </p>
               <div className="bg-muted/50 p-4 rounded-none border border-border">
-                <code className="text-sm text-foreground break-all">
+                <code className="text-sm text-neutral-950 break-all">
                   {eventOGUrl}
                 </code>
               </div>
@@ -88,7 +88,7 @@ export default function TestOGPage() {
 
             {/* Usage Instructions */}
             <div className="bg-muted/40 p-6 rounded-none border border-border">
-              <h3 className="text-lg text-foreground mb-3">
+              <h3 className="text-lg text-neutral-950 mb-3">
                 How to Use
               </h3>
               <div className="text-secondary-foreground space-y-2 text-sm">
@@ -100,7 +100,7 @@ export default function TestOGPage() {
 
             {/* Test Social Media */}
             <div className="bg-muted/40 p-6 rounded-none border border-border">
-              <h3 className="text-lg text-foreground mb-3">
+              <h3 className="text-lg text-neutral-950 mb-3">
                 Test Social Media Sharing
               </h3>
               <p className="text-secondary-foreground mb-4 text-sm">
@@ -111,7 +111,7 @@ export default function TestOGPage() {
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-white text-foreground px-4 py-2 rounded-none hover:bg-muted/60 transition-colors"
+                  className="inline-block border border-border bg-white text-neutral-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors"
                 >
                   Test on Facebook
                 </a>
@@ -119,7 +119,7 @@ export default function TestOGPage() {
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-white text-foreground px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
+                  className="inline-block border border-border bg-white text-neutral-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
                 >
                   Test on Twitter
                 </a>
@@ -127,7 +127,7 @@ export default function TestOGPage() {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-white text-foreground px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
+                  className="inline-block border border-border bg-white text-neutral-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
                 >
                   Test on LinkedIn
                 </a>

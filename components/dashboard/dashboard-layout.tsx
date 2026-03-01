@@ -59,9 +59,9 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
   // Suppress unused parameter warning for now
   void totalEvents;
-  
+
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <div className="flex-1">
         <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
           {/* Filters Top Bar */}
@@ -72,8 +72,8 @@ export function DashboardLayout({
               selectedType={selectedType}
               onTypeChange={onTypeChange}
               eventTypes={eventTypes}
-        selectedDateRange={selectedDateRange}
-        onDateRangeChange={onDateRangeChange}
+              selectedDateRange={selectedDateRange}
+              onDateRangeChange={onDateRangeChange}
               selectedAgeRange={selectedAgeRange}
               onAgeRangeChange={onAgeRangeChange}
               selectedCountry={selectedCountry}

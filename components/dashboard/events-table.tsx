@@ -61,50 +61,50 @@ export function EventsTable({
   void getSortIcon
 
   return (
-    <div className="overflow-x-auto overflow-y-visible scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent -mx-4">
+    <div className="overflow-x-auto overflow-y-visible scrollbar-thin scrollbar-thumb-slate-200 scrollbar-track-transparent -mx-4">
       <div className="min-w-full inline-block align-middle px-4">
-        <table className="w-full border-collapse border border-border min-w-[800px]">
+        <table className="w-full border-collapse border border-slate-200 min-w-[800px]">
           <thead>
-            <tr className="border-b bg-muted/30">
-              <th className="text-left p-3 text-muted-foreground border-r border-border sticky left-0 bg-muted/30 z-10">
+            <tr className="border-b bg-slate-100/30">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200 sticky left-0 bg-slate-100/30 z-10">
                 <div className="flex items-center justify-start gap-2">
-                  <Type className="w-4 h-4 text-muted-foreground" />
+                  <Type className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Event</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground border-r border-border">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200">
                 <div className="flex items-center justify-start gap-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <Calendar className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Date Range</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground border-r border-border">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200">
                 <div className="flex items-center justify-start gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <MapPin className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Location</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground border-r border-border">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200">
                 <div className="flex items-center justify-start gap-2">
-                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <Globe className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Country</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground border-r border-border">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200">
                 <div className="flex items-center justify-start gap-2">
-                  <Tag className="w-4 h-4 text-muted-foreground" />
+                  <Tag className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Type</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground border-r border-border">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200">
                 <div className="flex items-center justify-start gap-2">
-                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <FileText className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Fields</span>
                 </div>
               </th>
-              <th className="text-left p-3 text-muted-foreground">
+              <th className="text-left p-3 text-slate-500">
                 <div className="flex items-center justify-start gap-2">
-                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <Users className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Age Range</span>
                 </div>
               </th>
@@ -112,26 +112,26 @@ export function EventsTable({
           </thead>
           <tbody>
             {events.map((event) => (
-              <tr key={event.id} className="border-b hover:bg-muted/40 transition-colors">
-                <td className="p-3 border-r border-border sticky left-0 bg-background z-10">
+              <tr key={event.id} className="border-b hover:bg-slate-100/40 transition-colors">
+                <td className="p-3 border-r border-slate-200 sticky left-0 bg-white z-10">
                   <button
                     onClick={() => onEventClick(event)}
-                    className="text-foreground text-base max-w-[200px] truncate text-left hover:text-primary hover:underline transition-colors cursor-pointer"
+                    className="text-neutral-950 text-base max-w-[200px] truncate text-left hover:text-black hover:underline transition-colors cursor-pointer"
                   >
                     {event.name}
                   </button>
                 </td>
-                <td className="p-3 border-r border-border">
+                <td className="p-3 border-r border-slate-200">
                   <div className="text-sm">
                     {formatEventDate(event.fromDate, 'table')}-{formatEventDate(event.toDate, 'table')}
                   </div>
                 </td>
-                <td className="p-3 border-r border-border">
+                <td className="p-3 border-r border-slate-200">
                   <div className="text-sm max-w-[120px] truncate" title={event.location}>
                     {event.location}
                   </div>
                 </td>
-                <td className="p-3 border-r border-border">
+                <td className="p-3 border-r border-slate-200">
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-lg">{getCountryFlag(event.country)}</span>
                     <span className="truncate" title={getCountryDisplayName(event.country)}>
@@ -139,10 +139,10 @@ export function EventsTable({
                     </span>
                   </div>
                 </td>
-                <td className="p-3 border-r border-border">
+                <td className="p-3 border-r border-slate-200">
                   <div className="text-sm capitalize">{event.type}</div>
                 </td>
-                <td className="p-3 border-r border-border">
+                <td className="p-3 border-r border-slate-200">
                   <div className="text-sm max-w-[100px] truncate" title={event.fields.join(', ')}>
                     {event.fields.slice(0, 2).join(', ')}
                     {event.fields.length > 2 && '...'}

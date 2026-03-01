@@ -15,15 +15,15 @@ import { Button } from '@/components/ui/button'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
-  loading: () => <div className="animate-pulse h-screen bg-muted"></div>
+  loading: () => <div className="animate-pulse h-screen bg-slate-100"></div>
 })
 
 const EventsGrid = dynamic(() => import('@/components/dashboard/events-grid').then(mod => ({ default: mod.EventsGrid })), {
-  loading: () => <div className="animate-pulse h-64 bg-muted rounded-none"></div>
+  loading: () => <div className="animate-pulse h-64 bg-slate-100 rounded-none"></div>
 })
 
 const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(mod => ({ default: mod.DashboardSkeleton })), {
-  loading: () => <div className="animate-pulse h-64 bg-muted rounded-none"></div>
+  loading: () => <div className="animate-pulse h-64 bg-slate-100 rounded-none"></div>
 })
 
 export default function DashboardPage() {
@@ -69,8 +69,8 @@ export default function DashboardPage() {
     const notificationMessage = action === 'INSERT'
       ? `New event added: ${event.name}`
       : action === 'UPDATE'
-      ? `Event updated: ${event.name}`
-      : `Event removed: ${event.name}`
+        ? `Event updated: ${event.name}`
+        : `Event removed: ${event.name}`
 
     console.log(notificationMessage)
 
@@ -114,7 +114,7 @@ export default function DashboardPage() {
   // Sort events based on selected sort option
   const sortedEvents = useMemo(() => {
     if (!dbEvents) return []
-    
+
     return [...dbEvents].sort((a, b) => {
       switch (sortBy) {
         case 'date-asc':
@@ -202,9 +202,9 @@ export default function DashboardPage() {
       >
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="text-error-foreground text-5xl mb-4">⚠️</div>
-            <h3 className="text-lg text-foreground mb-2">Error Loading Events</h3>
-            <p className="text-muted-foreground mb-4">{error}</p>
+            <div className="text-red-600 text-5xl mb-4">⚠️</div>
+            <h3 className="text-lg text-neutral-950 mb-2">Error Loading Events</h3>
+            <p className="text-slate-500 mb-4">{error}</p>
             <Button onClick={() => window.location.reload()}>
               Try Again
             </Button>
