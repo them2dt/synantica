@@ -1,7 +1,8 @@
 'use client'
+import { formatEventDate } from '@/lib/utils/date-formatting'
 
 import { EventCard } from './event-card'
-import { EventsTable } from './events-table'
+
 import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { Button } from '@/components/ui/button'
@@ -16,8 +17,6 @@ interface EventsGridProps {
   eventTypes: CategoryWithIcon[]
   onEventClick: (event: Event | EventDirectory) => void
   isListView?: boolean
-  sortBy?: string
-  onSortChange?: (value: string) => void
   showLoadMore?: boolean
   onLoadMore?: () => void
   loadingMore?: boolean
@@ -33,8 +32,6 @@ export function EventsGrid({
   eventTypes,
   onEventClick,
   isListView = false,
-  sortBy = 'date-asc',
-  onSortChange = () => { },
   showLoadMore = false,
   onLoadMore,
   loadingMore = false,
@@ -49,16 +46,43 @@ export function EventsGrid({
     <div className="space-y-6">
       {/* Events Grid/List */}
       {isListView ? (
-        <EventsTable
-          events={events}
-          onEventClick={onEventClick}
-          sortBy={sortBy}
-          onSortChange={onSortChange}
-        />
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead>
+              <tr className="border-b border-slate-200">
+                <th className="p-4 font-medium text-slate-500">Event</th>
+                <th className="p-4 font-medium text-slate-500">Date Range</th>
+                <th className="p-4 font-medium text-slate-500">Location</th>
+                <th className="p-4 font-medium text-slate-500">Type</th>
+              </tr>
+            </thead>
+            <tbody>
+              {events.map((event) => (
+                <tr
+                  key={event.id}
+                  className="border-b border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
+                  onClick={() => onEventClick(event)}
+                >
+                  <td className="p-4">
+                    <div className="font-medium text-slate-950">{event.name}</div>
+                    <div className="text-xs text-slate-500 truncate max-w-[200px]">{event.description}</div>
+                  </td>
+                  <td className="p-4 text-slate-600">
+                    {formatEventDate(event.fromDate, 'table')} - {formatEventDate(event.toDate, 'table')}
+                  </td>
+                  <td className="p-4 text-slate-600 truncate max-w-[150px]">{event.location}</td>
+                  <td className="p-4">
+                    <span className="capitalize px-2 py-1 bg-slate-100 text-slate-600 text-xs">{event.type}</span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        <div className="grid gap-6 grid-cols-2">
+        <div className="flex flex-row flex-wrap">
           {events.map((event) => (
-            <div key={event.id}>
+            <div key={event.id} className="w-full md:w-1/2 border-b border-r border-slate-200 p-0 last:border-r-0 md:even:border-r-0">
               <EventCard
                 event={event}
                 onLearnMore={onEventClick}
@@ -71,7 +95,7 @@ export function EventsGrid({
 
       {/* Load More Button */}
       {showLoadMore && hasMore && events.length > 0 && (
-        <div className="flex justify-center py-6">
+        <div className="flex justify-center px-6 py-6">
           <Button
             onClick={onLoadMore}
             disabled={loadingMore}
@@ -92,7 +116,7 @@ export function EventsGrid({
       )}
 
       {events.length === 0 && (
-        <div className="text-center py-12">
+        <div className="text-center px-6 py-12">
           <div className="text-slate-500 mb-4">
             <div className="w-12 h-12 mx-auto mb-4 opacity-50">
               <svg

@@ -5,6 +5,7 @@ import { ReactNode } from 'react'
 // import { Badge } from '@/components/ui/badge' // Unused for now
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
+import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { DateRange } from 'react-day-picker'
 
 /**
@@ -17,19 +18,8 @@ interface DashboardLayoutProps {
   selectedType: string
   onTypeChange: (value: string) => void
   eventTypes: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
-  totalEvents: number
-  selectedDateRange?: DateRange
-  onDateRangeChange?: (range: DateRange | undefined) => void
-  selectedAgeRange?: [number, number]
-  onAgeRangeChange?: (value: [number, number]) => void
-  selectedCountry?: string
-  onCountryChange?: (value: string) => void
-  selectedField?: string
-  onFieldChange?: (value: string) => void
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
-  sortBy?: string
-  onSortChange?: (value: string) => void
 }
 
 /**
@@ -43,59 +33,45 @@ export function DashboardLayout({
   selectedType,
   onTypeChange,
   eventTypes,
-  totalEvents, // For future use in header stats
-  selectedDateRange,
-  onDateRangeChange,
-  selectedAgeRange,
-  onAgeRangeChange,
-  selectedCountry,
-  onCountryChange,
-  selectedField,
-  onFieldChange,
   isListView,
   onViewChange,
-  sortBy,
-  onSortChange,
 }: DashboardLayoutProps) {
-  // Suppress unused parameter warning for now
-  void totalEvents;
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <main className="mx-auto min-h-screen max-w-[1100px] border-x border-slate-200 flex flex-col">
       <div className="flex-1">
-        <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 bg-white min-h-[calc(100vh-140px)]">
-          <div className="px-6 py-10">
-            {/* Filters Top Bar */}
-            <div className="mb-10">
-              <FiltersTopBar
-                searchTerm={searchTerm}
-                onSearchChange={onSearchChange}
-                selectedType={selectedType}
-                onTypeChange={onTypeChange}
-                eventTypes={eventTypes}
-                selectedDateRange={selectedDateRange}
-                onDateRangeChange={onDateRangeChange}
-                selectedAgeRange={selectedAgeRange}
-                onAgeRangeChange={onAgeRangeChange}
-                selectedCountry={selectedCountry}
-                onCountryChange={onCountryChange}
-                selectedField={selectedField}
-                onFieldChange={onFieldChange}
-                isListView={isListView}
-                onViewChange={onViewChange}
-                sortBy={sortBy}
-                onSortChange={onSortChange}
-              />
-            </div>
-
-            {/* Main Content Area */}
-            <main>{children}</main>
+        {/* Hero Section */}
+        <section className="p-6 pt-16">
+          <NavigationSpacer />
+          <div className="space-y-4">
+            <h1 className="text-5xl">Dashboard</h1>
+            <p className="text-sm text-slate-500 max-w-2xl">
+              Search and filter through the directory of stem activities.
+            </p>
           </div>
-        </div>
+        </section>
+
+        {/* Filters Top Bar */}
+        <section className="border-t border-slate-200 px-6 py-6 pb-0">
+          <FiltersTopBar
+            searchTerm={searchTerm}
+            onSearchChange={onSearchChange}
+            selectedType={selectedType}
+            onTypeChange={onTypeChange}
+            eventTypes={eventTypes}
+            isListView={isListView}
+            onViewChange={onViewChange}
+          />
+        </section>
+
+        {/* Main Content Area */}
+        <section className="border-t border-slate-200">
+          {children}
+        </section>
       </div>
 
       {/* Footer */}
       <Footer />
-    </div>
+    </main>
   )
 }

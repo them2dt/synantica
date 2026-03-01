@@ -8,7 +8,7 @@ import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/types/event'
-import { DateRange } from 'react-day-picker'
+
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Button } from '@/components/ui/button'
@@ -30,12 +30,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState('all')
-  const [selectedDateRange, setSelectedDateRange] = useState<DateRange | undefined>(undefined)
-  const [selectedAgeRange, setSelectedAgeRange] = useState<[number, number]>([0, 99])
-  const [selectedCountry, setSelectedCountry] = useState('all')
-  const [selectedField, setSelectedField] = useState('all')
   const [isListView, setIsListView] = useState(false)
-  const [sortBy, setSortBy] = useState('date-asc')
 
   // Debounce search term to prevent excessive API calls
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
@@ -45,17 +40,10 @@ export default function DashboardPage() {
     const baseFilters: EventFilters = {
       search: debouncedSearchTerm || undefined,
       type: selectedType === 'all' ? undefined : selectedType,
-      fields: selectedField === 'all' ? undefined : [selectedField],
-      country: selectedCountry === 'all' ? undefined : selectedCountry,
-      fromAge: selectedAgeRange[0] > 0 ? selectedAgeRange[0] : undefined,
-      toAge: selectedAgeRange[1] < 99 ? selectedAgeRange[1] : undefined,
-      fromDate: selectedDateRange?.from ? selectedDateRange.from.toISOString().split('T')[0] : undefined,
-      toDate: selectedDateRange?.to ? selectedDateRange.to.toISOString().split('T')[0] : undefined
     }
 
-
     return baseFilters
-  }, [debouncedSearchTerm, selectedType, selectedField, selectedCountry, selectedAgeRange, selectedDateRange])
+  }, [debouncedSearchTerm, selectedType])
 
   // Fetch events from database - using paginated optimized directory view for better performance
   const { events: dbEvents, loading, loadingMore, error, hasMore, loadMore, refetch } = useEventsDirectoryPaginated(filters, 20)
@@ -111,33 +99,11 @@ export default function DashboardPage() {
     return categories
   }, [dbCategories])
 
-  // Sort events based on selected sort option
+  // Sort events (date ascending) constantly since we removed the sort picker UI
   const sortedEvents = useMemo(() => {
     if (!dbEvents) return []
-
-    return [...dbEvents].sort((a, b) => {
-      switch (sortBy) {
-        case 'date-asc':
-          return new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime()
-        case 'date-desc':
-          return new Date(b.fromDate).getTime() - new Date(a.fromDate).getTime()
-        case 'title-asc':
-          return a.name.localeCompare(b.name)
-        case 'title-desc':
-          return b.name.localeCompare(a.name)
-        case 'age-asc':
-          return (a.fromAge || 0) - (b.fromAge || 0)
-        case 'age-desc':
-          return (b.fromAge || 0) - (a.fromAge || 0)
-        case 'created-desc':
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        case 'created-asc':
-          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
-        default:
-          return 0
-      }
-    })
-  }, [dbEvents, sortBy])
+    return [...dbEvents].sort((a, b) => new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime())
+  }, [dbEvents])
 
   // Calculate statistics
   const totalEvents = dbEvents?.length || 0
@@ -157,19 +123,8 @@ export default function DashboardPage() {
           selectedType={selectedType}
           onTypeChange={setSelectedType}
           eventTypes={eventTypes}
-          totalEvents={0}
-          selectedDateRange={selectedDateRange}
-          onDateRangeChange={setSelectedDateRange}
-          selectedAgeRange={selectedAgeRange}
-          onAgeRangeChange={setSelectedAgeRange}
-          selectedCountry={selectedCountry}
-          onCountryChange={setSelectedCountry}
-          selectedField={selectedField}
-          onFieldChange={setSelectedField}
           isListView={isListView}
           onViewChange={setIsListView}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
         >
           <DashboardSkeleton />
         </DashboardLayout>
@@ -186,19 +141,8 @@ export default function DashboardPage() {
         selectedType={selectedType}
         onTypeChange={setSelectedType}
         eventTypes={eventTypes}
-        totalEvents={0}
-        selectedDateRange={selectedDateRange}
-        onDateRangeChange={setSelectedDateRange}
-        selectedAgeRange={selectedAgeRange}
-        onAgeRangeChange={setSelectedAgeRange}
-        selectedCountry={selectedCountry}
-        onCountryChange={setSelectedCountry}
-        selectedField={selectedField}
-        onFieldChange={setSelectedField}
         isListView={isListView}
         onViewChange={setIsListView}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
       >
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
@@ -222,19 +166,8 @@ export default function DashboardPage() {
         selectedType={selectedType}
         onTypeChange={setSelectedType}
         eventTypes={eventTypes}
-        totalEvents={totalEvents}
-        selectedDateRange={selectedDateRange}
-        onDateRangeChange={setSelectedDateRange}
-        selectedAgeRange={selectedAgeRange}
-        onAgeRangeChange={setSelectedAgeRange}
-        selectedCountry={selectedCountry}
-        onCountryChange={setSelectedCountry}
-        selectedField={selectedField}
-        onFieldChange={setSelectedField}
         isListView={isListView}
         onViewChange={setIsListView}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
       >
         <EventsGrid
           events={sortedEvents}
@@ -242,8 +175,6 @@ export default function DashboardPage() {
           eventTypes={eventTypes}
           onEventClick={handleEventClick}
           isListView={isListView}
-          sortBy={sortBy}
-          onSortChange={setSortBy}
           showLoadMore={true}
           onLoadMore={loadMore}
           loadingMore={loadingMore}
