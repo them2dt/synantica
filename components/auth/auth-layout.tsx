@@ -20,7 +20,7 @@ export function AuthLayout({ children, title }: AuthLayoutProps) {
       <div className="mx-auto w-full max-w-[520px] px-6 py-16">
         <div className="space-y-8">
           <div className="space-y-2">
-            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            <div className="text-xs uppercase text-muted-foreground">
               Account
             </div>
             <h1 className="text-3xl text-slate-950">

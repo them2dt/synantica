@@ -63,32 +63,34 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       <div className="flex-1">
-        <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
-          {/* Filters Top Bar */}
-          <div className="mb-10">
-            <FiltersTopBar
-              searchTerm={searchTerm}
-              onSearchChange={onSearchChange}
-              selectedType={selectedType}
-              onTypeChange={onTypeChange}
-              eventTypes={eventTypes}
-              selectedDateRange={selectedDateRange}
-              onDateRangeChange={onDateRangeChange}
-              selectedAgeRange={selectedAgeRange}
-              onAgeRangeChange={onAgeRangeChange}
-              selectedCountry={selectedCountry}
-              onCountryChange={onCountryChange}
-              selectedField={selectedField}
-              onFieldChange={onFieldChange}
-              isListView={isListView}
-              onViewChange={onViewChange}
-              sortBy={sortBy}
-              onSortChange={onSortChange}
-            />
-          </div>
+        <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 bg-white min-h-[calc(100vh-140px)]">
+          <div className="px-6 py-10">
+            {/* Filters Top Bar */}
+            <div className="mb-10">
+              <FiltersTopBar
+                searchTerm={searchTerm}
+                onSearchChange={onSearchChange}
+                selectedType={selectedType}
+                onTypeChange={onTypeChange}
+                eventTypes={eventTypes}
+                selectedDateRange={selectedDateRange}
+                onDateRangeChange={onDateRangeChange}
+                selectedAgeRange={selectedAgeRange}
+                onAgeRangeChange={onAgeRangeChange}
+                selectedCountry={selectedCountry}
+                onCountryChange={onCountryChange}
+                selectedField={selectedField}
+                onFieldChange={onFieldChange}
+                isListView={isListView}
+                onViewChange={onViewChange}
+                sortBy={sortBy}
+                onSortChange={onSortChange}
+              />
+            </div>
 
-          {/* Main Content Area */}
-          <main>{children}</main>
+            {/* Main Content Area */}
+            <main>{children}</main>
+          </div>
         </div>
       </div>
 

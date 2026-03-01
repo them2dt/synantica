@@ -31,7 +31,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
   if (variant === 'list') {
     return (
       <div className="h-full">
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden border-slate-200 bg-white">
           <div className="flex">
             {/* Content Section */}
             <div className="flex-1 p-4 flex flex-col justify-between">
@@ -104,7 +104,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
   // Grid variant (default)
   return (
     <div className="h-full">
-      <Card className="overflow-hidden flex flex-col h-full">
+      <Card className="overflow-hidden flex flex-col h-full border-slate-200 bg-white">
         <CardHeader>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">

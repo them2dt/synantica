@@ -89,7 +89,7 @@ export function FiltersTopBar({
 
   return (
     <div className="space-y-6">
-      <div className="border border-slate-200 bg-slate-50 p-4 space-y-4">
+      <div className="border border-slate-200 bg-white p-4 space-y-4">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 w-4 h-4" />
           <Input
@@ -182,7 +182,7 @@ export function FiltersTopBar({
             </div>
           </div>
 
-          <div className="flex items-center gap-1 border border-slate-200 bg-slate-50 p-1">
+          <div className="flex items-center gap-1 border border-slate-200 bg-white p-1">
             <Button
               variant={!isListView ? 'default' : 'ghost'}
               size="sm"

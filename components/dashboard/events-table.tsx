@@ -65,8 +65,8 @@ export function EventsTable({
       <div className="min-w-full inline-block align-middle px-4">
         <table className="w-full border-collapse border border-slate-200 min-w-[800px]">
           <thead>
-            <tr className="border-b bg-slate-100/30">
-              <th className="text-left p-3 text-slate-500 border-r border-slate-200 sticky left-0 bg-slate-100/30 z-10">
+            <tr className="border-b bg-slate-50/50">
+              <th className="text-left p-3 text-slate-500 border-r border-slate-200 sticky left-0 bg-slate-50/50 z-10">
                 <div className="flex items-center justify-start gap-2">
                   <Type className="w-4 h-4 text-slate-500" />
                   <span className="text-sm">Event</span>

@@ -86,7 +86,7 @@ export function LoginForm({
                 </div>
             </div>
 
-            <p className="text-center text-xs text-slate-500 px-4 leading-relaxed">
+            <p className="text-center text-xs text-slate-500 px-4">
                 By continuing, you agree to our{" "}
                 <a href="/terms" className="underline underline-offset-2 hover:text-slate-950">
                     Terms of Service
