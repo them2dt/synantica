@@ -35,14 +35,14 @@ function Spinner({
   const colorClasses = {
     primary: 'text-primary',
     muted: 'text-muted-foreground',
-    accent: 'text-accent',
+    accent: 'text-foreground',
     current: 'text-current'
   }
 
   return (
     <div
       className={cn(
-        'animate-spin rounded-full border-2 border-t-transparent',
+        'animate-spin rounded-none border-2 border-t-transparent',
         sizeClasses[size],
         colorClasses[color],
         className
@@ -127,7 +127,7 @@ export function Skeleton({
 
   if (variant === 'text') {
     if (lines === 1) {
-      return <div className={cn(baseClasses, 'h-4 rounded')} />
+      return <div className={cn(baseClasses, 'h-4 rounded-none')} />
     }
 
     return (
@@ -137,7 +137,7 @@ export function Skeleton({
             key={i}
             className={cn(
               baseClasses,
-              'h-4 rounded',
+              'h-4 rounded-none',
               i === lines - 1 && lines > 1 && 'w-3/4' // Last line shorter
             )}
           />
@@ -147,11 +147,11 @@ export function Skeleton({
   }
 
   if (variant === 'circular') {
-    return <div className={cn(baseClasses, 'rounded-full aspect-square', className)} />
+    return <div className={cn(baseClasses, 'rounded-none aspect-square', className)} />
   }
 
   // Default rectangular
-  return <div className={cn(baseClasses, 'rounded', className)} />
+  return <div className={cn(baseClasses, 'rounded-none', className)} />
 }
 
 /**
@@ -159,10 +159,10 @@ export function Skeleton({
  */
 export function EventCardSkeleton() {
   return (
-    <div className="border rounded-lg p-4 space-y-3">
+    <div className="border border-border p-4 space-y-3">
       <div className="flex items-start justify-between">
         <Skeleton className="h-5 w-20" />
-        <Skeleton className="h-6 w-16 rounded-full" />
+        <Skeleton className="h-6 w-16 rounded-none" />
       </div>
 
       <div className="space-y-2">
@@ -177,11 +177,11 @@ export function EventCardSkeleton() {
       </div>
 
       <div className="flex gap-2">
-        <Skeleton className="h-6 w-16 rounded-full" />
-        <Skeleton className="h-6 w-20 rounded-full" />
+        <Skeleton className="h-6 w-16 rounded-none" />
+        <Skeleton className="h-6 w-20 rounded-none" />
       </div>
 
-      <Skeleton className="h-9 w-full rounded-md" />
+      <Skeleton className="h-9 w-full rounded-none" />
     </div>
   )
 }
@@ -191,7 +191,7 @@ export function EventCardSkeleton() {
  */
 function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
   return (
-    <div className="border rounded-lg overflow-hidden">
+    <div className="border border-border overflow-hidden">
       {/* Header */}
       <div className="border-b bg-muted/50 p-4">
         <div className="grid grid-cols-6 gap-4">
@@ -215,7 +215,7 @@ function EventTableSkeleton({ rows = 5 }: { rows?: number }) {
             <Skeleton className="h-4 w-16" />
             <Skeleton className="h-4 w-12" />
             <Skeleton className="h-4 w-20" />
-            <Skeleton className="h-8 w-20 rounded" />
+            <Skeleton className="h-8 w-20 rounded-none" />
           </div>
         </div>
       ))}
@@ -281,7 +281,7 @@ function LoadingOverlay({
     <div className={cn('relative', className)}>
       {children}
       {loading && (
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-lg">
+        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center rounded-none">
           <div className="flex flex-col items-center gap-2">
             <Spinner size="md" />
             <p className="text-sm text-muted-foreground">{text}</p>

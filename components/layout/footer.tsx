@@ -7,7 +7,7 @@ import { Logo } from '@/components/ui/logo'
 export function Footer() {
   return (
     <footer className="border-t bg-background">
-      <div className="container mx-auto px-4 py-8">
+      <div className="mx-auto w-full max-w-[1100px] px-6 py-8">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           {/* Brand Name */}
           <div className="flex items-center">
@@ -25,14 +25,14 @@ export function Footer() {
               Built by{' '}
               <a 
                 href="https://www.maruthan.com/" 
-                className="text-muted-foreground hover:text-accent transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 Maruthan
               </a>
               {' '}for{' '}
               <a 
                 href="https://visioncatalyzer.com" 
-                className="text-muted-foreground hover:text-accent transition-colors"
+                className="text-muted-foreground hover:text-foreground transition-colors"
               >
                 VisionCatalyzer
               </a>

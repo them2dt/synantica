@@ -81,7 +81,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-red-600">
+          <DialogTitle className="flex items-center gap-2 text-error-foreground">
             <AlertTriangle className="w-5 h-5" />
             Delete Account
           </DialogTitle>
@@ -91,11 +91,11 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="bg-red-50 border border-red-200 rounded-md p-4">
-            <div className="text-sm text-red-800">
+          <div className="bg-error border border-error rounded-none p-4">
+            <div className="text-sm text-error-foreground">
               <strong>Warning:</strong> This will permanently delete:
             </div>
-            <ul className="text-sm text-red-700 mt-2 space-y-1">
+            <ul className="text-sm text-error-foreground mt-2 space-y-1">
               <li>• Your account and profile</li>
               <li>• All event participation history</li>
               <li>• All event history</li>
@@ -105,7 +105,7 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
 
           <div className="space-y-2">
             <Label htmlFor="confirmation">
-              Type <code className="bg-muted px-1 py-0.5 rounded text-sm">DELETE</code> to confirm:
+              Type <code className="bg-muted px-1 py-0.5 rounded-none text-sm">DELETE</code> to confirm:
             </Label>
             <Input
               id="confirmation"
@@ -114,12 +114,12 @@ export function DeleteAccountModal({ isOpen, onClose }: DeleteAccountModalProps)
               placeholder="Type DELETE to confirm"
               required
               disabled={isLoading}
-              className={!isConfirmationValid && confirmationText ? 'border-red-500' : ''}
+              className={!isConfirmationValid && confirmationText ? 'border-error' : ''}
             />
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            <div className="text-sm text-error-foreground bg-error p-3 rounded-none">
               {error}
             </div>
           )}

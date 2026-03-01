@@ -43,8 +43,8 @@ export function Skeleton({
         "bg-muted",
         {
           "animate-pulse": animate,
-          "rounded-md": variant === "default",
-          "rounded-full": variant === "circular",
+          "rounded-none": variant === "default",
+          "rounded-none": variant === "circular",
           "rounded-none": variant === "rectangular",
         },
         className
@@ -60,7 +60,7 @@ export function Skeleton({
  */
 function EventCardSkeleton() {
   return (
-    <div className="rounded-xl border bg-card text-card-foreground overflow-hidden">
+    <div className="border border-border bg-card text-card-foreground overflow-hidden">
       <div className="p-6 space-y-4">
         {/* Category badge skeleton */}
         <Skeleton className="h-6 w-20" />
@@ -107,7 +107,7 @@ function EventCardSkeleton() {
  */
 function EventGridSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+    <div className="grid gap-6 md:grid-cols-2">
       {Array.from({ length: count }).map((_, index) => (
         <EventCardSkeleton key={index} />
       ))}
@@ -123,7 +123,7 @@ function EventListSkeleton({ count = 5 }: { count?: number }) {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, index) => (
-        <div key={index} className="rounded-xl border bg-card text-card-foreground overflow-hidden">
+        <div key={index} className="border border-border bg-card text-card-foreground overflow-hidden">
           <div className="flex p-4 space-x-4">
             {/* Content skeleton */}
             <div className="flex-1 space-y-3">
@@ -175,7 +175,7 @@ export function DashboardSkeleton() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
-        <div className="container mx-auto px-4 py-8">
+        <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
           {/* Filters skeleton */}
           <div className="space-y-6 mb-8">
             {/* Search bar skeleton */}

@@ -40,12 +40,12 @@ export function isAdminRoute(pathname: string): boolean {
  * 2. Email-based admin list (recommended for simple setups)
  * 3. Database group membership (for complex setups)
  * 
- * @param {any} user - The Supabase user object
+ * @param {any} user - The authenticated user object
  * @returns {boolean} True if the user has admin privileges, false otherwise
  * 
  * @example
  * ```typescript
- * const user = await supabase.auth.getUser()
+ * const user = await auth.getUser()
  * if (isAdminUser(user.data.user)) {
  *   // User is an admin
  * }

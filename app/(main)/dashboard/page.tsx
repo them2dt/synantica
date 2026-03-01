@@ -11,6 +11,7 @@ import { EventFilters } from '@/types/event'
 import { DateRange } from 'react-day-picker'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { Button } from '@/components/ui/button'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
@@ -18,11 +19,11 @@ const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-l
 })
 
 const EventsGrid = dynamic(() => import('@/components/dashboard/events-grid').then(mod => ({ default: mod.EventsGrid })), {
-  loading: () => <div className="animate-pulse h-64 bg-muted rounded-lg"></div>
+  loading: () => <div className="animate-pulse h-64 bg-muted rounded-none"></div>
 })
 
 const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(mod => ({ default: mod.DashboardSkeleton })), {
-  loading: () => <div className="animate-pulse h-64 bg-muted rounded-lg"></div>
+  loading: () => <div className="animate-pulse h-64 bg-muted rounded-none"></div>
 })
 
 export default function DashboardPage() {
@@ -201,15 +202,12 @@ export default function DashboardPage() {
       >
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <div className="text-red-500 text-6xl mb-4">⚠️</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Error Loading Events</h3>
-            <p className="text-gray-600 mb-4">{error}</p>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-            >
+            <div className="text-error-foreground text-5xl mb-4">⚠️</div>
+            <h3 className="text-lg text-foreground mb-2">Error Loading Events</h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>
               Try Again
-            </button>
+            </Button>
           </div>
         </div>
       </DashboardLayout>

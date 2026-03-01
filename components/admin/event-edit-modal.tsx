@@ -203,7 +203,7 @@ export function EventEditModal({
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Basic Information</h3>
+            <h3 className="text-lg">Basic Information</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
@@ -273,7 +273,7 @@ export function EventEditModal({
 
           {/* Date & Location */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Date & Location</h3>
+            <h3 className="text-lg">Date & Location</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -330,7 +330,7 @@ export function EventEditModal({
 
           {/* Organizer & Age Range */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Organizer & Target Audience</h3>
+            <h3 className="text-lg">Organizer & Target Audience</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="space-y-2 md:col-span-3">
@@ -386,7 +386,7 @@ export function EventEditModal({
 
           {/* Fields/Subjects */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Fields/Subjects</h3>
+            <h3 className="text-lg">Fields/Subjects</h3>
 
             <div className="space-y-2">
               <Label>Quick Add Fields</Label>
@@ -444,7 +444,7 @@ export function EventEditModal({
                       <button
                         type="button"
                         onClick={() => removeField(field)}
-                        className="ml-2 hover:text-red-500"
+                        className="ml-2 hover:text-error-foreground"
                       >
                         <X className="h-3 w-3" />
                       </button>
@@ -457,7 +457,7 @@ export function EventEditModal({
 
           {/* Links & Media */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Links & Media</h3>
+            <h3 className="text-lg">Links & Media</h3>
 
             <div className="space-y-2">
               <Label htmlFor="youtubeLink">YouTube Link</Label>
@@ -501,20 +501,20 @@ export function EventEditModal({
                   {formData.links.map((link, index) => (
                     <div
                       key={index}
-                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                      className="flex items-center justify-between p-2 bg-muted rounded-none"
                     >
                       <a
                         href={link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-sm text-blue-600 hover:underline truncate"
+                        className="text-sm text-foreground hover:underline truncate"
                       >
                         {link}
                       </a>
                       <button
                         type="button"
                         onClick={() => removeLink(link)}
-                        className="ml-2 text-red-500 hover:text-red-700"
+                        className="ml-2 text-error-foreground"
                       >
                         <X className="h-4 w-4" />
                       </button>
@@ -540,4 +540,3 @@ export function EventEditModal({
     </Dialog>
   )
 }
-

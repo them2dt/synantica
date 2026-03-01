@@ -103,133 +103,127 @@ export function FiltersTopBar({
     <div className="space-y-6">
       {/* Desktop Filters */}
       <div className="hidden md:block space-y-6">
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            placeholder="Search events..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-
-        {/* Controls Row */}
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-          {/* Left Side - Sorter and Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
-            {/* Sorter - First */}
-            <Select value={sortBy} onValueChange={onSortChange}>
-              <SelectTrigger className="w-48 h-10 [&>svg]:hidden">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                {sortOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* Filter Options - Split up like the image */}
-            <div className="flex flex-col lg:flex-row gap-3">
-              {/* First Row of Filters */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Event Type Filter */}
-                <Select value={selectedType} onValueChange={onTypeChange}>
-                  <SelectTrigger className="w-40 h-10">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {eventTypes.map((eventType) => {
-                      const Icon = eventType.icon
-                      return (
-                        <SelectItem key={eventType.value} value={eventType.value}>
-                          <div className="flex items-center gap-2">
-                            <Icon className="w-4 h-4" />
-                            {eventType.label}
-                          </div>
-                        </SelectItem>
-                      )
-                    })}
-                  </SelectContent>
-                </Select>
-
-                {/* Date Range Filter */}
-                <DateRangePicker
-                  value={selectedDateRange}
-                  onChange={onDateRangeChange}
-                  placeholder="Select date range"
-                  className="w-48 h-10 max-w-48"
-                />
-
-              </div>
-
-              {/* Second Row of New Filters */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                {/* Age Range Filter */}
-                <CompactAgeFilterDropdown
-                  value={selectedAgeRange}
-                  onChange={onAgeRangeChange}
-                  min={0}
-                  max={99}
-                  placeholder="Age"
-                  className="w-32 h-10"
-                />
-
-                {/* Country Filter */}
-                <Select value={selectedCountry} onValueChange={onCountryChange}>
-                  <SelectTrigger className="w-40 h-10">
-                    <SelectValue placeholder="Country" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-60">
-                    {countryOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        <div className="flex items-center gap-2">
-                          {option.flag && <span className="text-lg">{option.flag}</span>}
-                          <span>{option.label}</span>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-
-                {/* Field Filter */}
-                <Select value={selectedField} onValueChange={onFieldChange}>
-                  <SelectTrigger className="w-40 h-10">
-                    <SelectValue placeholder="Field" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {fieldOptions.map((option) => (
-                      <SelectItem key={option.value} value={option.value}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+        <div className="rounded-none border border-border bg-card p-4 space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              placeholder="Search events..."
+              value={searchTerm}
+              onChange={(e) => onSearchChange(e.target.value)}
+              className="pl-10"
+            />
           </div>
 
-          {/* Right Side - View Toggle */}
-          <div className="flex items-center gap-1 bg-muted rounded-lg p-1">
-            <Button
-              variant={!isListView ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange(false)}
-              className="h-8 px-3"
-            >
-              <Grid3X3 className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={isListView ? "default" : "ghost"}
-              size="sm"
-              onClick={() => onViewChange(true)}
-              className="h-8 px-3"
-            >
-              <List className="h-4 w-4" />
-            </Button>
+          {/* Controls Row */}
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
+            {/* Left Side - Sorter and Filters */}
+            <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+              {/* Sorter - First */}
+              <Select value={sortBy} onValueChange={onSortChange}>
+                <SelectTrigger className="w-52 [&>svg]:hidden">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  {sortOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* Filter Options */}
+              <div className="flex flex-col lg:flex-row gap-3">
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Select value={selectedType} onValueChange={onTypeChange}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {eventTypes.map((eventType) => {
+                        const Icon = eventType.icon
+                        return (
+                          <SelectItem key={eventType.value} value={eventType.value}>
+                            <div className="flex items-center gap-2">
+                              <Icon className="w-4 h-4" />
+                              {eventType.label}
+                            </div>
+                          </SelectItem>
+                        )
+                      })}
+                    </SelectContent>
+                  </Select>
+
+                  <DateRangePicker
+                    value={selectedDateRange}
+                    onChange={onDateRangeChange}
+                    placeholder="Select date range"
+                    className="w-48 max-w-48"
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <CompactAgeFilterDropdown
+                    value={selectedAgeRange}
+                    onChange={onAgeRangeChange}
+                    min={0}
+                    max={99}
+                    placeholder="Age"
+                    className="w-32"
+                  />
+
+                  <Select value={selectedCountry} onValueChange={onCountryChange}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Country" />
+                    </SelectTrigger>
+                    <SelectContent className="max-h-60">
+                      {countryOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          <div className="flex items-center gap-2">
+                            {option.flag && <span className="text-lg">{option.flag}</span>}
+                            <span>{option.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={selectedField} onValueChange={onFieldChange}>
+                    <SelectTrigger className="w-40">
+                      <SelectValue placeholder="Field" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fieldOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Side - View Toggle */}
+            <div className="flex items-center gap-1 rounded-none border border-border bg-background p-1">
+              <Button
+                variant={!isListView ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange(false)}
+                className="h-8 px-3"
+              >
+                <Grid3X3 className="h-4 w-4" />
+              </Button>
+              <Button
+                variant={isListView ? "default" : "ghost"}
+                size="sm"
+                onClick={() => onViewChange(true)}
+                className="h-8 px-3"
+              >
+                <List className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils"
-import Image from "next/image"
 
 /**
  * Props for the Logo component
@@ -78,22 +77,9 @@ export function Logo({
       )}
       onClick={onClick}
     >
-      {showIcon && (
-        <div className={cn(
-          'flex items-center justify-center',
-          currentSize.icon
-        )}>
-          <Image
-            src="/icon.png"
-            alt="Synantica Logo"
-            width={currentSize.icon.includes('w-6') ? 24 : currentSize.icon.includes('w-8') ? 32 : currentSize.icon.includes('w-12') ? 48 : 64}
-            height={currentSize.icon.includes('h-6') ? 24 : currentSize.icon.includes('h-8') ? 32 : currentSize.icon.includes('h-12') ? 48 : 64}
-            className="object-contain"
-          />
-        </div>
-      )}
+      {showIcon && null}
       {showText && (
-        <span className={cn('font-semibold text-primary font-heading', currentSize.text)}>
+        <span className={cn('text-foreground font-heading', currentSize.text)}>
           Synantica
         </span>
       )}

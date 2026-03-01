@@ -78,7 +78,7 @@ This file tracks updates to our project documentation (`weaknesses.md`, `redunda
 - `lib/validations/auth.ts` - Now uses common validation schemas
 
 **Performance Improvements:**
-- **Bundle Splitting**: Smart vendor, Radix UI, and Supabase chunk separation
+- **Bundle Splitting**: Smart vendor and Radix UI chunk separation
 - **Lazy Loading**: Dashboard components loaded on demand
 - **Tree Shaking**: Removed unused dependencies and components
 - **Code Splitting**: Optimized package imports for better caching

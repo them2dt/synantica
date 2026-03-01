@@ -19,9 +19,9 @@ export function NavigationSpacer({ className }: NavigationSpacerProps) {
     <div 
       className={cn(
         // Mobile: Standard navigation height (64px + border)
-        "h-16",
-        // Desktop: Navigation height + top offset (64px + 16px top margin)
-        "md:h-20",
+        "h-20",
+        // Desktop: Navigation height + top offset
+        "md:h-24",
         className
       )}
       aria-hidden="true"

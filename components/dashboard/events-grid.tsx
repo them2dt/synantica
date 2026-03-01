@@ -6,7 +6,6 @@ import { Event, EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { Button } from '@/components/ui/button'
 import { InlineSpinner } from '@/components/ui/loading'
-import { motion } from 'framer-motion'
 
 /**
  * Props for the events grid component
@@ -46,21 +45,6 @@ export function EventsGrid({
   void selectedType;
   void eventTypes;
 
-  const gridVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
-  };
-
   return (
     <div className="space-y-6">
       {/* Events Grid/List */}
@@ -72,22 +56,17 @@ export function EventsGrid({
           onSortChange={onSortChange}
         />
       ) : (
-        <motion.div 
-          className="grid gap-6 md:grid-cols-2 xl:grid-cols-3"
-          variants={gridVariants}
-          initial="hidden"
-          animate="visible"
-        >
+        <div className="grid gap-6 md:grid-cols-2">
           {events.map((event) => (
-            <motion.div key={event.id} variants={cardVariants}>
+            <div key={event.id}>
               <EventCard
                 event={event}
                 onLearnMore={onEventClick}
                 variant="grid"
               />
-            </motion.div>
+            </div>
           ))}
-        </motion.div>
+        </div>
       )}
 
       {/* Load More Button */}

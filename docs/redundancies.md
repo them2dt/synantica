@@ -182,8 +182,6 @@ export const emailSchema = z.string().email() /* ... */
 
 **Duplicate Patterns:**
 ```typescript
-// Similar Supabase query patterns
-const { data, error } = await supabase
   .from('events')
   .select('*')
   .eq('status', 'published')
@@ -195,8 +193,6 @@ return data
 **Affected Files:**
 - `lib/database/events-client.ts`
 - `lib/database/events.ts`
-- `lib/supabase/client.ts`
-- `lib/supabase/server.ts`
 
 **Consolidation Strategy:**
 Create base query utilities:

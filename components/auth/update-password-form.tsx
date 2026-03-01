@@ -55,7 +55,7 @@ export function UpdatePasswordForm() {
     return (
       <div className="flex flex-col items-center justify-center text-center">
         <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-        <h2 className="text-xl font-semibold">Verifying Link...</h2>
+        <h2 className="text-xl">Verifying Link...</h2>
         <p className="mt-2 text-muted-foreground">
           Please wait while we verify your password reset request.
         </p>
@@ -66,7 +66,7 @@ export function UpdatePasswordForm() {
   if (verificationError) {
     return (
       <div className="text-center text-destructive">
-        <h2 className="text-xl font-semibold">Verification Failed</h2>
+        <h2 className="text-xl">Verification Failed</h2>
         <p className="mt-2">{verificationError}</p>
       </div>
     )

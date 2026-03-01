@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { EventsTable } from '@/components/admin/events-table'
 import { Event } from '@/types/event'
 import { AlertCircle } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 /**
  * EventsManagementPage - Main admin page for event management
@@ -176,40 +177,35 @@ export default function EventsManagementPage() {
   if (error) {
     return (
       <div className="text-center py-8">
-        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Error Loading Events</h2>
-        <p className="text-gray-600 mb-4">{error}</p>
-        <button
-          onClick={loadEvents}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-        >
-          Try Again
-        </button>
+        <AlertCircle className="w-12 h-12 text-error-foreground mx-auto mb-4" />
+        <h2 className="text-xl text-foreground mb-2">Error Loading Events</h2>
+        <p className="text-muted-foreground mb-4">{error}</p>
+        <Button onClick={loadEvents}>Try Again</Button>
       </div>
     )
   }
 
   return (
-    <div className="flex flex-col min-h-screen py-8 px-5">
-      <div className="flex-shrink-0 mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Events Management</h1>
-        <p className="text-gray-600 mt-2">Add, edit, and manage all events. Click on any row to edit.</p>
+    <div className="flex flex-col min-h-screen py-10 px-6 bg-background">
+      <div className="flex-shrink-0 mb-6 max-w-[1100px] w-full mx-auto">
+        <h1 className="text-3xl text-foreground">Events Management</h1>
+        <p className="text-muted-foreground mt-2">Add, edit, and manage all events. Click on any row to edit.</p>
       </div>
 
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-primary"></div>
         </div>
       ) : (
-        <EventsTable
-          events={events}
-          onAddEvent={handleAddEvent}
-          onUpdateEvent={handleUpdateEvent}
-          onDeleteEvent={handleDeleteEvent}
-        />
+        <div className="max-w-[1100px] w-full mx-auto">
+          <EventsTable
+            events={events}
+            onAddEvent={handleAddEvent}
+            onUpdateEvent={handleUpdateEvent}
+            onDeleteEvent={handleDeleteEvent}
+          />
+        </div>
       )}
     </div>
   )
 }
-
-

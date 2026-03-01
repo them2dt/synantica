@@ -28,15 +28,12 @@ This document provides a comprehensive list of all issues and improvable points 
 ### 2. Environment Variable Security
 - **Impact:** Potential security vulnerabilities
 - **Count:** 40 instances across 15 files
-- **Files Affected:** `app/layout.tsx`, `components/login-form.tsx`, `next.config.ts`, `lib/utils/error-handling.ts`, `lib/supabase/middleware.ts`, `components/sign-up-form.tsx`, `lib/supabase/server.ts`, `lib/supabase/client.ts`, `components/error-boundary.tsx`, `components/tutorial/sign-up-user-steps.tsx`, `app/test-og/page.tsx`, `lib/og-image.ts`, `lib/utils.ts`
 - **Issues:**
   - Client-side access to sensitive environment variables
   - Missing runtime validation
   - No CSRF protection
 - **Examples:**
   ```typescript
-  process.env.NEXT_PUBLIC_SUPABASE_URL
-  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
   process.env.VERCEL_URL
   ```
 
@@ -99,10 +96,8 @@ This document provides a comprehensive list of all issues and improvable points 
 ### 7. Code Duplication - API Fetch Patterns
 - **Priority:** HIGH (Code Quality)
 - **Impact:** 6+ similar fetch implementations, ~250 lines duplicated
-- **Files Affected:** `lib/database/events-client.ts`, `lib/database/events.ts`, `lib/supabase/client.ts`, `lib/supabase/server.ts`
 - **Example Pattern:**
   ```typescript
-  const { data, error } = await supabase
     .from('events')
     .select('*')
     .eq('status', 'published')

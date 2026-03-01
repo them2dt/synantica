@@ -112,15 +112,15 @@ export function getPasswordStrength(score: number): PasswordStrength {
 export function getStrengthColor(strength: PasswordStrength): string {
   switch (strength) {
     case PasswordStrength.WEAK:
-      return 'text-red-500';
+      return 'text-error-foreground';
     case PasswordStrength.FAIR:
-      return 'text-orange-500';
+      return 'text-processing-foreground';
     case PasswordStrength.GOOD:
-      return 'text-yellow-500';
+      return 'text-secondary-foreground';
     case PasswordStrength.STRONG:
-      return 'text-green-500';
+      return 'text-success';
     default:
-      return 'text-gray-500';
+      return 'text-muted-foreground';
   }
 }
 
@@ -132,15 +132,15 @@ export function getStrengthColor(strength: PasswordStrength): string {
 export function getStrengthBgColor(strength: PasswordStrength): string {
   switch (strength) {
     case PasswordStrength.WEAK:
-      return 'bg-red-500';
+      return 'bg-error';
     case PasswordStrength.FAIR:
-      return 'bg-orange-500';
+      return 'bg-processing';
     case PasswordStrength.GOOD:
-      return 'bg-yellow-500';
+      return 'bg-muted';
     case PasswordStrength.STRONG:
-      return 'bg-green-500';
+      return 'bg-success';
     default:
-      return 'bg-gray-500';
+      return 'bg-muted';
   }
 }
 

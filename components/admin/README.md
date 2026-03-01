@@ -141,8 +141,6 @@ All fields are properly handled in the modal form and API routes.
 
 - Admin routes protected by middleware
 - `isAdminUser()` check in all API routes
-- Uses Supabase admin client with service role for elevated permissions
-- Bypasses RLS policies for admin operations
 
 ## Styling
 
@@ -161,4 +159,3 @@ All fields are properly handled in the modal form and API routes.
 - [ ] Add activity/audit log
 - [ ] Add image upload for events
 - [ ] Add rich text editor for descriptions
-

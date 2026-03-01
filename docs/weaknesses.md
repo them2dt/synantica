@@ -87,8 +87,6 @@ export function sanitizeEmail(email: string): string {
 **Evidence:**
 ```typescript
 // Environment variables still accessed client-side (needs future hardening)
-process.env.NEXT_PUBLIC_SUPABASE_URL
-process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_OR_ANON_KEY
 process.env.VERCEL_URL
 ```
 

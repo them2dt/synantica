@@ -74,7 +74,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
         
         <DropdownMenuSeparator />
         
-        <DropdownMenuItem onClick={handleLogout} className="text-red-600">
+        <DropdownMenuItem onClick={handleLogout} className="text-error-foreground">
           <LogOut className="w-4 h-4 mr-2" />
           Log out
         </DropdownMenuItem>

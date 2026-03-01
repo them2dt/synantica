@@ -5,7 +5,6 @@ import { ReactNode } from 'react'
 // import { Badge } from '@/components/ui/badge' // Unused for now
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
-import { motion } from 'framer-motion'
 import { DateRange } from 'react-day-picker'
 
 /**
@@ -64,9 +63,9 @@ export function DashboardLayout({
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
-        <div className="container mx-auto px-4 py-8">
+        <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
           {/* Filters Top Bar */}
-          <div className="mb-8">
+          <div className="mb-10">
             <FiltersTopBar
               searchTerm={searchTerm}
               onSearchChange={onSearchChange}
@@ -89,15 +88,7 @@ export function DashboardLayout({
           </div>
 
           {/* Main Content Area */}
-          <main>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {children}
-            </motion.div>
-          </main>
+          <main>{children}</main>
         </div>
       </div>
 

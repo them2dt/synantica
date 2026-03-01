@@ -8,7 +8,6 @@ import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { EventCardSkeleton } from '@/components/ui/loading'
 import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
-import { motion } from 'framer-motion'
 
 /**
  * Props for the event card component
@@ -31,8 +30,8 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
   if (variant === 'list') {
     return (
-      <motion.div whileHover={{ y: -4 }} className="h-full" transition={{ duration: 0.2 }}>
-        <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="h-full">
+        <Card className="overflow-hidden">
           <div className="flex">
             {/* Content Section */}
             <div className="flex-1 p-4 flex flex-col justify-between">
@@ -40,15 +39,14 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
                     <Badge
-                      className="capitalize text-xs"
+                      className="capitalize"
                       variant="default"
-                      style={{ backgroundColor: '#FF327D', color: 'white' }}
                     >
                       {event.type}
                     </Badge>
                     <Badge
                       variant="outline"
-                      className="text-xs border-muted-foreground/30 text-muted-foreground"
+                      className="text-muted-foreground"
                     >
                       Age: {event.fromAge || 0}-{event.toAge || 99}
                     </Badge>
@@ -62,24 +60,24 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
                 
                 <div className="space-y-2">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Calendar className="w-4 h-4 text-accent" />
+                    <Calendar className="w-4 h-4 text-muted-foreground" />
                     {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
                   </div>
 
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <MapPin className="w-4 h-4 text-accent" />
+                    <MapPin className="w-4 h-4 text-muted-foreground" />
                     {event.location}
                   </div>
 
 
                   <div className="flex flex-wrap gap-1">
                     {event.fields.slice(0, 3).map((field) => (
-                      <Badge key={field} variant="outline" className="text-xs border-accent">
+                      <Badge key={field} variant="outline" className="text-muted-foreground">
                         {field}
                       </Badge>
                     ))}
                     {event.fields.length > 3 && (
-                      <Badge variant="outline" className="text-xs border-accent">
+                      <Badge variant="outline" className="text-muted-foreground">
                         +{event.fields.length - 3}
                       </Badge>
                     )}
@@ -99,27 +97,26 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
             </div>
           </div>
         </Card>
-      </motion.div>
+      </div>
     )
   }
 
   // Grid variant (default)
   return (
-    <motion.div whileHover={{ y: -4 }} className="h-full" transition={{ duration: 0.2 }}>
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow flex flex-col h-full">
+    <div className="h-full">
+      <Card className="overflow-hidden flex flex-col h-full">
         <CardHeader>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
                 <Badge
                   className="capitalize"
                   variant="default"
-                  style={{ backgroundColor: '#FF327D', color: 'white' }}
                 >
                   {event.type}
                 </Badge>
               <Badge
                 variant="outline"
-                className="text-xs border-muted-foreground/30 text-muted-foreground"
+                className="text-muted-foreground"
               >
                 Age: {event.fromAge || 0}-{event.toAge || 99}
               </Badge>
@@ -134,19 +131,19 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
         <CardContent className="space-y-3 flex-grow">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Calendar className="w-4 h-4 text-accent" />
+            <Calendar className="w-4 h-4 text-muted-foreground" />
             {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
           </div>
 
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MapPin className="w-4 h-4 text-accent" />
+            <MapPin className="w-4 h-4 text-muted-foreground" />
             {event.location}
           </div>
 
 
           <div className="flex flex-wrap gap-1">
             {event.fields.map((field) => (
-              <Badge key={field} variant="outline" className="text-xs border-accent">
+              <Badge key={field} variant="outline" className="text-muted-foreground">
                 {field}
               </Badge>
             ))}
@@ -163,6 +160,6 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
           </Button>
         </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   )
 }

@@ -43,7 +43,7 @@ export function ForgotPasswordForm() {
   if (isSuccess) {
     return (
       <div className="text-center">
-        <h2 className="text-xl font-semibold">Check your inbox</h2>
+        <h2 className="text-xl">Check your inbox</h2>
         <p className="mt-2 text-muted-foreground">
           A password reset link has been sent to your email address. Please follow the instructions in the email to reset your password.
         </p>

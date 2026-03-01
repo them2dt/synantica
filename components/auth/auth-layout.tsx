@@ -16,40 +16,18 @@ interface AuthLayoutProps {
  */
 export function AuthLayout({ children, title }: AuthLayoutProps) {
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - Auth Form */}
-      <div className="flex-1 flex items-center justify-center px-8 py-12 bg-background">
-        <div className="w-full max-w-md">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl font-semibold text-foreground mb-2 font-heading">
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto w-full max-w-[520px] px-6 py-16">
+        <div className="space-y-8">
+          <div className="space-y-2">
+            <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              Account
+            </div>
+            <h1 className="text-3xl text-foreground">
               {title}
             </h1>
           </div>
-
-          {/* Auth Form */}
           {children}
-        </div>
-      </div>
-
-      {/* Right Side - Decorative Pattern */}
-      <div className="hidden lg:flex flex-1 bg-slate-900 relative overflow-hidden">
-        {/* Decorative Pattern */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="grid grid-cols-4 gap-8 h-full w-full p-8">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <div
-                key={i}
-                className="bg-blue-400 rounded-full"
-                style={{
-                  width: '60px',
-                  height: '60px',
-                  clipPath: 'polygon(0% 0%, 100% 0%, 100% 50%, 0% 50%)',
-                  transform: 'rotate(45deg)',
-                }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>

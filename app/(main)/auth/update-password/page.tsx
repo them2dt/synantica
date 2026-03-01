@@ -7,7 +7,7 @@ function UpdatePasswordFormFallback() {
   return (
     <div className="flex flex-col items-center justify-center text-center">
       <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-      <h2 className="text-xl font-semibold">Loading Form...</h2>
+      <h2 className="text-xl">Loading Form...</h2>
       <p className="mt-2 text-muted-foreground">
         Please wait a moment.
       </p>

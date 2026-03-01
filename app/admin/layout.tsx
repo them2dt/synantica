@@ -9,12 +9,12 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="sticky top-0 z-50 w-full border-b bg-white">
-        <div className="container flex h-16 items-center px-4 sm:px-8">
+    <div className="min-h-screen bg-background">
+      <header className="sticky top-0 z-50 w-full border-b border-border bg-background">
+        <div className="mx-auto flex h-16 w-full max-w-[1100px] items-center px-6">
           <div className="flex items-center space-x-4">
             <Logo />
-            <h1 className="text-lg font-semibold text-gray-800">Admin Panel</h1>
+            <h1 className="text-lg text-foreground">Admin Panel</h1>
           </div>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <UserMenu />
@@ -22,7 +22,7 @@ export default function AdminLayout({
         </div>
       </header>
       <main>
-        <div className="w-full px-5">
+        <div className="w-full">
           {children}
         </div>
       </main>
