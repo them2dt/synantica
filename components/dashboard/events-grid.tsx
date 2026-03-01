@@ -37,8 +37,6 @@ export function EventsGrid({
   loadingMore = false,
   hasMore = true
 }: EventsGridProps) {
-  // selectedType and eventTypes are used for future filtering enhancements
-  // Suppress unused parameter warnings for now
   void selectedType;
   void eventTypes;
 
@@ -46,43 +44,58 @@ export function EventsGrid({
     <div className="space-y-6">
       {/* Events Grid/List */}
       {isListView ? (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm whitespace-nowrap">
-            <thead>
-              <tr className="border-b border-slate-200">
-                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Event</th>
-                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Date Range</th>
-                <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Location</th>
-                <th className="p-4 text-xs uppercase font-medium text-slate-500">Type</th>
-              </tr>
-            </thead>
-            <tbody>
-              {events.map((event) => (
-                <tr
-                  key={event.id}
-                  className="border-b border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
-                  onClick={() => onEventClick(event)}
-                >
-                  <td className="p-4">
-                    <div className="font-medium text-slate-950">{event.name}</div>
-                    <div className="text-xs text-slate-500 truncate max-w-[200px]">{event.description}</div>
-                  </td>
-                  <td className="p-4 text-slate-600">
-                    {formatEventDate(event.fromDate, 'table')} - {formatEventDate(event.toDate, 'table')}
-                  </td>
-                  <td className="p-4 text-slate-600 truncate max-w-[150px]">{event.location}</td>
-                  <td className="p-4">
-                    <span className="capitalize px-2 py-1 bg-slate-100 text-slate-600 text-xs">{event.type}</span>
-                  </td>
+        <>
+          {/* Desktop table — hidden on mobile */}
+          <div className="hidden md:block overflow-x-auto">
+            <table className="w-full text-left text-sm whitespace-nowrap">
+              <thead>
+                <tr className="border-b border-slate-200">
+                  <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Event</th>
+                  <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Date Range</th>
+                  <th className="p-4 text-xs uppercase font-medium text-slate-500 border-r border-slate-200">Location</th>
+                  <th className="p-4 text-xs uppercase font-medium text-slate-500">Type</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {events.map((event) => (
+                  <tr
+                    key={event.id}
+                    className="border-b border-slate-200 hover:bg-slate-50 transition-colors cursor-pointer"
+                    onClick={() => onEventClick(event)}
+                  >
+                    <td className="p-4">
+                      <div className="font-medium text-slate-950">{event.name}</div>
+                      <div className="text-xs text-slate-500 truncate max-w-[200px]">{event.description}</div>
+                    </td>
+                    <td className="p-4 text-slate-600">
+                      {formatEventDate(event.fromDate, 'table')} - {formatEventDate(event.toDate, 'table')}
+                    </td>
+                    <td className="p-4 text-slate-600 truncate max-w-[150px]">{event.location}</td>
+                    <td className="p-4">
+                      <span className="capitalize px-2 py-1 bg-slate-100 text-slate-600 text-xs">{event.type}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Mobile card list — shown only on mobile */}
+          <div className="md:hidden divide-y divide-slate-100">
+            {events.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onLearnMore={onEventClick}
+                variant="list"
+              />
+            ))}
+          </div>
+        </>
       ) : (
         <div className="flex flex-row flex-wrap">
           {events.map((event) => (
-            <div key={event.id} className="w-full md:w-1/2 border-b border-r border-slate-200 p-0 last:border-r-0 md:even:border-r-0">
+            <div key={event.id} className="w-full sm:w-1/2 border-b border-r border-slate-200 p-0 sm:even:border-r-0 last:border-r-0">
               <EventCard
                 event={event}
                 onLearnMore={onEventClick}

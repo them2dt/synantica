@@ -39,13 +39,13 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
 
   return (
-    <main className="mx-auto min-h-screen max-w-[1100px] border-x border-slate-200 flex flex-col">
+    <main className="mx-auto min-h-screen max-w-[1100px] md:border-x border-slate-200 flex flex-col">
       <div className="flex-1">
         {/* Hero Section */}
         <section className="p-6 pt-16">
           <NavigationSpacer />
           <div className="space-y-4">
-            <h1 className="text-5xl">Dashboard</h1>
+            <h1 className="text-3xl md:text-5xl font-heading">Dashboard</h1>
             <p className="text-sm text-slate-500 max-w-2xl">
               Search and filter through the directory of stem activities.
             </p>

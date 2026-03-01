@@ -175,7 +175,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Submit an Event</DialogTitle>
           <DialogDescription>
@@ -191,12 +191,12 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
           {/* Basic Information */}
           <div className="space-y-4">
             <h3 className="text-lg">Basic Information</h3>
-            <div className="grid grid-cols-1 grid-cols-2 gap-4">
-              <div className="space-y-2 col-span-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2 col-span-1 md:col-span-2">
                 <Label htmlFor="name">Event Name *</Label>
                 <Input id="name" value={formData.name} onChange={(e) => handleInputChange('name', e.target.value)} placeholder="Enter event name" required />
               </div>
-              <div className="space-y-2 col-span-2">
+              <div className="space-y-2 col-span-1 md:col-span-2">
                 <Label htmlFor="description">Description *</Label>
                 <Textarea id="description" value={formData.description} onChange={(e) => handleInputChange('description', e.target.value)} placeholder="Describe the event in detail..." rows={4} required />
               </div>
@@ -217,7 +217,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
           {/* Date & Location */}
           <div className="space-y-4">
             <h3 className="text-lg">Date & Location</h3>
-            <div className="grid grid-cols-1 grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fromDate">Start Date *</Label>
                 <Input id="fromDate" type="date" value={formData.fromDate} onChange={(e) => handleInputChange('fromDate', e.target.value)} required />
@@ -240,8 +240,8 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
           {/* Organizer & Age Range */}
           <div className="space-y-4">
             <h3 className="text-lg">Organizer & Target Audience</h3>
-            <div className="grid grid-cols-1 grid-cols-3 gap-4">
-              <div className="space-y-2 col-span-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3">
                 <Label htmlFor="organizer">Organizer *</Label>
                 <Input id="organizer" value={formData.organizer} onChange={(e) => handleInputChange('organizer', e.target.value)} placeholder="Organization or person name" required />
               </div>

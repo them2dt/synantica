@@ -20,7 +20,7 @@ export default function ProfilePage() {
 
     if (loading) {
         return (
-            <main className="mx-auto min-h-screen max-w-[1100px] border-x border-slate-200 flex items-center justify-center">
+            <main className="mx-auto min-h-screen max-w-[1100px] md:border-x border-slate-200 flex items-center justify-center">
                 <div className="text-center">
                     <div className="w-8 h-8 border-2 border-slate-950 border-t-transparent rounded-none animate-spin mx-auto mb-4" />
                     <p className="text-slate-500">Loading profile...</p>
@@ -34,7 +34,7 @@ export default function ProfilePage() {
     }
 
     return (
-        <main className="mx-auto min-h-screen max-w-[1100px] border-x border-slate-200 flex flex-col">
+        <main className="mx-auto min-h-screen max-w-[1100px] md:border-x border-slate-200 flex flex-col">
             <NavigationSpacer />
 
             {/* Profile Header */}

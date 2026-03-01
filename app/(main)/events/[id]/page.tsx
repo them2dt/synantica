@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Footer } from '@/components/layout/footer'
+import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { useEvent } from '@/lib/hooks/use-events'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
@@ -78,7 +79,8 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <div className="flex-1">
-        <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
+        <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 px-4 sm:px-6 py-6 sm:py-10">
+          <NavigationSpacer />
           <div className="mb-6">
             <Link href="/dashboard">
               <Button variant="ghost" className="gap-2">
@@ -100,13 +102,13 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-4xl mb-4">{event.name}</CardTitle>
+              <CardTitle className="text-2xl sm:text-4xl mb-4">{event.name}</CardTitle>
               <CardDescription className="text-lg text-secondary-foreground">
                 {event.description}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-6 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-3 sm:gap-6 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
                   {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
@@ -199,7 +201,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8"
+                className="px-4 sm:px-8"
                 onClick={() => {
                   if (navigator.share) {
                     navigator.share({
@@ -218,7 +220,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
               <Button
                 variant="outline"
                 size="lg"
-                className="px-8"
+                className="px-4 sm:px-8"
                 onClick={() => {
                   window.location.href = `mailto:contact@visioncatalyzer.com?subject=Question about ${event.name}`
                 }}

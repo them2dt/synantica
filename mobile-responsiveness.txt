@@ -1,0 +1,34 @@
+Mobile Responsiveness Review
+
+1. Layout Components (Navigation, Footer)
+Status: Poor
+
+- navigation.tsx: The primary navigation bar is not mobile responsive. It relies on fixed layouts and lacks a hamburger menu for smaller screens. Links and auth buttons will overflow or squash on mobile.
+- footer.tsx & navigation-spacer.tsx: Standard structural elements without specific responsive adaptations (adequate).
+
+2. Dashboard Components
+Status: Mixed
+
+- filters-top-bar.tsx: (Poor) Features a single row with four cells. On mobile, this will overflow horizontally or squash. Needs to wrap or stack its inputs into multiple rows.
+- dashboard-layout.tsx: (Needs Work) The Hero section uses a fixed text-5xl heading which is too large for mobile devices.
+- events-grid.tsx: (Good) Uses breakpoints to stack cards on mobile and show side-by-side on desktop. The list/table view uses overflow-x-auto to prevent tables from breaking viewports.
+- my-events-list.tsx: (Adequate) Flex layout handles mobile decently but long text might wrap awkwardly.
+- event-card.tsx: (Good) Has some mobile breakpoints for layout switching.
+
+3. Auth & Modal Components
+Status: Good
+
+- sign-in-modal.tsx: Uses sm:max-w-[400px] to be full-screen/large on mobile and constrained on desktop.
+- login-form.tsx & auth-button-client.tsx: Naturally responsive and block-level.
+
+4. Primitive UI Components (shadcn/ui)
+Status: Excellent
+
+- Most primitives (button.tsx, dialog.tsx, input.tsx) automatically inherit their parent container's width, responding fluidly to mobile bounds.
+- skeleton.tsx and loading.tsx use specific breakpoints correctly where needed.
+
+Summary:
+While the primitives and event grids handle mobile well, the most critical architectural layout pieces are failing on mobile screens:
+1. Navigation: Needs a mobile menu (hamburger icon) to hide links.
+2. Filters Top Bar: The 4-column filter row must be refactored to wrap on mobile sizes.
+3. Typography: Dashboard headings need responsive font sizes (e.g., text-3xl md:text-5xl).

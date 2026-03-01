@@ -1,0 +1,48 @@
+🔐 Auth (components/auth)
+- auth-button-client.tsx
+- login-form.tsx
+- sign-in-modal.tsx
+
+📊 Dashboard (components/dashboard)
+- dashboard-layout.tsx
+- event-card.tsx
+- events-grid.tsx
+- filters-top-bar.tsx
+- my-events-list.tsx
+- submit-event-modal.tsx
+
+🗺️ Layout (components/layout)
+- auth-nav.tsx
+- footer.tsx
+- navigation-links.tsx
+- navigation-spacer.tsx
+- navigation.tsx
+
+🪟 Modals (components/modals)
+- delete-account-modal.tsx
+
+🎨 Core UI (components/ui)
+- age-filter-dropdown.tsx
+- age-range-slider.tsx
+- badge.tsx
+- button.tsx
+- calendar.tsx
+- card.tsx
+- date-range-picker.tsx
+- dialog.tsx
+- dropdown-menu.tsx
+- input.tsx
+- label.tsx
+- loading.tsx
+- popover.tsx
+- select.tsx
+- skeleton.tsx
+- slider.tsx
+- textarea.tsx
+- toast.tsx
+
+👤 User (components/user)
+- user-menu.tsx
+
+⚠️ Other
+- error-boundary.tsx
