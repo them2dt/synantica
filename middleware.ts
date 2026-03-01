@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   if (!sessionCookie && !isPublicRoute(request.nextUrl.pathname)) {
     // No user detected on a protected route; redirect to the login page.
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/";
     return NextResponse.redirect(url);
   }
 

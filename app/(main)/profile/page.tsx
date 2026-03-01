@@ -16,7 +16,7 @@ import { useAuth } from '@/lib/hooks/use-auth'
  * Displays user account information and profile details
  */
 export default function ProfilePage() {
-    const { user, loading } = useAuth('/auth/login', true)
+    const { user, loading } = useAuth('/', true)
     const [deleteAccountOpen, setDeleteAccountOpen] = useState(false)
 
     if (loading) {

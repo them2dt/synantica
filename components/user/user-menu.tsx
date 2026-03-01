@@ -38,7 +38,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
   const { user, loading, signOut } = useAuth()
 
   const handleLogout = async () => {
-    await signOut('/auth/login')
+    await signOut('/')
     onClick?.()
   }
 

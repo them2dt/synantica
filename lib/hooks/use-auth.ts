@@ -96,7 +96,7 @@ export function useAuth(redirectTo?: string, requireAuth: boolean = false) {
     }
   }, [router, redirectTo, requireAuth])
 
-  const signOut = useCallback(async (redirectTo: string = '/auth/login') => {
+  const signOut = useCallback(async (redirectTo: string = '/') => {
     try {
       setState(prev => ({ ...prev, loading: true }))
 
@@ -155,7 +155,7 @@ export function useAuthState() {
 /**
  * Hook for protected routes that requires authentication
  */
-export function useProtectedAuth(redirectTo: string = '/auth/login') {
+export function useProtectedAuth(redirectTo: string = '/') {
   return useAuth(redirectTo, true)
 }
 
@@ -217,7 +217,7 @@ export function useAuthActions() {
  */
 export const authRedirects = {
   toLogin: (router: ReturnType<typeof useRouter>, from?: string) => {
-    const path = from ? `/auth/login?redirect=${encodeURIComponent(from)}` : '/auth/login'
+    const path = '/'
     router.push(path)
   },
 
