@@ -13,7 +13,7 @@ import {
   signInWithPopup,
   AuthProvider
 } from 'firebase/auth'
-import { auth, googleProvider, appleProvider } from '@/lib/firebase/client'
+import { auth, googleProvider } from '@/lib/firebase/client'
 
 /**
  * Extended user interface with commonly used fields
@@ -188,13 +188,10 @@ export function useAuthActions() {
     signInWithProvider(googleProvider, redirectTo),
     [signInWithProvider])
 
-  const signInWithApple = useCallback((redirectTo?: string) =>
-    signInWithProvider(appleProvider, redirectTo),
-    [signInWithProvider])
 
   return {
     signInWithGoogle,
-    signInWithApple,
+
     loading,
     error,
   }

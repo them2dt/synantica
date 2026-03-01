@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, OAuthProvider } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
@@ -15,7 +15,7 @@ const storage = getStorage(app);
 
 // Providers
 const googleProvider = new GoogleAuthProvider();
-const appleProvider = new OAuthProvider('apple.com');
+
 
 // Initialize Analytics only on the client side
 let analytics;
@@ -27,4 +27,4 @@ if (typeof window !== 'undefined') {
     }
 }
 
-export { auth, db, googleProvider, appleProvider };
+export { auth, db, googleProvider };

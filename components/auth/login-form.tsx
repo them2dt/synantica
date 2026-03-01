@@ -11,7 +11,7 @@ export function LoginForm({
     ...props
 }: React.ComponentPropsWithoutRef<"div">) {
     const { error: toastError } = useToast();
-    const { signInWithGoogle, signInWithApple, loading } = useAuthActions();
+    const { signInWithGoogle, loading } = useAuthActions();
 
     const handleGoogleSignIn = async () => {
         const { error } = await signInWithGoogle("/dashboard");
@@ -20,12 +20,6 @@ export function LoginForm({
         }
     };
 
-    const handleAppleSignIn = async () => {
-        const { error } = await signInWithApple("/dashboard");
-        if (error) {
-            toastError("Login Failed", error);
-        }
-    };
 
     return (
         <div className={cn("w-full space-y-6", className)} {...props}>
@@ -62,29 +56,10 @@ export function LoginForm({
                     Continue with Google
                 </Button>
 
-                <Button
-                    variant="outline"
-                    type="button"
-                    disabled={loading}
-                    onClick={handleAppleSignIn}
-                    className="h-12 text-base font-medium transition-all hover:bg-slate-100 border-slate-500/20"
-                >
-                    {loading ? (
-                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    ) : (
-                        <svg className="mr-2 h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M17.05 20.28c-.98.95-2.05 1.74-3.5 1.74-1.45 0-1.85-.88-3.55-.88-1.7 0-2.25.88-3.55.88-1.35 0-2.43-.9-3.48-1.94C1.1 18.2 0 15.35 0 12c0-3.6 2.25-5.5 4.5-5.5 1.15 0 2.22.75 3.15.75s2-.75 3.35-.75c1.45 0 3.5.75 4.7 2.3-3.1 1.5-2.6 5.5.5 6.7-.6 1.7-1.45 3.45-2.15 4.78zM12 5.12c-.1 0-.15 0-.25.05C11.53 3 13.1 1 15 1c.1 0 .15 0 .25-.05.23 2.17-1.35 4.17-3.25 4.17z" />
-                        </svg>
-                    )}
-                    Continue with Apple
-                </Button>
+
             </div>
 
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-slate-500/10" />
-                </div>
-            </div>
+
 
             <p className="text-center text-xs text-slate-500 px-4">
                 By continuing, you agree to our{" "}
