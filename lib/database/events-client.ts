@@ -99,7 +99,9 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
 
   // Create and store the promise to prevent duplicate requests
   const requestPromise = safeDatabaseOperation(async () => {
+    console.time(`[PERF] getEventsDirectory:${requestKey}`)
     try {
+      console.time(`[PERF] Firestore Query:${requestKey}`)
       let eventsQuery: Query = collection(db, 'events')
 
       // Since Firestore doesn't support complex OR queries (like search across multiple fields) 
@@ -125,7 +127,9 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
       }
 
       const querySnapshot = await getDocs(eventsQuery)
+      console.timeEnd(`[PERF] Firestore Query:${requestKey}`)
 
+      console.time(`[PERF] Mapping & In-Memory Filtering:${requestKey}`)
       const eventsRows: EventRow[] = []
       querySnapshot.forEach((doc) => {
         eventsRows.push(mapFirestoreDataToEventRow(doc.id, doc.data() as Record<string, unknown>))
@@ -138,6 +142,8 @@ export async function getEventsDirectory(filters: EventFilters = {}): Promise<Ev
 
       // Cache the results for future use
       eventsCache.set(filters, events)
+      console.timeEnd(`[PERF] Mapping & In-Memory Filtering:${requestKey}`)
+      console.timeEnd(`[PERF] getEventsDirectory:${requestKey}`)
 
       return events
     } catch (error: unknown) {

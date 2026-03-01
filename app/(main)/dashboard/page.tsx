@@ -12,6 +12,7 @@ import { EventFilters } from '@/types/event'
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Button } from '@/components/ui/button'
+import { InlineSpinner } from '@/components/ui/loading'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
@@ -116,26 +117,7 @@ export default function DashboardPage() {
     router.push(`/events/${event.id}`)
   }
 
-  // Show loading state
-  if (loading || categoriesLoading) {
-    return (
-      <ErrorBoundary>
-        <DashboardLayout
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
-          selectedType={selectedType}
-          onTypeChange={setSelectedType}
-          eventTypes={eventTypes}
-          isListView={isListView}
-          onViewChange={setIsListView}
-        >
-          <DashboardSkeleton />
-        </DashboardLayout>
-      </ErrorBoundary>
-    )
-  }
-
-  // Show error state
+  // Show error state (keep this covering the page if it's a hard error)
   if (error) {
     return (
       <DashboardLayout
@@ -171,29 +153,28 @@ export default function DashboardPage() {
         eventTypes={eventTypes}
         isListView={isListView}
         onViewChange={setIsListView}
+        onAddEventClick={() => setIsSubmitModalOpen(true)}
       >
-        <EventsGrid
-          events={sortedEvents}
-          selectedType={selectedType}
-          eventTypes={eventTypes}
-          onEventClick={handleEventClick}
-          isListView={isListView}
-          showLoadMore={true}
-          onLoadMore={loadMore}
-          loadingMore={loadingMore}
-          hasMore={hasMore}
-        />
-        {/* Floating Action Button */}
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40">
-          <Button
-            onClick={() => setIsSubmitModalOpen(true)}
-            size="lg"
-            className="rounded-full shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <Plus className="mr-2 h-5 w-5" />
-            Submit Event
-          </Button>
-        </div>
+        {loading || categoriesLoading ? (
+          <div className="flex items-center justify-center py-20 text-slate-500">
+            <div className="flex flex-col items-center gap-4">
+              <InlineSpinner className="w-8 h-8" />
+              <p>Loading directory...</p>
+            </div>
+          </div>
+        ) : (
+          <EventsGrid
+            events={sortedEvents}
+            selectedType={selectedType}
+            eventTypes={eventTypes}
+            onEventClick={handleEventClick}
+            isListView={isListView}
+            showLoadMore={true}
+            onLoadMore={loadMore}
+            loadingMore={loadingMore}
+            hasMore={hasMore}
+          />
+        )}
         <SubmitEventModal
           isOpen={isSubmitModalOpen}
           onClose={() => setIsSubmitModalOpen(false)}

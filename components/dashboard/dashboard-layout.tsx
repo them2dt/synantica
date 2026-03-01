@@ -19,6 +19,7 @@ interface DashboardLayoutProps {
   eventTypes: Array<{ value: string; label: string; icon: React.ComponentType<{ className?: string }> }>
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
+  onAddEventClick?: () => void
 }
 
 /**
@@ -34,6 +35,7 @@ export function DashboardLayout({
   eventTypes,
   isListView,
   onViewChange,
+  onAddEventClick,
 }: DashboardLayoutProps) {
 
   return (
@@ -60,6 +62,7 @@ export function DashboardLayout({
             eventTypes={eventTypes}
             isListView={isListView}
             onViewChange={onViewChange}
+            onAddEventClick={onAddEventClick}
           />
         </section>
 
