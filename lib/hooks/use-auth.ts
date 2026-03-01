@@ -170,6 +170,8 @@ export function useAuthActions() {
         body: JSON.stringify({ idToken }),
       })
 
+      setLoading(false)
+
       if (redirectTo) {
         router.push(redirectTo)
       }
