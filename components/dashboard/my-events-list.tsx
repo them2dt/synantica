@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { ThemedText } from '@/components/ui/themed-text'
 import type { EventWithDetails } from '@/lib/database/events-client'
 import { auth, db } from '@/lib/firebase/client'
 import { onAuthStateChanged } from 'firebase/auth'
@@ -70,7 +71,7 @@ export function MyEventsList() {
   }
 
   if (error) {
-    return <p className="p-4 text-red-600">{error}</p>
+    return <ThemedText color="error" className="p-4 block">{error}</ThemedText>
   }
 
   if (events.length === 0) {
@@ -91,15 +92,15 @@ export function MyEventsList() {
             className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 cursor-pointer"
             onClick={() => router.push(`/events/${event.id}`)}
           >
-            <div>
-              <p className="font-medium text-slate-900">{event.name}</p>
-              <p className="text-sm text-slate-500">
+            <div className="flex-1 min-w-0">
+              <ThemedText variant="base" className="font-medium block">{event.name}</ThemedText>
+              <ThemedText variant="sm" color="muted" className="block">
                 {event.type} &middot; {event.fromDate}{event.toDate && event.toDate !== event.fromDate ? ` – ${event.toDate}` : ''}
-              </p>
+              </ThemedText>
             </div>
-            <span className={`text-xs font-medium px-2 py-1 rounded-full ${badge.className}`}>
+            <ThemedText variant="xs" color="white" className={`font-medium px-2 py-1 rounded-full ${badge.className}`}>
               {badge.label}
-            </span>
+            </ThemedText>
           </div>
         )
       })}

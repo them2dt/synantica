@@ -1,6 +1,10 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { generateMetadataWithOG, generateEventOGImageUrl } from '@/lib/og-image';
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { ThemedText } from '@/components/ui/themed-text'
+import { ArrowLeft, ExternalLink, Image as ImageIcon, Share2 } from 'lucide-react'
 
 /**
  * Test page to demonstrate Open Graph image generation
@@ -33,19 +37,17 @@ export default function TestOGPage() {
     <div className="min-h-screen bg-slate-50 py-10">
       <div className="max-w-[1100px] mx-auto px-6">
         <div className="bg-slate-50 rounded-none border border-slate-200 p-8">
-          <h1 className="text-3xl text-slate-950 mb-8">
+          <ThemedText variant="h2" as="h1" className="mb-8">
             Open Graph Image Testing
-          </h1>
+          </ThemedText>
 
           <div className="space-y-8">
             {/* Default OG Image */}
-            <div>
-              <h2 className="text-2xl text-slate-950 mb-4">
-                Default OG Image
-              </h2>
-              <p className="text-slate-600 mb-4">
-                This is the default layout for general pages:
-              </p>
+            <div className="flex-1">
+              <ThemedText variant="h3" as="h2" className="mb-4">Standard OpenGraph</ThemedText>
+              <ThemedText variant="base" color="secondary" className="mb-4 block">
+                The standard OG image for general pages. Clean branding with Swiss flag.
+              </ThemedText>
               <div className="bg-slate-50/50 p-4 rounded-none border border-slate-200">
                 <code className="text-sm text-slate-950 break-all">
                   {defaultOGUrl}
@@ -64,12 +66,12 @@ export default function TestOGPage() {
 
             {/* Event OG Image */}
             <div>
-              <h2 className="text-2xl text-slate-950 mb-4">
-                Event OG Image
-              </h2>
-              <p className="text-slate-600 mb-4">
+              <ThemedText variant="h3" as="h2" className="mb-4">
+                Event OpenGraph
+              </ThemedText>
+              <ThemedText variant="base" color="secondary" className="mb-4 block">
                 This is the specialized layout for event pages:
-              </p>
+              </ThemedText>
               <div className="bg-slate-50/50 p-4 rounded-none border border-slate-200">
                 <code className="text-sm text-slate-950 break-all">
                   {eventOGUrl}
@@ -88,24 +90,28 @@ export default function TestOGPage() {
 
             {/* Usage Instructions */}
             <div className="bg-slate-50/40 p-6 rounded-none border border-slate-200">
-              <h3 className="text-lg text-slate-950 mb-3">
-                How to Use
-              </h3>
-              <div className="text-slate-600 space-y-2 text-sm">
-                <p><strong>For general pages:</strong> Use <code>generateMetadataWithOG()</code> in your page metadata</p>
-                <p><strong>For event pages:</strong> Use <code>generateMetadataWithOG()</code> with type &apos;event&apos; and additional parameters</p>
-                <p><strong>Direct URL:</strong> You can also use the API directly at <code>/api/og</code> with query parameters</p>
+              <ThemedText variant="h3" as="h2" className="mb-4">How to Use</ThemedText>
+              <div className="space-y-4">
+                <div className="bg-slate-50 p-4 border border-slate-200">
+                  <ThemedText variant="sm" className="block"><strong>For general pages:</strong> Use <code>generateMetadataWithOG()</code> in your page metadata</ThemedText>
+                  <ThemedText variant="sm" className="block"><strong>For event pages:</strong> Use <code>generateMetadataWithOG()</code> with type &apos;event&apos; and additional parameters</ThemedText>
+                  <ThemedText variant="sm" className="block"><strong>Direct URL:</strong> You can also use the API directly at <code>/api/og</code> with query parameters</ThemedText>
+                </div>
               </div>
+              <ThemedText variant="h5" as="h3" className="mt-8 mb-3">API Parameters</ThemedText>
+              <ThemedText variant="xs" color="muted" className="mb-4 block">
+                Supported parameters for <code>/api/og</code>:
+              </ThemedText>
             </div>
 
             {/* Test Social Media */}
             <div className="bg-slate-50/40 p-6 rounded-none border border-slate-200">
-              <h3 className="text-lg text-slate-950 mb-3">
+              <ThemedText variant="h3" as="h2" className="mb-3">
                 Test Social Media Sharing
-              </h3>
-              <p className="text-slate-600 mb-4 text-sm">
+              </ThemedText>
+              <ThemedText variant="sm" color="secondary" className="mb-4 block">
                 Use these tools to test how your OG images appear on social media:
-              </p>
+              </ThemedText>
               <div className="space-y-2">
                 <a
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl)}/test-og`}

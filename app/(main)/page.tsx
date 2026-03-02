@@ -1,6 +1,7 @@
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { Button } from '@/components/ui/button'
+import { ThemedText } from '@/components/ui/themed-text'
 import Link from 'next/link'
 
 export default function Home() {
@@ -11,17 +12,17 @@ export default function Home() {
         <section className="p-6 pt-16">
           <NavigationSpacer />
           <div className="space-y-4">
-            <p className="text-xs uppercase text-slate-500">
+            <ThemedText variant="xs" color="muted" className="uppercase block">
               Swiss STEM Directory
-            </p>
-            <h1 className="text-3xl sm:text-5xl md:text-6xl leading-tight">
+            </ThemedText>
+            <ThemedText variant="h1" as="h1">
               The Swiss database for
               <span className="block">STEM and research opportunities</span>
-            </h1>
-            <p className="text-base sm:text-lg text-slate-600 max-w-2xl">
+            </ThemedText>
+            <ThemedText variant="lg" color="secondary" className="max-w-2xl block">
               A calm, organized view of contests, hackathons, events, and workshops.
               Built for fast scanning, clear totals, and dependable timelines.
-            </p>
+            </ThemedText>
           </div>
         </section>
 
@@ -35,14 +36,12 @@ export default function Home() {
             ].map((item, i) => (
               <div
                 key={item.title}
-                className={`border-slate-200 p-4 pt-8 sm:pt-12 ${
-                  i % 2 === 0 ? 'border-r' : ''
-                } md:border-r last:border-r-0 ${
-                  i < 2 ? 'border-b md:border-b-0' : ''
-                }`}
+                className={`border-slate-200 p-4 pt-8 sm:pt-12 ${i % 2 === 0 ? 'border-r' : ''
+                  } md:border-r last:border-r-0 ${i < 2 ? 'border-b md:border-b-0' : ''
+                  }`}
               >
-                <div className="text-sm text-slate-950">{item.title}</div>
-                <div className="text-xs text-slate-500">{item.copy}</div>
+                <ThemedText variant="sm" className="block">{item.title}</ThemedText>
+                <ThemedText variant="xs" color="muted" className="block">{item.copy}</ThemedText>
               </div>
             ))}
           </div>
@@ -51,12 +50,12 @@ export default function Home() {
         {/* CTA Section */}
         <section className="border-t border-slate-200 px-6 py-10 sm:py-12 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div className="space-y-2">
-            <h2 className="text-2xl sm:text-3xl">
+            <ThemedText variant="h2" as="h2">
               Ready to find your next opportunity?
-            </h2>
-            <p className="text-sm text-slate-600">
+            </ThemedText>
+            <ThemedText variant="sm" color="secondary" className="block">
               Keep the search focused and the details close. The dashboard is built for clarity.
-            </p>
+            </ThemedText>
           </div>
           <div className="flex gap-3 shrink-0">
             <Button asChild variant="outline" size="lg">

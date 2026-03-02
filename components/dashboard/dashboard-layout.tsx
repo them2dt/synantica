@@ -7,6 +7,7 @@ import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { FloatingAddEvent } from '@/components/dashboard/floating-add-event'
+import { ThemedText } from '@/components/ui/themed-text'
 
 /**
  * Props for the dashboard layout component
@@ -46,10 +47,10 @@ export function DashboardLayout({
         <section className="p-6 pt-16">
           <NavigationSpacer />
           <div className="space-y-4">
-            <h1 className="text-3xl md:text-5xl font-heading">Dashboard</h1>
-            <p className="text-sm text-slate-500 max-w-2xl">
+            <ThemedText variant="h1">Dashboard</ThemedText>
+            <ThemedText variant="sm" color="muted" className="max-w-2xl block">
               Search and filter through the directory of stem activities.
-            </p>
+            </ThemedText>
           </div>
         </section>
 

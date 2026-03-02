@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/components/ui/toast";
 import { Loader2 } from "lucide-react";
+import { ThemedText } from "@/components/ui/themed-text";
 
 export function LoginForm({
     className,
@@ -61,7 +62,7 @@ export function LoginForm({
 
 
 
-            <p className="text-center text-xs text-slate-500 px-4">
+            <ThemedText variant="xs" color="muted" className="text-center px-4 block">
                 By continuing, you agree to our{" "}
                 <a href="/terms" className="underline underline-offset-2 hover:text-slate-950">
                     Terms of Service
@@ -71,7 +72,7 @@ export function LoginForm({
                     Privacy Policy
                 </a>
                 .
-            </p>
+            </ThemedText>
         </div>
     );
 }

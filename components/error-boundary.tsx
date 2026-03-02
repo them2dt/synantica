@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
+import { ThemedText } from '@/components/ui/themed-text';
 import {
     Card,
     CardContent,
@@ -9,7 +10,7 @@ import {
     CardHeader,
     CardTitle,
 } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Home, RefreshCcw } from 'lucide-react';
 
 /**
  * Props for the ErrorBoundary component
@@ -44,12 +45,12 @@ function DefaultErrorFallback({
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
                     <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-none bg-red-600/10">
-                        <AlertTriangle className="h-6 w-6 text-red-600" />
+                        <AlertTriangle className="h-6 w-6 text-red-600" aria-hidden="true" />
                     </div>
-                    <CardTitle className="text-xl">Something went wrong</CardTitle>
-                    <CardDescription>
-                        We&apos;re sorry, but something unexpected happened. Please try again.
-                    </CardDescription>
+                    <ThemedText variant="h3" as="h2" className="mb-2">Something went wrong</ThemedText>
+                    <ThemedText color="muted" className="mb-8 block">
+                        We apologize for the inconvenience. An unexpected error has occurred while processing your request.
+                    </ThemedText>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {process.env.NODE_ENV === 'development' && (
@@ -64,8 +65,8 @@ function DefaultErrorFallback({
                         </details>
                     )}
                     <div className="flex flex-col gap-2">
-                        <Button onClick={resetError} className="w-full">
-                            <RefreshCw className="mr-2 h-4 w-4" /> Try Again
+                        <Button onClick={resetError} className="w-full gap-2">
+                            <RefreshCcw className="h-4 w-4" /> Try Again
                         </Button>
                         {retryCount > 0 && (
                             <p className="text-xs text-slate-500 text-center">

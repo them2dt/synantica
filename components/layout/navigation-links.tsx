@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
+import { ThemedText } from '@/components/ui/themed-text'
 
 interface NavigationLinksProps {
     vertical?: boolean
@@ -32,30 +33,30 @@ export function NavigationLinks({ vertical = false }: NavigationLinksProps = {})
             <Link
                 href="/"
                 className={cn(
-                    'text-sm transition-colors',
+                    'transition-colors',
                     isActive('/') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
                 )}
             >
-                Home
+                <ThemedText variant="sm">Home</ThemedText>
             </Link>
             <Link
                 href="/dashboard"
                 className={cn(
-                    'text-sm transition-colors',
+                    'transition-colors',
                     isActive('/dashboard') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
                 )}
             >
-                Dashboard
+                <ThemedText variant="sm">Dashboard</ThemedText>
             </Link>
             {isAdmin && (
                 <Link
                     href="/admin"
                     className={cn(
-                        'text-sm transition-colors',
+                        'transition-colors',
                         isActive('/admin') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
                     )}
                 >
-                    Admin
+                    <ThemedText variant="sm">Admin</ThemedText>
                 </Link>
             )}
         </div>

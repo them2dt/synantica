@@ -8,6 +8,7 @@ import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { EventCardSkeleton } from '@/components/ui/loading'
 import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
+import { ThemedText } from '@/components/ui/themed-text'
 
 /**
  * Props for the event card component
@@ -34,41 +35,45 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
         <div className="flex-1 p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
-              <div className="flex gap-2 text-xs text-slate-500 uppercase tracking-wide">
-                <span>{event.type}</span>
-                <span>•</span>
-                <span>Age {event.fromAge || 0}-{event.toAge || 99}</span>
+              <div className="flex gap-2 uppercase tracking-wide">
+                <ThemedText variant="xs" color="muted">{event.type}</ThemedText>
+                <ThemedText variant="xs" color="muted">•</ThemedText>
+                <ThemedText variant="xs" color="muted">Age {event.fromAge || 0}-{event.toAge || 99}</ThemedText>
               </div>
               <div className="text-xl" title={getCountryDisplayName(event.country)}>
                 {getCountryFlag(event.country)}
               </div>
             </div>
 
-            <h3 className="text-xl text-balance text-slate-950 mb-2 font-medium">{event.name}</h3>
-            <p className="text-slate-600 text-sm line-clamp-2 md:line-clamp-none mb-4 max-w-4xl">{event.description}</p>
+            <ThemedText variant="xl" className="mb-2 font-medium block">{event.name}</ThemedText>
+            <ThemedText variant="sm" color="secondary" className="line-clamp-2 md:line-clamp-none mb-4 max-w-4xl block">
+              {event.description}
+            </ThemedText>
 
             <div className="flex flex-wrap md:flex-nowrap gap-x-6 gap-y-2 mb-4">
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-slate-400" />
-                {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
+                <ThemedText variant="sm" color="muted">
+                  {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
+                </ThemedText>
               </div>
 
-              <div className="flex items-center gap-2 text-sm text-slate-500">
+              <div className="flex items-center gap-2">
                 <MapPin className="w-4 h-4 text-slate-400" />
-                {event.location}
+                <ThemedText variant="sm" color="muted">{event.location}</ThemedText>
               </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
               {event.fields.slice(0, 3).map((field) => (
-                <span key={field} className="text-xs bg-slate-100 text-slate-600 px-2 py-1">
+                <ThemedText key={field} variant="xs" color="secondary" className="bg-slate-100 px-2 py-1">
                   {field}
-                </span>
+                </ThemedText>
               ))}
               {event.fields.length > 3 && (
-                <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1">
+                <ThemedText variant="xs" color="secondary" className="bg-slate-100 px-2 py-1">
                   +{event.fields.length - 3}
-                </span>
+                </ThemedText>
               )}
             </div>
           </div>
@@ -81,41 +86,45 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
   return (
     <div className="flex flex-col h-full bg-white p-6 hover:bg-slate-50 transition-colors cursor-pointer" onClick={() => onLearnMore(event)}>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex gap-2 text-xs text-slate-500 uppercase tracking-wide">
-          <span>{event.type}</span>
-          <span>•</span>
-          <span>Age {event.fromAge || 0}-{event.toAge || 99}</span>
+        <div className="flex gap-2 uppercase tracking-wide">
+          <ThemedText variant="xs" color="muted">{event.type}</ThemedText>
+          <ThemedText variant="xs" color="muted">•</ThemedText>
+          <ThemedText variant="xs" color="muted">Age {event.fromAge || 0}-{event.toAge || 99}</ThemedText>
         </div>
         <div className="text-xl" title={getCountryDisplayName(event.country)}>
           {getCountryFlag(event.country)}
         </div>
       </div>
 
-      <h3 className="text-xl text-balance text-slate-950 mb-2 font-medium">{event.name}</h3>
-      <p className="text-slate-600 text-sm line-clamp-2 mb-6 flex-grow">{event.description}</p>
+      <ThemedText variant="xl" className="mb-2 font-medium block">{event.name}</ThemedText>
+      <ThemedText variant="sm" color="secondary" className="line-clamp-2 mb-6 flex-grow block">
+        {event.description}
+      </ThemedText>
 
       <div className="space-y-2 mb-6">
-        <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4 text-slate-400" />
-          {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
+          <ThemedText variant="sm" color="muted">
+            {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
+          </ThemedText>
         </div>
 
-        <div className="flex items-center gap-2 text-sm text-slate-500">
+        <div className="flex items-center gap-2">
           <MapPin className="w-4 h-4 text-slate-400" />
-          {event.location}
+          <ThemedText variant="sm" color="muted">{event.location}</ThemedText>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mt-auto">
         {event.fields.slice(0, 3).map((field) => (
-          <span key={field} className="text-xs bg-slate-100 text-slate-600 px-2 py-1">
+          <ThemedText key={field} variant="xs" color="secondary" className="bg-slate-100 px-2 py-1">
             {field}
-          </span>
+          </ThemedText>
         ))}
         {event.fields.length > 3 && (
-          <span className="text-xs bg-slate-100 text-slate-600 px-2 py-1">
+          <ThemedText variant="xs" color="secondary" className="bg-slate-100 px-2 py-1">
             +{event.fields.length - 3}
-          </span>
+          </ThemedText>
         )}
       </div>
     </div>

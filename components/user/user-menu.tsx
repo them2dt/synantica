@@ -14,6 +14,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/lib/hooks/use-auth'
 import { Skeleton } from '@/components/ui/loading'
+import { ThemedText } from '@/components/ui/themed-text'
 
 /**
  * Props for the UserMenu component
@@ -60,7 +61,9 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuLabel>
+          <ThemedText variant="sm">My Account</ThemedText>
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <DropdownMenuItem onClick={() => {
@@ -68,7 +71,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
           router.push('/profile')
         }}>
           <User className="w-4 h-4 mr-2" />
-          Profile
+          <ThemedText variant="sm">Profile</ThemedText>
         </DropdownMenuItem>
 
 
@@ -76,7 +79,7 @@ export function UserMenu({ className, children, onClick }: UserMenuProps) {
 
         <DropdownMenuItem onClick={handleLogout} className="text-red-600">
           <LogOut className="w-4 h-4 mr-2" />
-          Log out
+          <ThemedText variant="sm">Log out</ThemedText>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

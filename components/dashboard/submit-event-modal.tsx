@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { ThemedText } from '@/components/ui/themed-text'
 import {
   Select,
   SelectContent,
@@ -162,10 +163,10 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
         <DialogContent className="max-w-md">
           <div className="flex flex-col items-center py-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-            <h3 className="text-xl font-semibold mb-2">Event Submitted!</h3>
-            <p className="text-slate-500 mb-6">
+            <ThemedText variant="h3" className="mb-2">Event Submitted!</ThemedText>
+            <ThemedText color="muted" className="mb-6 block">
               Your event has been submitted for review. You&apos;ll be notified once it&apos;s approved.
-            </p>
+            </ThemedText>
             <Button onClick={handleClose}>Close</Button>
           </div>
         </DialogContent>
@@ -177,20 +178,20 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
         <DialogHeader>
-          <DialogTitle>Submit an Event</DialogTitle>
-          <DialogDescription>
+          <ThemedText variant="h3" as="h2">Submit an Event</ThemedText>
+          <ThemedText variant="sm" color="muted">
             Fill in the event details below. Your submission will be reviewed before publishing.
-          </DialogDescription>
+          </ThemedText>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <div className="p-3 text-sm text-red-600 bg-red-50 rounded-md">{error}</div>
+            <ThemedText variant="sm" color="error" className="p-3 bg-red-50 rounded-md block">{error}</ThemedText>
           )}
 
           {/* Basic Information */}
           <div className="space-y-4">
-            <h3 className="text-lg">Basic Information</h3>
+            <ThemedText variant="h5" as="h3">Basic Information</ThemedText>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 col-span-1 md:col-span-2">
                 <Label htmlFor="name">Event Name *</Label>
@@ -216,7 +217,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
           {/* Date & Location */}
           <div className="space-y-4">
-            <h3 className="text-lg">Date & Location</h3>
+            <ThemedText variant="h5" as="h3">Date & Location</ThemedText>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="fromDate">Start Date *</Label>
@@ -239,7 +240,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
           {/* Organizer & Age Range */}
           <div className="space-y-4">
-            <h3 className="text-lg">Organizer & Target Audience</h3>
+            <ThemedText variant="h5" as="h3">Organizer & Target Audience</ThemedText>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               <div className="space-y-2 col-span-1 sm:col-span-2 md:col-span-3">
                 <Label htmlFor="organizer">Organizer *</Label>
@@ -258,7 +259,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
           {/* Fields/Subjects */}
           <div className="space-y-4">
-            <h3 className="text-lg">Fields/Subjects</h3>
+            <ThemedText variant="h5" as="h3">Fields/Subjects</ThemedText>
             <div className="space-y-2">
               <Label>Quick Add Fields</Label>
               <div className="flex flex-wrap gap-2">
@@ -296,7 +297,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
           {/* Links & Media */}
           <div className="space-y-4">
-            <h3 className="text-lg">Links & Media</h3>
+            <ThemedText variant="h5" as="h3">Links & Media</ThemedText>
             <div className="space-y-2">
               <Label htmlFor="youtubeLink">YouTube Link</Label>
               <Input id="youtubeLink" type="url" value={formData.youtubeLink} onChange={(e) => handleInputChange('youtubeLink', e.target.value)} placeholder="https://youtube.com/watch?v=..." />

@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Menu, X } from 'lucide-react'
 import { AuthNav } from './auth-nav'
 import { NavigationLinks } from './navigation-links'
+import { ThemedText } from '@/components/ui/themed-text'
 
 export function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -12,9 +13,9 @@ export function Navigation() {
     <header className="fixed top-0 left-0 right-0 z-[60] bg-slate-50">
       <div className="mx-auto flex w-full max-w-[1100px] items-center justify-between border-b border-slate-200 md:border-x">
         <div className="flex items-center gap-6 py-4 md:py-0">
-          <span className="font-heading text-xl pl-4">
+          <ThemedText variant="h5" className="pl-4">
             Synantica
-          </span>
+          </ThemedText>
           <div className="hidden md:block">
             <NavigationLinks />
           </div>

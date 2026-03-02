@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
+import { ThemedText } from '@/components/ui/themed-text'
 import { useEvent } from '@/lib/hooks/use-events'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
@@ -29,7 +30,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950 mx-auto mb-4" />
-                <p className="text-slate-500">Loading event...</p>
+                <ThemedText color="muted">Loading event...</ThemedText>
               </div>
             </div>
           </div>
@@ -55,12 +56,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
                 <div className="text-red-600 text-5xl mb-4">⚠️</div>
-                <h3 className="text-lg text-slate-950 mb-2">Event Not Found</h3>
-                <p className="text-slate-500 mb-4">
+                <ThemedText variant="h3" className="mb-2">Event Not Found</ThemedText>
+                <ThemedText color="muted" className="mb-4 block">
                   {error || 'The event you are looking for does not exist or has been removed.'}
-                </p>
+                </ThemedText>
                 <Link href="/dashboard">
-                  <Button variant="outline">Back to Dashboard</Button>
+                  <Button>Return to Dashboard</Button>
                 </Link>
               </div>
             </div>
@@ -81,12 +82,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
       <div className="flex-1">
         <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 px-4 sm:px-6 py-6 sm:py-10">
           <NavigationSpacer />
-          <div className="mb-6">
-            <Link href="/dashboard">
-              <Button variant="ghost" className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                Back to Dashboard
-              </Button>
+          <div className="mb-8">
+            <Link href="/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-slate-950 transition-colors">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Dashboard
             </Link>
           </div>
 
@@ -102,10 +101,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                   </div>
                 </div>
               </div>
-              <CardTitle className="text-2xl sm:text-4xl mb-4">{event.name}</CardTitle>
-              <CardDescription className="text-lg text-slate-600">
+              <ThemedText variant="h2" className="mb-4">{event.name}</ThemedText>
+              <ThemedText variant="lg" color="secondary">
                 {event.description}
-              </CardDescription>
+              </ThemedText>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3 sm:gap-6 text-sm text-slate-500">

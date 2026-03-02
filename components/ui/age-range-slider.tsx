@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Slider } from "@/components/ui/slider"
 import { cn } from "@/lib/utils"
+import { ThemedText } from "@/components/ui/themed-text"
 
 interface AgeRangeSliderProps {
   value?: [number, number]
@@ -37,9 +38,9 @@ export function AgeRangeSlider({
 
   return (
     <div className={cn("space-y-3", className)}>
-      <div className="flex items-center justify-between text-xs text-slate-500">
-        <span>{min}</span>
-        <span>{max}</span>
+      <div className="flex items-center justify-between">
+        <ThemedText variant="xs" color="muted">{min}</ThemedText>
+        <ThemedText variant="xs" color="muted">{max}</ThemedText>
       </div>
       <Slider
         min={min}
@@ -49,9 +50,9 @@ export function AgeRangeSlider({
         onValueChange={handleValueChange}
         disabled={disabled}
       />
-      <div className="flex items-center justify-between text-sm text-slate-950">
-        <span>{localValue[0]} years</span>
-        <span>{localValue[1]} years</span>
+      <div className="flex items-center justify-between">
+        <ThemedText variant="sm">{localValue[0]} years</ThemedText>
+        <ThemedText variant="sm">{localValue[1]} years</ThemedText>
       </div>
     </div>
   )
