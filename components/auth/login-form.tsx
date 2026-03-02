@@ -25,7 +25,7 @@ export function LoginForm({
 
     return (
         <div className={cn("grid gap-6", className)} {...props}>
-            <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-6">
+            <Card className="border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-6">
                 <div className="grid gap-4">
                     <Button
                         variant="outline"

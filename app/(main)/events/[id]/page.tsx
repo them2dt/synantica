@@ -195,7 +195,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             </CardContent>
           </Card>
 
-          <div className="border border-slate-200 dark:border-slate-800 p-6 mb-8 bg-white dark:bg-slate-900">
+          <div className="border border-slate-200 dark:border-slate-800 p-6 mb-8 bg-slate-50 dark:bg-slate-900">
             <div className="flex justify-center gap-3">
               <Button
                 variant="outline"

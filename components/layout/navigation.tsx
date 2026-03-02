@@ -44,7 +44,7 @@ export function Navigation() {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-slate-200 bg-white absolute top-full left-0 right-0 w-full flex flex-col p-4 shadow-lg space-y-4 dark:border-slate-800 dark:bg-slate-950 dark:shadow-slate-950/50">
+        <div className="md:hidden border-b border-slate-200 bg-slate-50 absolute top-full left-0 right-0 w-full flex flex-col p-4 shadow-lg space-y-4 dark:border-slate-800 dark:bg-slate-950 dark:shadow-slate-950/50">
           <NavigationLinks vertical />
           <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
             <div className="flex items-center justify-between">

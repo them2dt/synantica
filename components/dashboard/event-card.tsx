@@ -28,7 +28,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
   if (variant === 'list') {
     return (
-      <div className="flex flex-col md:flex-row bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-b border-slate-200 dark:border-slate-800 last:border-b-0" onClick={() => onLearnMore(event)}>
+      <div className="flex flex-col md:flex-row bg-slate-50 dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer border-b border-slate-200 dark:border-slate-800 last:border-b-0" onClick={() => onLearnMore(event)}>
         <div className="flex-1 p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-2">
@@ -81,7 +81,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
 
   // Grid variant (default)
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer" onClick={() => onLearnMore(event)}>
+    <div className="flex flex-col h-full bg-slate-50 dark:bg-slate-900 p-6 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer" onClick={() => onLearnMore(event)}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex gap-2 uppercase tracking-wide">
           <ThemedText variant="xs" color="muted">{event.type}</ThemedText>
