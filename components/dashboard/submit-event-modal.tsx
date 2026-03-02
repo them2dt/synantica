@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogContent,
   DialogHeader,
+  DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -161,7 +162,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
         <DialogContent className="max-w-md">
           <div className="flex flex-col items-center py-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-            <ThemedText variant="h3" className="mb-2">Event Published!</ThemedText>
+            <DialogTitle className="text-2xl font-heading mb-2">Event Published!</DialogTitle>
             <ThemedText color="muted" className="mb-6 block">
               Your event is now live and visible to the community.
             </ThemedText>
@@ -176,7 +177,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
         <DialogHeader>
-          <ThemedText variant="h3" as="h2">Submit an Event</ThemedText>
+          <DialogTitle className="text-3xl font-heading">Submit an Event</DialogTitle>
           <ThemedText variant="sm" color="muted">
             Fill in the event details below. Your event will be published immediately.
           </ThemedText>
