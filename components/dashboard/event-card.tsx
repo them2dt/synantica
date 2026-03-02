@@ -1,9 +1,6 @@
 'use client'
 
 import { Calendar, MapPin } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { Event, EventDirectory } from '@/types/event'
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { EventCardSkeleton } from '@/components/ui/loading'

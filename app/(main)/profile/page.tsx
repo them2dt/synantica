@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Mail, Settings } from 'lucide-react'
-import Link from 'next/link'
 import { DeleteAccountModal } from '@/components/modals/delete-account-modal'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'

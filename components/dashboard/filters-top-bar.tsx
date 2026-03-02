@@ -1,6 +1,6 @@
 'use client'
 
-import { Grid3X3, List, Plus } from 'lucide-react'
+import { Grid3X3, List } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -20,7 +20,6 @@ interface FiltersTopBarProps {
   eventTypes: CategoryWithIcon[]
   isListView?: boolean
   onViewChange?: (isList: boolean) => void
-  onAddEventClick?: () => void
 }
 
 export function FiltersTopBar({
@@ -31,7 +30,6 @@ export function FiltersTopBar({
   eventTypes,
   isListView = false,
   onViewChange = () => { },
-  onAddEventClick,
 }: FiltersTopBarProps) {
   // Minimal setup: We only use search and type internally for this lean redesign
 

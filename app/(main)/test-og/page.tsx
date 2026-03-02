@@ -1,10 +1,7 @@
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { generateMetadataWithOG, generateEventOGImageUrl } from '@/lib/og-image';
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { ThemedText } from '@/components/ui/themed-text'
-import { ArrowLeft, ExternalLink, Image as ImageIcon, Share2 } from 'lucide-react'
 
 /**
  * Test page to demonstrate Open Graph image generation

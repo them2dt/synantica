@@ -15,53 +15,12 @@ interface SpinnerProps {
   color?: 'primary' | 'muted' | 'accent' | 'current'
 }
 
-/**
- * Spinner component with consistent styling
- * Replaces various animate-spin implementations
- */
-function Spinner({
-  size = 'md',
-  className,
-  color = 'primary'
-}: SpinnerProps) {
-  const sizeClasses = {
-    xs: 'h-3 w-3',
-    sm: 'h-4 w-4',
-    md: 'h-6 w-6',
-    lg: 'h-8 w-8',
-    xl: 'h-10 w-10'
-  }
-
-  const colorClasses = {
-    primary: 'text-slate-950',
-    muted: 'text-slate-500',
-    accent: 'text-slate-950',
-    current: 'text-current'
-  }
-
-  return (
-    <div
-      className={cn(
-        'animate-spin rounded-none border-2 border-t-transparent',
-        sizeClasses[size],
-        colorClasses[color],
-        className
-      )}
-      role="status"
-      aria-label="Loading"
-    />
-  )
-}
-
-/**
- * Inline spinner for buttons and small spaces
- */
 export function InlineSpinner({ className, color = 'current' }: Omit<SpinnerProps, 'size'>) {
   return (
     <Loader2
       className={cn(
         'h-4 w-4 animate-spin',
-        color === 'current' ? 'text-current' : color === 'primary' ? 'text-slate-950' : color === 'muted' ? 'text-slate-500' : 'text-slate-950',
+        color === 'current' ? 'text-current' : color === 'primary' ? 'text-slate-950' : color === 'muted' ? 'text-slate-500' : color === 'accent' ? 'text-blue-600' : 'text-slate-950',
         className
       )}
       aria-hidden="true"

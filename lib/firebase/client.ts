@@ -27,4 +27,4 @@ if (typeof window !== 'undefined') {
     }
 }
 
-export { auth, db, googleProvider };
+export { auth, db, googleProvider, storage, analytics };

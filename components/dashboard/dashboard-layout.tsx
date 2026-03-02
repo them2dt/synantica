@@ -64,7 +64,6 @@ export function DashboardLayout({
             eventTypes={eventTypes}
             isListView={isListView}
             onViewChange={onViewChange}
-            onAddEventClick={onAddEventClick}
           />
         </section>
 

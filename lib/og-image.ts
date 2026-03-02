@@ -48,7 +48,6 @@ export function generateEventOGImageUrl(
 export function generateMetadataWithOG(
   title: string,
   description: string,
-  type: 'default' | 'event' = 'default',
   additionalParams?: {
     eventDate?: string;
     location?: string;

@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { Calendar, Users, BookOpen, Trophy, Plus } from 'lucide-react'
+import { Calendar, Users, BookOpen, Trophy } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
 import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
@@ -21,10 +21,6 @@ const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-l
 })
 
 const EventsGrid = dynamic(() => import('@/components/dashboard/events-grid').then(mod => ({ default: mod.EventsGrid })), {
-  loading: () => <div className="animate-pulse h-64 bg-slate-100 rounded-none"></div>
-})
-
-const DashboardSkeleton = dynamic(() => import('@/components/ui/skeleton').then(mod => ({ default: mod.DashboardSkeleton })), {
   loading: () => <div className="animate-pulse h-64 bg-slate-100 rounded-none"></div>
 })
 
@@ -113,8 +109,6 @@ export default function DashboardPage() {
     return [...dbEvents].sort((a, b) => new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime())
   }, [dbEvents])
 
-  // Calculate statistics
-  const totalEvents = dbEvents?.length || 0
 
   const handleEventClick = (event: EventDirectory) => {
     // Navigate to the event detail page

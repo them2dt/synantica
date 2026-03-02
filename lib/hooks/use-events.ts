@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { getEventsClient, getEventByIdClient, getPopularEventsClient, getEventsDirectory, preloadNextPage, getMyEventsClient, EventWithDetails } from '@/lib/database/events-client'
+import { getEventByIdClient, getEventsDirectory, preloadNextPage, getMyEventsClient, EventWithDetails } from '@/lib/database/events-client'
 import { EventDirectory, EventStatus, EventFilters } from '@/types/event'
 import { handleAsyncError } from '@/lib/utils/error-handling'
 import { useAuth } from '@/lib/hooks/use-auth'

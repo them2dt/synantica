@@ -6,11 +6,9 @@ import { ThemedText } from '@/components/ui/themed-text';
 import {
     Card,
     CardContent,
-    CardDescription,
     CardHeader,
-    CardTitle,
 } from '@/components/ui/card';
-import { AlertTriangle, Home, RefreshCcw } from 'lucide-react';
+import { AlertTriangle, RefreshCcw } from 'lucide-react';
 
 /**
  * Props for the ErrorBoundary component
