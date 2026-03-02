@@ -11,12 +11,6 @@ const normalizeStatus = (status?: string): EventStatus => {
       return EventStatus.CANCELLED
     case EventStatus.PUBLISHED:
       return EventStatus.PUBLISHED
-    case EventStatus.PENDING_REVIEW:
-    case 'pending_review':
-      return EventStatus.PENDING_REVIEW
-    case EventStatus.REJECTED:
-    case 'rejected':
-      return EventStatus.REJECTED
     default:
       return EventStatus.PUBLISHED
   }

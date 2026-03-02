@@ -9,8 +9,6 @@ export enum EventStatus {
   DRAFT = 'draft',
   PUBLISHED = 'published',
   CANCELLED = 'cancelled',
-  PENDING_REVIEW = 'pending_review',
-  REJECTED = 'rejected'
 }
 
 /**

@@ -138,7 +138,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
         links: formData.links || [],
         type: formData.type || '',
         fields: formData.fields || [],
-        status: 'pending_review',
+        status: 'published',
         submitted_by: user.uid,
         submitted_by_email: user.email || undefined,
         created_at: now,
@@ -161,9 +161,9 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
         <DialogContent className="max-w-md">
           <div className="flex flex-col items-center py-8 text-center">
             <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-            <ThemedText variant="h3" className="mb-2">Event Submitted!</ThemedText>
+            <ThemedText variant="h3" className="mb-2">Event Published!</ThemedText>
             <ThemedText color="muted" className="mb-6 block">
-              Your event has been submitted for review. You&apos;ll be notified once it&apos;s approved.
+              Your event is now live and visible to the community.
             </ThemedText>
             <Button onClick={handleClose}>Close</Button>
           </div>
@@ -178,7 +178,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
         <DialogHeader>
           <ThemedText variant="h3" as="h2">Submit an Event</ThemedText>
           <ThemedText variant="sm" color="muted">
-            Fill in the event details below. Your submission will be reviewed before publishing.
+            Fill in the event details below. Your event will be published immediately.
           </ThemedText>
         </DialogHeader>
 
@@ -328,7 +328,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
             <Button type="button" variant="outline" onClick={handleClose}>Cancel</Button>
             <Button type="submit" disabled={isSubmitting}>
               <Send className="mr-2 h-4 w-4" />
-              {isSubmitting ? 'Submitting...' : 'Submit for Review'}
+              {isSubmitting ? 'Publishing...' : 'Publish Event'}
             </Button>
           </div>
         </form>

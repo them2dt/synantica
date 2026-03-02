@@ -1,7 +1,7 @@
 'use client'
 
 import { db } from '@/lib/firebase/client'
-import { collection, query, where, getDocs, getDoc, doc, limit, orderBy, Query } from 'firebase/firestore'
+import { collection, query, where, getDocs, getDoc, doc, limit, orderBy, Query, updateDoc, deleteDoc } from 'firebase/firestore'
 import { EventDirectory, EventFilters } from '@/types/event'
 import { createDatabaseError, safeDatabaseOperation } from '@/lib/utils/error-handling'
 import { applyEventFilters, mapEventRowToEventDirectory, mapEventRowToEventWithDetails, mapFirestoreDataToEventRow } from './events-mappers'
@@ -242,10 +242,6 @@ export async function getEventByIdClient(id: string): Promise<EventWithDetails |
 
       const data = docSnap.data()
 
-      if (data.status !== 'published') {
-        return null;
-      }
-
       const eventRow = mapFirestoreDataToEventRow(docSnap.id, data as Record<string, unknown>)
       return mapEventRowToEventWithDetails(eventRow)
     } catch (error: unknown) {
@@ -345,4 +341,23 @@ export async function getEventTypesClient() {
   }
 }
 
+/**
+ * Update an event (client-side) - owner can edit their own events
+ */
+export async function updateEventClient(eventId: string, data: Record<string, unknown>): Promise<void> {
+  const docRef = doc(db, 'events', eventId)
+  await updateDoc(docRef, {
+    ...data,
+    updated_at: new Date().toISOString(),
+  })
+  eventsCache.clear()
+}
 
+/**
+ * Delete an event (client-side) - owner can delete their own events
+ */
+export async function deleteEventClient(eventId: string): Promise<void> {
+  const docRef = doc(db, 'events', eventId)
+  await deleteDoc(docRef)
+  eventsCache.clear()
+}

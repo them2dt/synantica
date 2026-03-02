@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
@@ -12,14 +11,6 @@ interface NavigationLinksProps {
 
 export function NavigationLinks({ vertical = false }: NavigationLinksProps = {}) {
     const pathname = usePathname()
-    const [isAdmin, setIsAdmin] = useState(false)
-
-    useEffect(() => {
-        fetch('/api/admin/check')
-            .then((res) => res.json())
-            .then((data) => setIsAdmin(data.isAdmin === true))
-            .catch(() => setIsAdmin(false))
-    }, [])
 
     const isActive = (path: string) => {
         if (path === '/') {
@@ -48,17 +39,6 @@ export function NavigationLinks({ vertical = false }: NavigationLinksProps = {})
             >
                 <ThemedText variant="sm">Dashboard</ThemedText>
             </Link>
-            {isAdmin && (
-                <Link
-                    href="/admin"
-                    className={cn(
-                        'transition-colors',
-                        isActive('/admin') ? 'text-slate-950 dark:text-slate-50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200'
-                    )}
-                >
-                    <ThemedText variant="sm">Admin</ThemedText>
-                </Link>
-            )}
         </div>
     )
 }
