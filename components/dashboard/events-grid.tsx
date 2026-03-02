@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { ThemedText } from '@/components/ui/themed-text'
 import { InlineSpinner } from '@/components/ui/loading'
 import { GraduationCap } from 'lucide-react'
+import { EmptyState } from '@/components/ui/empty-state'
 
 /**
  * Props for the events grid component
@@ -144,15 +145,11 @@ export function EventsGrid({
       )}
 
       {events.length === 0 && (
-        <div className="py-12 flex flex-col items-center justify-center text-center space-y-4">
-          <div className="bg-slate-100 p-6 rounded-full">
-            <GraduationCap className="h-12 w-12 text-slate-400" />
-          </div>
-          <div className="space-y-1">
-            <ThemedText variant="lg" className="block">No events found</ThemedText>
-            <ThemedText color="muted" className="block">Try adjusting your search or filter criteria</ThemedText>
-          </div>
-        </div>
+        <EmptyState
+          icon={GraduationCap}
+          title="No events found"
+          description="Try adjusting your search or filter criteria"
+        />
       )}
     </div>
   )

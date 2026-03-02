@@ -69,7 +69,7 @@ export function DashboardLayout({
 
         {/* Main Content Area */}
         <section className="border-t border-slate-200 dark:border-slate-800 min-h-[calc(100vh-65px)] bg-slate-50 dark:bg-slate-950">
-          <div className="px-6 py-10 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+          <div className="bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
             {children}
           </div>
         </section>

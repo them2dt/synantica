@@ -3,6 +3,7 @@
   * Contains only essential elements: name, copyright, Instagram link, and "Made with..."
     */
 import { ThemedText } from '@/components/ui/themed-text'
+import { ThemeToggle } from './theme-toggle'
 
 export function Footer() {
   return (
@@ -17,7 +18,8 @@ export function Footer() {
           </div>
 
           {/* Copyright and Made with */}
-          <div className="flex flex-row items-center gap-2">
+          <div className="flex flex-row items-center gap-4">
+            <ThemeToggle />
             <ThemedText variant="sm" color="muted">
               © {new Date().getFullYear()} Synantica
             </ThemedText>

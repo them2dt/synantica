@@ -1,7 +1,9 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { Users } from 'lucide-react'
 import { ThemedText } from '@/components/ui/themed-text'
+import { EmptyState } from '@/components/ui/empty-state'
 import { useMyEvents } from '@/lib/hooks/use-events'
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
@@ -30,9 +32,11 @@ export function MyEventsList() {
 
   if (events.length === 0) {
     return (
-      <div className="flex items-center justify-center py-16 text-slate-500">
-        You haven&apos;t submitted any events yet.
-      </div>
+      <EmptyState
+        icon={Users}
+        title="No events submitted"
+        description="You haven't submitted any events yet. Click the '+' button to share an event with the community."
+      />
     )
   }
 
