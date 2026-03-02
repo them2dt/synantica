@@ -59,7 +59,6 @@ export function LoginForm({
                         Continue with Google
                     </Button>
                 </div>
-
                 <ThemedText variant="xs" color="muted" className="text-center px-4 block mt-6">
                     By continuing, you agree to our{" "}
                     <a href="/terms" className="underline underline-offset-2 hover:text-slate-950 dark:hover:text-slate-50">

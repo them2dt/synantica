@@ -2,16 +2,19 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, Calendar, MapPin, Users, ExternalLink, Share2, Mail, Globe } from 'lucide-react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { ArrowLeft } from 'lucide-react'
+import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { ThemedText } from '@/components/ui/themed-text'
 import { useEvent } from '@/lib/hooks/use-events'
-import { formatEventDate } from '@/lib/utils/date-formatting'
-import { getCountryFlag, getCountryDisplayName } from '@/lib/utils/country-flags'
+import { EventHeader } from '@/components/events/event-header'
+import { EventDetailsSection } from '@/components/events/event-details-section'
+import { EventVideoSection } from '@/components/events/event-video-section'
+import { EventResourcesSection } from '@/components/events/event-resources-section'
+import { EventFieldsSection } from '@/components/events/event-fields-section'
+import { EventActionsSection } from '@/components/events/event-actions-section'
 
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [eventId, setEventId] = useState<string>('')
@@ -72,11 +75,6 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
     )
   }
 
-  const getYouTubeVideoId = (url: string) => {
-    const match = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/)
-    return match ? match[1] : null
-  }
-
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <div className="flex-1">
@@ -89,146 +87,15 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             </Link>
           </div>
 
-          <Card className="mb-8">
-            <CardHeader>
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center gap-2">
-                  <Badge variant="default" className="capitalize">
-                    {event.type}
-                  </Badge>
-                  <div className="text-2xl" title={getCountryDisplayName(event.country)}>
-                    {getCountryFlag(event.country)}
-                  </div>
-                </div>
-              </div>
-              <ThemedText variant="h2" className="mb-4">{event.name}</ThemedText>
-              <ThemedText variant="lg" color="secondary">
-                {event.description}
-              </ThemedText>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-3 sm:gap-6 text-sm text-slate-500">
-                <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-slate-500" />
-                  {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
-                </div>
-                <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-slate-500" />
-                  {event.location}
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-slate-500" />
-                  Organized by {event.organizer}
-                </div>
-                {event.fromAge && event.toAge && (
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-slate-500" />
-                    Ages {event.fromAge}-{event.toAge}
-                  </div>
-                )}
-              </div>
-            </CardContent>
+          <Card className="mb-8 p-6">
+            <EventHeader event={event} />
+            <EventDetailsSection event={event} />
           </Card>
 
-          {event.youtubeLink && (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ExternalLink className="w-5 h-5 text-slate-500" />
-                  Video
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="aspect-video w-full">
-                  <iframe
-                    src={`https://www.youtube.com/embed/${getYouTubeVideoId(event.youtubeLink)}`}
-                    title={`${event.name} - Video`}
-                    className="w-full h-full rounded-none border border-slate-200 dark:border-slate-800"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          {event.links && event.links.length > 0 && (
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-slate-500" />
-                  Resources
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {event.links.map((link, index) => (
-                    <a
-                      key={index}
-                      href={link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-900/60 transition-colors"
-                    >
-                      <ExternalLink className="w-4 h-4 text-slate-500" />
-                      <span className="text-sm text-slate-950 dark:text-slate-50">Resource {index + 1}</span>
-                      <ExternalLink className="w-3 h-3 text-slate-500 ml-auto" />
-                    </a>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          )}
-
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Fields</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {event.fields.map((field, index) => (
-                  <Badge key={index} variant="outline" className="text-slate-500">
-                    {field}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
-          <div className="border border-slate-200 dark:border-slate-800 p-6 mb-8 bg-slate-50 dark:bg-slate-900">
-            <div className="flex justify-center gap-3">
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-4 sm:px-8"
-                onClick={() => {
-                  if (navigator.share) {
-                    navigator.share({
-                      title: event.name,
-                      text: event.description,
-                      url: window.location.href,
-                    })
-                  } else {
-                    navigator.clipboard.writeText(window.location.href)
-                  }
-                }}
-              >
-                <Share2 className="w-4 h-4 mr-2" />
-                Share Event
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="px-4 sm:px-8"
-                onClick={() => {
-                  window.location.href = `mailto:contact@visioncatalyzer.com?subject=Question about ${event.name}`
-                }}
-              >
-                <Mail className="w-4 h-4 mr-2" />
-                Ask Questions
-              </Button>
-            </div>
-          </div>
+          <EventVideoSection videoLink={event.youtubeLink || ''} eventName={event.name} />
+          <EventResourcesSection links={event.links} />
+          <EventFieldsSection fields={event.fields} />
+          <EventActionsSection event={event} />
         </div>
       </div>
       <Footer />

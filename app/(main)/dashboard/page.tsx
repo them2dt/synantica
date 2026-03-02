@@ -3,17 +3,18 @@
 import { useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { Calendar, Users, BookOpen, Trophy } from 'lucide-react'
 import { EventDirectory } from '@/types/event'
-import { CategoryWithIcon } from '@/types/category'
 import { useEventsDirectoryPaginated, useEventTypes, useRealtimeEvents } from '@/lib/hooks/use-events'
 import { EventFilters } from '@/types/event'
 
 import { useDebounce } from '@/lib/hooks/use-debounce'
 import { ErrorBoundary } from '@/components/error-boundary'
 import { Button } from '@/components/ui/button'
-import { InlineSpinner } from '@/components/ui/loading'
 import { useAuth } from '@/lib/hooks/use-auth'
+
+import { mapEventTypesToCategories } from '@/lib/utils/categories'
+import { DashboardTabs } from '@/components/dashboard/dashboard-tabs'
+import { DashboardLoading } from '@/components/dashboard/dashboard-loading'
 
 // Lazy load heavy components
 const DashboardLayout = dynamic(() => import('@/components/dashboard/dashboard-layout').then(mod => ({ default: mod.DashboardLayout })), {
@@ -40,14 +41,10 @@ export default function DashboardPage() {
   const debouncedSearchTerm = useDebounce(searchTerm, 300)
 
   // Build filters for database query (without limit for pagination hook)
-  const filters: EventFilters = useMemo(() => {
-    const baseFilters: EventFilters = {
-      search: debouncedSearchTerm || undefined,
-      type: selectedType === 'all' ? undefined : selectedType,
-    }
-
-    return baseFilters
-  }, [debouncedSearchTerm, selectedType])
+  const filters: EventFilters = useMemo(() => ({
+    search: debouncedSearchTerm || undefined,
+    type: selectedType === 'all' ? undefined : selectedType,
+  }), [debouncedSearchTerm, selectedType])
 
   // Fetch events from database - using paginated optimized directory view for better performance
   const { events: dbEvents, loading, loadingMore, error, hasMore, loadMore, refetch } = useEventsDirectoryPaginated(filters, 20)
@@ -57,51 +54,14 @@ export default function DashboardPage() {
   useRealtimeEvents((event, action) => {
     console.log(`Event ${action}:`, event.name)
 
-    // Show a subtle notification (you could enhance this with a toast notification)
-    const notificationMessage = action === 'INSERT'
-      ? `New event added: ${event.name}`
-      : action === 'UPDATE'
-        ? `Event updated: ${event.name}`
-        : `Event removed: ${event.name}`
-
-    console.log(notificationMessage)
-
-    // For now, we'll just log and potentially refresh the data
-    // In a production app, you'd want to update the local state instead
+    // For updates/deletes, refresh the data after a short delay
     if (action !== 'INSERT') {
-      // For updates/deletes, refresh the data after a short delay
-      setTimeout(() => {
-        refetch()
-      }, 2000)
+      setTimeout(() => refetch(), 2000)
     }
   }, true) // Enable real-time updates
 
   // Transform database event types to match our interface
-  const eventTypes: CategoryWithIcon[] = useMemo(() => {
-    const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-      'olympiads': Trophy,
-      'contests': Calendar,
-      'events': Users,
-      'workshops': BookOpen
-    }
-
-    const categories: CategoryWithIcon[] = [
-      { value: 'all', label: 'All Events', icon: Calendar }
-    ]
-
-    if (dbCategories) {
-      dbCategories.forEach(eventType => {
-        const slug = eventType.name.toLowerCase().replace(/\s+/g, '-')
-        categories.push({
-          value: slug,
-          label: eventType.name,
-          icon: iconMap[slug] || Calendar
-        })
-      })
-    }
-
-    return categories
-  }, [dbCategories])
+  const eventTypes = useMemo(() => mapEventTypesToCategories(dbCategories), [dbCategories])
 
   // Sort events (date ascending) constantly since we removed the sort picker UI
   const sortedEvents = useMemo(() => {
@@ -109,13 +69,11 @@ export default function DashboardPage() {
     return [...dbEvents].sort((a, b) => new Date(a.fromDate).getTime() - new Date(b.fromDate).getTime())
   }, [dbEvents])
 
-
   const handleEventClick = (event: EventDirectory) => {
-    // Navigate to the event detail page
     router.push(`/events/${event.id}`)
   }
 
-  // Show error state (keep this covering the page if it's a hard error)
+  // Show error state
   if (error) {
     return (
       <DashboardLayout
@@ -153,31 +111,16 @@ export default function DashboardPage() {
         onViewChange={setIsListView}
         onAddEventClick={() => setIsSubmitModalOpen(true)}
       >
-        {isAuthenticated && (
-          <div className="flex gap-1 pt-3 border-b border-slate-100">
-            <button
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'all' ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-              onClick={() => setActiveTab('all')}
-            >
-              All Events
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${activeTab === 'mine' ? 'border-slate-900 text-slate-900' : 'border-transparent text-slate-500 hover:text-slate-700'}`}
-              onClick={() => setActiveTab('mine')}
-            >
-              My Events
-            </button>
-          </div>
-        )}
+        <DashboardTabs
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          isAuthenticated={isAuthenticated}
+        />
+
         {activeTab === 'mine' ? (
           <MyEventsList />
         ) : loading || categoriesLoading ? (
-          <div className="flex items-center justify-center py-20 text-slate-500">
-            <div className="flex flex-col items-center gap-4">
-              <InlineSpinner className="w-8 h-8" />
-              <p>Loading directory...</p>
-            </div>
-          </div>
+          <DashboardLoading />
         ) : (
           <EventsGrid
             events={sortedEvents}
