@@ -10,8 +10,8 @@ interface FloatingAddEventProps {
 
 export function FloatingAddEvent({ onClick }: FloatingAddEventProps) {
     return (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
-            <Button onClick={onClick} className='shadow-lg shadow-slate-950/25 dark:shadow-slate-950/50'>
+        <div className="fixed bottom-24 left-1/2 -translate-x-1/2 z-50">
+            <Button onClick={onClick} className='shadow-lg shadow-slate-950/10' variant="outline">
                 <Plus className="w-5 h-5" />
                 <ThemedText variant="base">Create Event</ThemedText>
             </Button>
