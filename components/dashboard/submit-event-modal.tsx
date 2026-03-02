@@ -175,7 +175,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-hide">
         <DialogHeader>
           <DialogTitle>Submit an Event</DialogTitle>
           <DialogDescription>
@@ -286,7 +286,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
                   {formData.fields.map((field) => (
                     <Badge key={field} variant="secondary">
                       {field}
-                      <button type="button" onClick={() => removeField(field)} className="ml-2 hover:text-error-foreground"><X className="h-3 w-3" /></button>
+                      <button type="button" onClick={() => removeField(field)} className="ml-2 hover:text-red-600"><X className="h-3 w-3" /></button>
                     </Badge>
                   ))}
                 </div>
@@ -314,9 +314,9 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
                 <Label>Added Links</Label>
                 <div className="space-y-2">
                   {formData.links.map((link, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-muted rounded-none">
+                    <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded-none">
                       <a href={link} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-950 hover:underline truncate">{link}</a>
-                      <button type="button" onClick={() => removeLink(link)} className="ml-2 text-error-foreground"><X className="h-4 w-4" /></button>
+                      <button type="button" onClick={() => removeLink(link)} className="ml-2 text-red-600"><X className="h-4 w-4" /></button>
                     </div>
                   ))}
                 </div>

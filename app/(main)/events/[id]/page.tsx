@@ -23,13 +23,13 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-slate-50 flex flex-col">
         <div className="flex-1">
           <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
-                <p className="text-muted-foreground">Loading event...</p>
+                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950 mx-auto mb-4" />
+                <p className="text-slate-500">Loading event...</p>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-background flex flex-col">
+      <div className="min-h-screen bg-slate-50 flex flex-col">
         <div className="flex-1">
           <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
             <div className="mb-6">
@@ -54,9 +54,9 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             </div>
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="text-error-foreground text-5xl mb-4">⚠️</div>
+                <div className="text-red-600 text-5xl mb-4">⚠️</div>
                 <h3 className="text-lg text-slate-950 mb-2">Event Not Found</h3>
-                <p className="text-muted-foreground mb-4">
+                <p className="text-slate-500 mb-4">
                   {error || 'The event you are looking for does not exist or has been removed.'}
                 </p>
                 <Link href="/dashboard">
@@ -77,7 +77,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <div className="flex-1">
         <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 px-4 sm:px-6 py-6 sm:py-10">
           <NavigationSpacer />
@@ -103,27 +103,27 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                 </div>
               </div>
               <CardTitle className="text-2xl sm:text-4xl mb-4">{event.name}</CardTitle>
-              <CardDescription className="text-lg text-secondary-foreground">
+              <CardDescription className="text-lg text-slate-600">
                 {event.description}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="flex flex-wrap gap-3 sm:gap-6 text-sm text-muted-foreground">
+              <div className="flex flex-wrap gap-3 sm:gap-6 text-sm text-slate-500">
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-muted-foreground" />
+                  <Calendar className="w-4 h-4 text-slate-500" />
                   {formatEventDate(event.fromDate)} - {formatEventDate(event.toDate)}
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-muted-foreground" />
+                  <MapPin className="w-4 h-4 text-slate-500" />
                   {event.location}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4 text-muted-foreground" />
+                  <Users className="w-4 h-4 text-slate-500" />
                   Organized by {event.organizer}
                 </div>
                 {event.fromAge && event.toAge && (
                   <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-muted-foreground" />
+                    <Users className="w-4 h-4 text-slate-500" />
                     Ages {event.fromAge}-{event.toAge}
                   </div>
                 )}
@@ -135,7 +135,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <ExternalLink className="w-5 h-5 text-muted-foreground" />
+                  <ExternalLink className="w-5 h-5 text-slate-500" />
                   Video
                 </CardTitle>
               </CardHeader>
@@ -144,7 +144,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                   <iframe
                     src={`https://www.youtube.com/embed/${getYouTubeVideoId(event.youtubeLink)}`}
                     title={`${event.name} - Video`}
-                    className="w-full h-full rounded-none border border-border"
+                    className="w-full h-full rounded-none border border-slate-200"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
@@ -157,7 +157,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <Card className="mb-8">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Globe className="w-5 h-5 text-muted-foreground" />
+                  <Globe className="w-5 h-5 text-slate-500" />
                   Resources
                 </CardTitle>
               </CardHeader>
@@ -169,11 +169,11 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                       href={link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 border border-border hover:bg-muted/60 transition-colors"
+                      className="flex items-center gap-3 p-3 border border-slate-200 hover:bg-slate-50/60 transition-colors"
                     >
-                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                      <ExternalLink className="w-4 h-4 text-slate-500" />
                       <span className="text-sm text-slate-950">Resource {index + 1}</span>
-                      <ExternalLink className="w-3 h-3 text-muted-foreground ml-auto" />
+                      <ExternalLink className="w-3 h-3 text-slate-500 ml-auto" />
                     </a>
                   ))}
                 </div>
@@ -188,7 +188,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             <CardContent>
               <div className="flex flex-wrap gap-2">
                 {event.fields.map((field, index) => (
-                  <Badge key={index} variant="outline" className="text-muted-foreground">
+                  <Badge key={index} variant="outline" className="text-slate-500">
                     {field}
                   </Badge>
                 ))}
@@ -196,7 +196,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             </CardContent>
           </Card>
 
-          <div className="border border-border p-6 mb-8">
+          <div className="border border-slate-200 p-6 mb-8">
             <div className="flex justify-center gap-3">
               <Button
                 variant="outline"

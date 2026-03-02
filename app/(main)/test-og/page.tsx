@@ -30,9 +30,9 @@ export default function TestOGPage() {
   );
 
   return (
-    <div className="min-h-screen bg-background py-10">
+    <div className="min-h-screen bg-slate-50 py-10">
       <div className="max-w-[1100px] mx-auto px-6">
-        <div className="bg-card rounded-none border border-border p-8">
+        <div className="bg-slate-50 rounded-none border border-slate-200 p-8">
           <h1 className="text-3xl text-slate-950 mb-8">
             Open Graph Image Testing
           </h1>
@@ -43,10 +43,10 @@ export default function TestOGPage() {
               <h2 className="text-2xl text-slate-950 mb-4">
                 Default OG Image
               </h2>
-              <p className="text-secondary-foreground mb-4">
+              <p className="text-slate-600 mb-4">
                 This is the default layout for general pages:
               </p>
-              <div className="bg-muted/50 p-4 rounded-none border border-border">
+              <div className="bg-slate-50/50 p-4 rounded-none border border-slate-200">
                 <code className="text-sm text-slate-950 break-all">
                   {defaultOGUrl}
                 </code>
@@ -57,7 +57,7 @@ export default function TestOGPage() {
                   alt="Default OG Image"
                   width={600}
                   height={315}
-                  className="max-w-full h-auto rounded-none border border-border"
+                  className="max-w-full h-auto rounded-none border border-slate-200"
                 />
               </div>
             </div>
@@ -67,10 +67,10 @@ export default function TestOGPage() {
               <h2 className="text-2xl text-slate-950 mb-4">
                 Event OG Image
               </h2>
-              <p className="text-secondary-foreground mb-4">
+              <p className="text-slate-600 mb-4">
                 This is the specialized layout for event pages:
               </p>
-              <div className="bg-muted/50 p-4 rounded-none border border-border">
+              <div className="bg-slate-50/50 p-4 rounded-none border border-slate-200">
                 <code className="text-sm text-slate-950 break-all">
                   {eventOGUrl}
                 </code>
@@ -81,17 +81,17 @@ export default function TestOGPage() {
                   alt="Event OG Image"
                   width={600}
                   height={315}
-                  className="max-w-full h-auto rounded-none border border-border"
+                  className="max-w-full h-auto rounded-none border border-slate-200"
                 />
               </div>
             </div>
 
             {/* Usage Instructions */}
-            <div className="bg-muted/40 p-6 rounded-none border border-border">
+            <div className="bg-slate-50/40 p-6 rounded-none border border-slate-200">
               <h3 className="text-lg text-slate-950 mb-3">
                 How to Use
               </h3>
-              <div className="text-secondary-foreground space-y-2 text-sm">
+              <div className="text-slate-600 space-y-2 text-sm">
                 <p><strong>For general pages:</strong> Use <code>generateMetadataWithOG()</code> in your page metadata</p>
                 <p><strong>For event pages:</strong> Use <code>generateMetadataWithOG()</code> with type &apos;event&apos; and additional parameters</p>
                 <p><strong>Direct URL:</strong> You can also use the API directly at <code>/api/og</code> with query parameters</p>
@@ -99,11 +99,11 @@ export default function TestOGPage() {
             </div>
 
             {/* Test Social Media */}
-            <div className="bg-muted/40 p-6 rounded-none border border-border">
+            <div className="bg-slate-50/40 p-6 rounded-none border border-slate-200">
               <h3 className="text-lg text-slate-950 mb-3">
                 Test Social Media Sharing
               </h3>
-              <p className="text-secondary-foreground mb-4 text-sm">
+              <p className="text-slate-600 mb-4 text-sm">
                 Use these tools to test how your OG images appear on social media:
               </p>
               <div className="space-y-2">
@@ -111,7 +111,7 @@ export default function TestOGPage() {
                   href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors"
+                  className="inline-block border border-slate-200 bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-slate-50/60 transition-colors"
                 >
                   Test on Facebook
                 </a>
@@ -119,7 +119,7 @@ export default function TestOGPage() {
                   href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
+                  className="inline-block border border-slate-200 bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-slate-50/60 transition-colors ml-2"
                 >
                   Test on Twitter
                 </a>
@@ -127,7 +127,7 @@ export default function TestOGPage() {
                   href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(baseUrl)}/test-og`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block border border-border bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-muted/60 transition-colors ml-2"
+                  className="inline-block border border-slate-200 bg-slate-50 text-slate-950 px-4 py-2 rounded-none hover:bg-slate-50/60 transition-colors ml-2"
                 >
                   Test on LinkedIn
                 </a>

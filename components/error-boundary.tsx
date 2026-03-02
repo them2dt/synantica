@@ -43,8 +43,8 @@ function DefaultErrorFallback({
         <div className="min-h-[400px] flex items-center justify-center p-4">
             <Card className="w-full max-w-md">
                 <CardHeader className="text-center">
-                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-none bg-destructive/10">
-                        <AlertTriangle className="h-6 w-6 text-destructive" />
+                    <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-none bg-red-600/10">
+                        <AlertTriangle className="h-6 w-6 text-red-600" />
                     </div>
                     <CardTitle className="text-xl">Something went wrong</CardTitle>
                     <CardDescription>
@@ -53,11 +53,11 @@ function DefaultErrorFallback({
                 </CardHeader>
                 <CardContent className="space-y-4">
                     {process.env.NODE_ENV === 'development' && (
-                        <details className="rounded-none bg-muted p-3">
+                        <details className="rounded-none bg-slate-50 p-3">
                             <summary className="cursor-pointer text-sm">
                                 Error Details (Development)
                             </summary>
-                            <pre className="mt-2 text-xs text-muted-foreground overflow-auto whitespace-pre-wrap">
+                            <pre className="mt-2 text-xs text-slate-500 overflow-auto whitespace-pre-wrap">
                                 {error.message}
                                 {error.stack && `\n\n${error.stack}`}
                             </pre>
@@ -68,7 +68,7 @@ function DefaultErrorFallback({
                             <RefreshCw className="mr-2 h-4 w-4" /> Try Again
                         </Button>
                         {retryCount > 0 && (
-                            <p className="text-xs text-muted-foreground text-center">
+                            <p className="text-xs text-slate-500 text-center">
                                 Retry attempt: {retryCount}
                             </p>
                         )}

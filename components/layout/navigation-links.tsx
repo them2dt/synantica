@@ -6,10 +6,10 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 interface NavigationLinksProps {
-    className?: string
+    vertical?: boolean
 }
 
-export function NavigationLinks({ className }: NavigationLinksProps = {}) {
+export function NavigationLinks({ vertical = false }: NavigationLinksProps = {}) {
     const pathname = usePathname()
     const [isAdmin, setIsAdmin] = useState(false)
 
@@ -28,7 +28,7 @@ export function NavigationLinks({ className }: NavigationLinksProps = {}) {
     }
 
     return (
-        <div className={cn('flex items-center gap-4', className)}>
+        <div className={cn('flex items-center gap-4', vertical && 'flex-col items-start')}>
             <Link
                 href="/"
                 className={cn(

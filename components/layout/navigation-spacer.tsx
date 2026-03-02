@@ -2,14 +2,10 @@
 
 import { cn } from '@/lib/utils'
 
-interface NavigationSpacerProps {
-  className?: string
-}
-
-export function NavigationSpacer({ className }: NavigationSpacerProps) {
+export function NavigationSpacer() {
   return (
     <div
-      className={cn('h-20', className)}
+      className="h-20"
       aria-hidden="true"
     />
   )
