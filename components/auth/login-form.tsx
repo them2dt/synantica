@@ -23,8 +23,8 @@ export function LoginForm({
 
 
     return (
-        <div className={cn("w-full space-y-6", className)} {...props}>
-            <div className="grid gap-4">
+        <div className={cn("grid gap-6", className)} {...props}>
+            <Card className="border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
                 <Button
                     variant="outline"
                     type="button"
@@ -73,6 +73,6 @@ export function LoginForm({
                 </a>
                 .
             </ThemedText>
-        </div>
+        </div >
     );
 }

@@ -28,7 +28,7 @@ function Skeleton({
   return (
     <div
       className={cn(
-        "bg-slate-100",
+        "bg-slate-100 dark:bg-slate-800",
         animate && "animate-pulse",
         "rounded-none", // Design choice for this project
         className
@@ -43,7 +43,7 @@ function Skeleton({
  */
 function EventCardSkeleton() {
   return (
-    <div className="border border-slate-200 bg-slate-50 text-slate-950 overflow-hidden">
+    <div className="border border-slate-200 bg-slate-50 text-slate-950 overflow-hidden dark:border-slate-800 dark:bg-slate-900 dark:text-slate-50">
       <div className="p-6 space-y-4">
         <Skeleton className="h-6 w-20" />
         <div className="space-y-2">
@@ -91,7 +91,7 @@ function EventGridSkeleton({ count = 6 }: { count?: number }) {
  */
 export function DashboardSkeleton() {
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <div className="flex-1">
         <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
           <div className="space-y-6 mb-8">

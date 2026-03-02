@@ -26,10 +26,10 @@ const themedTextVariants = cva(
                 "4xl-black": "font-sans text-4xl font-black",
             },
             color: {
-                default: "text-slate-950",
-                muted: "text-slate-500",
-                secondary: "text-slate-600",
-                error: "text-red-600",
+                default: "text-slate-950 dark:text-slate-50",
+                muted: "text-slate-500 dark:text-slate-400",
+                secondary: "text-slate-600 dark:text-slate-300",
+                error: "text-red-600 dark:text-red-400",
                 white: "text-slate-50",
             }
         },

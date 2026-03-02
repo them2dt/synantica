@@ -34,7 +34,7 @@ export function NavigationLinks({ vertical = false }: NavigationLinksProps = {})
                 href="/"
                 className={cn(
                     'transition-colors',
-                    isActive('/') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
+                    isActive('/') ? 'text-slate-950 dark:text-slate-50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200'
                 )}
             >
                 <ThemedText variant="sm">Home</ThemedText>
@@ -43,7 +43,7 @@ export function NavigationLinks({ vertical = false }: NavigationLinksProps = {})
                 href="/dashboard"
                 className={cn(
                     'transition-colors',
-                    isActive('/dashboard') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
+                    isActive('/dashboard') ? 'text-slate-950 dark:text-slate-50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200'
                 )}
             >
                 <ThemedText variant="sm">Dashboard</ThemedText>
@@ -53,7 +53,7 @@ export function NavigationLinks({ vertical = false }: NavigationLinksProps = {})
                     href="/admin"
                     className={cn(
                         'transition-colors',
-                        isActive('/admin') ? 'text-slate-950' : 'text-slate-500 hover:text-slate-950'
+                        isActive('/admin') ? 'text-slate-950 dark:text-slate-50' : 'text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-200'
                     )}
                 >
                     <ThemedText variant="sm">Admin</ThemedText>

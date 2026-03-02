@@ -83,13 +83,13 @@ export function MyEventsList() {
   }
 
   return (
-    <div className="divide-y divide-slate-100">
+    <div className="divide-y divide-slate-100 dark:divide-slate-800">
       {events.map((event) => {
         const badge = STATUS_BADGE[event.status] ?? { label: event.status, className: 'bg-slate-100 text-slate-700' }
         return (
           <div
             key={event.id}
-            className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 cursor-pointer"
+            className="flex items-center justify-between px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-900/50 cursor-pointer"
             onClick={() => router.push(`/events/${event.id}`)}
           >
             <div className="flex-1 min-w-0">

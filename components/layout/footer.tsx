@@ -6,7 +6,7 @@ import { ThemedText } from '@/components/ui/themed-text'
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-slate-200">
+    <footer className="w-full border-t border-slate-200 dark:border-slate-800">
       <div className="mx-auto w-full max-w-[1100px] px-6 py-8">
         <div className="flex justify-between items-center gap-4">
           {/* Brand Name */}

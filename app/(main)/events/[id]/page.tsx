@@ -24,12 +24,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
         <div className="flex-1">
           <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950 mx-auto mb-4" />
+                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950 dark:border-slate-50 mx-auto mb-4" />
                 <ThemedText color="muted">Loading event...</ThemedText>
               </div>
             </div>
@@ -42,7 +42,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   if (error || !event) {
     return (
-      <div className="min-h-screen bg-slate-50 flex flex-col">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
         <div className="flex-1">
           <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
             <div className="mb-6">
@@ -78,12 +78,12 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
       <div className="flex-1">
-        <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 px-4 sm:px-6 py-6 sm:py-10">
+        <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-6 sm:py-10">
           <NavigationSpacer />
           <div className="mb-8">
-            <Link href="/dashboard" className="inline-flex items-center text-sm text-slate-500 hover:text-slate-950 transition-colors">
+            <Link href="/dashboard" className="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-50 transition-colors">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
@@ -143,7 +143,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                   <iframe
                     src={`https://www.youtube.com/embed/${getYouTubeVideoId(event.youtubeLink)}`}
                     title={`${event.name} - Video`}
-                    className="w-full h-full rounded-none border border-slate-200"
+                    className="w-full h-full rounded-none border border-slate-200 dark:border-slate-800"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
@@ -168,10 +168,10 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
                       href={link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-3 p-3 border border-slate-200 hover:bg-slate-50/60 transition-colors"
+                      className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-900/60 transition-colors"
                     >
                       <ExternalLink className="w-4 h-4 text-slate-500" />
-                      <span className="text-sm text-slate-950">Resource {index + 1}</span>
+                      <span className="text-sm text-slate-950 dark:text-slate-50">Resource {index + 1}</span>
                       <ExternalLink className="w-3 h-3 text-slate-500 ml-auto" />
                     </a>
                   ))}
@@ -195,7 +195,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
             </CardContent>
           </Card>
 
-          <div className="border border-slate-200 p-6 mb-8">
+          <div className="border border-slate-200 dark:border-slate-800 p-6 mb-8 bg-white dark:bg-slate-900">
             <div className="flex justify-center gap-3">
               <Button
                 variant="outline"

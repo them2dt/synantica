@@ -39,7 +39,7 @@ export function FiltersTopBar({
   return (
     <div className="flex flex-col md:flex-row">
       {/* Search Cell */}
-      <div className="flex-[2] border-b md:border-b-0 md:border-r border-slate-200 flex items-center h-16 md:h-auto">
+      <div className="flex-[2] border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex items-center h-16 md:h-auto">
         <Input
           placeholder="Search activities..."
           value={searchTerm}
@@ -49,7 +49,7 @@ export function FiltersTopBar({
       </div>
 
       {/* Category Cell */}
-      <div className="flex-[1.5] border-b md:border-b-0 md:border-r border-slate-200 flex items-center h-16 md:h-auto">
+      <div className="flex-[1.5] border-b md:border-b-0 md:border-r border-slate-200 dark:border-slate-800 flex items-center h-16 md:h-auto">
         <Select value={selectedType} onValueChange={onTypeChange}>
           <SelectTrigger className="border-0 focus:ring-0 text-sm sm:text-base h-full p-4 shadow-none w-full border-none outline-none focus:outline-none focus:bg-transparent">
             <SelectValue placeholder="All Activities" />
@@ -74,19 +74,19 @@ export function FiltersTopBar({
         {/* Grid View Toggle Cell */}
         <button
           onClick={() => onViewChange(false)}
-          className={`flex-1 md:w-16 border-r border-slate-200 flex items-center justify-center transition-colors ${!isListView ? 'bg-slate-50' : 'hover:bg-slate-50'}`}
+          className={`flex-1 md:w-16 border-r border-slate-200 dark:border-slate-800 flex items-center justify-center transition-colors ${!isListView ? 'bg-slate-50 dark:bg-slate-900' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}
           aria-label="Grid view"
         >
-          <Grid3X3 className={`w-5 h-5 ${!isListView ? 'text-slate-950' : 'text-slate-300'}`} />
+          <Grid3X3 className={`w-5 h-5 ${!isListView ? 'text-slate-950 dark:text-slate-50' : 'text-slate-300 dark:text-slate-700'}`} />
         </button>
 
         {/* List View Toggle Cell */}
         <button
           onClick={() => onViewChange(true)}
-          className={`flex-1 md:w-16 flex items-center justify-center transition-colors ${isListView ? 'bg-slate-50' : 'hover:bg-slate-50'}`}
+          className={`flex-1 md:w-16 flex items-center justify-center transition-colors ${isListView ? 'bg-slate-50 dark:bg-slate-900' : 'hover:bg-slate-50 dark:hover:bg-slate-900'}`}
           aria-label="List view"
         >
-          <List className={`w-5 h-5 ${isListView ? 'text-slate-950' : 'text-slate-300'}`} />
+          <List className={`w-5 h-5 ${isListView ? 'text-slate-950 dark:text-slate-50' : 'text-slate-300 dark:text-slate-700'}`} />
         </button>
       </div>
     </div>

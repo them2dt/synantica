@@ -186,7 +186,7 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
-            <ThemedText variant="sm" color="error" className="p-3 bg-red-50 rounded-md block">{error}</ThemedText>
+            <ThemedText variant="sm" color="error" className="p-3 bg-red-50 dark:bg-red-900/20 rounded-none block">{error}</ThemedText>
           )}
 
           {/* Basic Information */}
@@ -315,9 +315,9 @@ export function SubmitEventModal({ isOpen, onClose }: SubmitEventModalProps) {
                 <Label>Added Links</Label>
                 <div className="space-y-2">
                   {formData.links.map((link, index) => (
-                    <div key={index} className="flex items-center justify-between p-2 bg-slate-50 rounded-none">
-                      <a href={link} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-950 hover:underline truncate">{link}</a>
-                      <button type="button" onClick={() => removeLink(link)} className="ml-2 text-red-600"><X className="h-4 w-4" /></button>
+                    <div key={index} className="flex items-center justify-between p-2 bg-slate-50 dark:bg-slate-900 rounded-none border border-slate-100 dark:border-slate-800">
+                      <a href={link} target="_blank" rel="noopener noreferrer" className="text-sm text-slate-950 dark:text-slate-50 hover:underline truncate">{link}</a>
+                      <button type="button" onClick={() => removeLink(link)} className="ml-2 text-red-600 dark:text-red-400"><X className="h-4 w-4" /></button>
                     </div>
                   ))}
                 </div>

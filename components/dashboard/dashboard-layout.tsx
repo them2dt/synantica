@@ -41,7 +41,7 @@ export function DashboardLayout({
 }: DashboardLayoutProps) {
 
   return (
-    <main className="mx-auto min-h-screen max-w-[1100px] md:border-x border-slate-200 flex flex-col">
+    <main className="mx-auto min-h-screen max-w-[1100px] md:border-x border-slate-200 dark:border-slate-800 flex flex-col bg-slate-50 dark:bg-slate-950">
       <div className="flex-1">
         {/* Hero Section */}
         <section className="p-6 pt-16">
@@ -55,7 +55,7 @@ export function DashboardLayout({
         </section>
 
         {/* Filters Top Bar */}
-        <section className="border-t border-slate-200">
+        <section className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
           <FiltersTopBar
             searchTerm={searchTerm}
             onSearchChange={onSearchChange}
@@ -69,8 +69,10 @@ export function DashboardLayout({
         </section>
 
         {/* Main Content Area */}
-        <section className="border-t border-slate-200">
-          {children}
+        <section className="border-t border-slate-200 dark:border-slate-800 min-h-[calc(100vh-65px)] bg-slate-50 dark:bg-slate-950">
+          <div className="px-6 py-10 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+            {children}
+          </div>
         </section>
       </div>
 

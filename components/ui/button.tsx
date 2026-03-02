@@ -9,13 +9,13 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                default: "bg-slate-950 text-slate-50 hover:opacity-90 active:opacity-85",
-                destructive: "bg-red-600 text-slate-50 hover:opacity-90 active:opacity-85",
-                outline: "border border-slate-200 bg-slate-50 text-slate-950 hover:bg-slate-100/60",
-                secondary: "bg-slate-50 text-slate-600 hover:bg-slate-100/70",
-                ghost: "text-slate-950 hover:bg-slate-100/60",
-                link: "text-slate-950 underline-offset-4 hover:underline",
-                black: "bg-slate-950 text-slate-50 hover:opacity-90",
+                default: "bg-slate-950 text-slate-50 hover:opacity-90 active:opacity-85 dark:bg-slate-50 dark:text-slate-950",
+                destructive: "bg-red-600 text-slate-50 hover:opacity-90 active:opacity-85 dark:bg-red-500",
+                outline: "border border-slate-200 bg-slate-50 text-slate-950 hover:bg-slate-100/60 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-50 dark:hover:bg-slate-900",
+                secondary: "bg-slate-50 text-slate-600 hover:bg-slate-100/70 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-slate-800",
+                ghost: "text-slate-950 hover:bg-slate-100/60 dark:text-slate-50 dark:hover:bg-slate-900",
+                link: "text-slate-950 underline-offset-4 hover:underline dark:text-slate-50",
+                black: "bg-slate-950 text-slate-50 hover:opacity-90 dark:bg-slate-50 dark:text-slate-950",
             },
             size: {
                 default: "h-11 px-4 py-2",
