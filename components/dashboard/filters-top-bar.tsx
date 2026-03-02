@@ -65,17 +65,6 @@ export function FiltersTopBar({
 
       {/* Action Buttons Group */}
       <div className="flex flex-row h-16 md:h-auto">
-        {/* Add Event Cell */}
-        {onAddEventClick && (
-          <button
-            onClick={onAddEventClick}
-            className="flex-1 md:w-16 border-r border-slate-200 flex items-center justify-center transition-colors hover:bg-slate-50 group"
-            aria-label="Submit Event"
-          >
-            <Plus className="w-6 h-6 text-slate-950 group-hover:scale-110 transition-transform" />
-          </button>
-        )}
-
         {/* Grid View Toggle Cell */}
         <button
           onClick={() => onViewChange(false)}

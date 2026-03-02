@@ -6,6 +6,7 @@ import { ReactNode } from 'react'
 import { FiltersTopBar } from '@/components/dashboard/filters-top-bar'
 import { Footer } from '@/components/layout/footer'
 import { NavigationSpacer } from '@/components/layout/navigation-spacer'
+import { FloatingAddEvent } from '@/components/dashboard/floating-add-event'
 
 /**
  * Props for the dashboard layout component
@@ -71,6 +72,9 @@ export function DashboardLayout({
           {children}
         </section>
       </div>
+
+      {/* Floating Add Event Button */}
+      {onAddEventClick && <FloatingAddEvent onClick={onAddEventClick} />}
 
       {/* Footer */}
       <Footer />
