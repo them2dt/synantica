@@ -10,6 +10,7 @@ import { useMyEvents } from '@/lib/hooks/use-events'
 import { deleteEventClient } from '@/lib/database/events-client'
 import { SubmitEventModal } from '@/components/dashboard/submit-event-modal'
 import { Event } from '@/types/event'
+import { EventWithDetails } from '@/lib/database/events-client'
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {
   published: { label: 'Published', className: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-400' },
@@ -22,7 +23,7 @@ export function MyEventsList() {
   const { events, loading, error, refetch } = useMyEvents()
   const [deletingId, setDeletingId] = useState<string | null>(null)
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null)
-  const [editingEvent, setEditingEvent] = useState<Event | null>(null)
+  const [editingEvent, setEditingEvent] = useState<EventWithDetails | null>(null)
 
   const handleDelete = async (eventId: string) => {
     setDeletingId(eventId)
@@ -92,7 +93,7 @@ export function MyEventsList() {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                  onClick={() => setEditingEvent(event as unknown as Event)}
+                  onClick={() => setEditingEvent(event)}
                   title="Edit event"
                 >
                   <Pencil className="h-4 w-4" />

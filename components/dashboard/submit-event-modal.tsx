@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Event, EventStatus } from '@/types/event'
+import type { EventWithDetails } from '@/lib/database/events-client'
 import {
   Dialog,
   DialogContent,
@@ -28,7 +29,7 @@ import { addDoc, updateDoc, doc, collection } from 'firebase/firestore'
 interface SubmitEventModalProps {
   isOpen: boolean
   onClose: () => void
-  editEvent?: Event | null
+  editEvent?: Event | EventWithDetails | null
 }
 
 const eventTypes = [
@@ -274,7 +275,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Label htmlFor="name">Event Name *</Label>
                 <Input
                   id="name"
-                  value={formData.name}
+                  value={formData.name ?? ''}
                   onChange={(e) => handleInputChange('name', e.target.value)}
                   placeholder="Enter event name"
                   className={fieldErrors.name ? 'border-red-500' : ''}
@@ -285,7 +286,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Label htmlFor="description">Description *</Label>
                 <Textarea
                   id="description"
-                  value={formData.description}
+                  value={formData.description ?? ''}
                   onChange={(e) => handleInputChange('description', e.target.value)}
                   placeholder="Describe the event in detail..."
                   rows={4}
@@ -295,7 +296,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
               </div>
               <div className="space-y-2">
                 <Label htmlFor="type">Event Type *</Label>
-                <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+                <Select value={formData.type ?? 'events'} onValueChange={(value) => handleInputChange('type', value)}>
                   <SelectTrigger className={fieldErrors.type ? 'border-red-500' : ''}>
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
@@ -319,7 +320,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Input
                   id="fromDate"
                   type="date"
-                  value={formData.fromDate}
+                  value={formData.fromDate ?? ''}
                   onChange={(e) => handleInputChange('fromDate', e.target.value)}
                   className={fieldErrors.fromDate ? 'border-red-500' : ''}
                 />
@@ -330,8 +331,8 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Input
                   id="toDate"
                   type="date"
-                  value={formData.toDate}
-                  min={formData.fromDate}
+                  value={formData.toDate ?? ''}
+                  min={formData.fromDate ?? ''}
                   onChange={(e) => handleInputChange('toDate', e.target.value)}
                   className={fieldErrors.toDate ? 'border-red-500' : ''}
                 />
@@ -341,7 +342,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Label htmlFor="location">Location *</Label>
                 <Input
                   id="location"
-                  value={formData.location}
+                  value={formData.location ?? ''}
                   onChange={(e) => handleInputChange('location', e.target.value)}
                   placeholder="e.g., Main Auditorium, Room 101"
                   className={fieldErrors.location ? 'border-red-500' : ''}
@@ -352,7 +353,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Label htmlFor="country">Country *</Label>
                 <Input
                   id="country"
-                  value={formData.country}
+                  value={formData.country ?? ''}
                   onChange={(e) => handleInputChange('country', e.target.value)}
                   placeholder="e.g., Switzerland, Germany"
                   className={fieldErrors.country ? 'border-red-500' : ''}
@@ -370,7 +371,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
                 <Label htmlFor="organizer">Organizer *</Label>
                 <Input
                   id="organizer"
-                  value={formData.organizer}
+                  value={formData.organizer ?? ''}
                   onChange={(e) => handleInputChange('organizer', e.target.value)}
                   placeholder="Organization or person name"
                   className={fieldErrors.organizer ? 'border-red-500' : ''}
@@ -462,7 +463,7 @@ export function SubmitEventModal({ isOpen, onClose, editEvent }: SubmitEventModa
               <Input
                 id="youtubeLink"
                 type="url"
-                value={formData.youtubeLink}
+                value={formData.youtubeLink ?? ''}
                 onChange={(e) => handleInputChange('youtubeLink', e.target.value)}
                 placeholder="https://youtube.com/watch?v=..."
               />

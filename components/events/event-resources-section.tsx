@@ -35,8 +35,7 @@ export function EventResourcesSection({ links }: { links?: string[] }) {
               rel="noopener noreferrer"
               className="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-800 hover:bg-slate-50/60 dark:hover:bg-slate-900/60 transition-colors"
             >
-              <ExternalLink className="w-4 h-4 text-slate-400 shrink-0" />
-              <span className="text-sm text-slate-950 dark:text-slate-50 flex-1 truncate">
+              <span className="text-sm text-slate-950 dark:text-slate-50 flex-1 truncate font-medium">
                 {getLinkLabel(link)}
               </span>
               <span className="text-xs text-slate-400 truncate max-w-[200px] hidden sm:block">{link}</span>
