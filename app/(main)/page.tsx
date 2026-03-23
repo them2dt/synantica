@@ -3,7 +3,7 @@ import { NavigationSpacer } from '@/components/layout/navigation-spacer'
 import { Button } from '@/components/ui/button'
 import { ThemedText } from '@/components/ui/themed-text'
 import Link from 'next/link'
-import { Trophy, Calendar, Code2, BookOpen, ArrowRight } from 'lucide-react'
+import { Trophy, Calendar, Users, BookOpen, ArrowRight } from 'lucide-react'
 
 const CATEGORIES = [
   {
@@ -23,10 +23,10 @@ const CATEGORIES = [
     bg: 'bg-blue-50 dark:bg-blue-950/20',
   },
   {
-    title: 'Hackathons',
-    copy: 'Intensive, short-format team challenges.',
-    icon: Code2,
-    type: 'hackathons',
+    title: 'Events',
+    copy: 'Networking sessions, fairs, and community meetups.',
+    icon: Users,
+    type: 'events',
     accent: 'text-emerald-500',
     bg: 'bg-emerald-50 dark:bg-emerald-950/20',
   },
