@@ -12,7 +12,7 @@ function escapeICS(str: string): string {
   return str.replace(/[\\;,]/g, '\\$&').replace(/\n/g, '\\n')
 }
 
-export function generateICS(event: Event): string {
+function generateICS(event: Event): string {
   const uid = `${event.id}@synantica.ch`
   const now = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
 
