@@ -76,16 +76,6 @@ export function useEventsDirectoryPaginated(filters: EventFilters = {}, pageSize
     }
   }, [events.length, hasMore, currentPage, filters, pageSize])
 
-  // Cleanup cache periodically
-  useEffect(() => {
-    const cleanup = setInterval(() => {
-      // This would trigger cache cleanup if we exposed it
-      // For now, we'll just clear any expired entries
-    }, 60000) // Every minute
-
-    return () => clearInterval(cleanup)
-  }, [])
-
   const refetch = useCallback(() => {
     setCurrentPage(0)
     fetchEvents(0, false)

@@ -34,14 +34,12 @@ export function FilterChips({ filters, onRemove, onClearAll }: FilterChipsProps)
           </button>
         </span>
       ))}
-      {filters.length >= 1 && (
-        <button
-          onClick={onClearAll}
-          className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline"
-        >
-          Clear all
-        </button>
-      )}
+      <button
+        onClick={onClearAll}
+        className="text-xs text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors underline"
+      >
+        Clear all
+      </button>
       <ThemedText variant="xs" color="muted" className="ml-auto">
         {filters.length} filter{filters.length > 1 ? 's' : ''} active
       </ThemedText>

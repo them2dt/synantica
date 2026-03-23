@@ -18,7 +18,7 @@ export interface Event {
   // Core identification
   id: string
   name: string
-  description: string
+  description?: string
 
   // Date range
   fromDate: string
@@ -77,46 +77,6 @@ export interface EventFilters {
 
 
 /**
- * Optimized Event interface for directory/listing views
- * Contains only essential fields for performance and reduced payload size
+ * Alias for directory/listing views — same shape as Event.
  */
-export interface EventDirectory {
-  // Core identification
-  id: string
-  name: string
-  description?: string
-
-  // Categorization (simplified)
-  type: string
-  fields: string[]
-
-  // Age and location filters
-  fromAge?: number
-  toAge?: number
-  country: string
-
-  // Date range
-  fromDate: string
-  toDate: string
-
-  // Location (simplified)
-  location: string
-
-  // Status
-  status: EventStatus
-
-  // Submission tracking
-  submittedBy?: string
-  submittedByEmail?: string
-
-  // Organizer (simplified)
-  organizer: string
-
-  // Media and links
-  youtubeLink?: string
-  links: string[]
-
-  // Timestamps
-  createdAt: string
-  updatedAt: string
-}
+export type EventDirectory = Event

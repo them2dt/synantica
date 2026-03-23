@@ -45,29 +45,7 @@ export function mapEventRowToEvent(row: EventRow): Event {
 }
 
 export function mapEventRowToEventDirectory(row: EventRow): EventDirectory {
-  const base = mapEventRowToEvent(row)
-
-  return {
-    id: base.id,
-    name: base.name,
-    description: base.description,
-    type: base.type,
-    fields: base.fields,
-    fromAge: base.fromAge,
-    toAge: base.toAge,
-    country: base.country,
-    fromDate: base.fromDate,
-    toDate: base.toDate,
-    location: base.location,
-    status: base.status,
-    submittedBy: base.submittedBy,
-    submittedByEmail: base.submittedByEmail,
-    organizer: base.organizer,
-    youtubeLink: base.youtubeLink,
-    links: base.links,
-    createdAt: base.createdAt,
-    updatedAt: base.updatedAt,
-  }
+  return mapEventRowToEvent(row)
 }
 
 export function mapEventRowToEventWithDetails(row: EventRow): EventWithDetails {

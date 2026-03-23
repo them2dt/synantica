@@ -215,8 +215,6 @@ function DashboardContent() {
         ) : (
           <EventsGrid
             events={sortedEvents}
-            selectedType={selectedType}
-            eventTypes={eventTypes}
             onEventClick={handleEventClick}
             isListView={isListView}
             showLoadMore={true}
