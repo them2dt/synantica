@@ -4,6 +4,39 @@
  */
 
 /**
+ * Returns a human-readable relative label for an event's start/end dates.
+ * Used on event cards to show urgency and status at a glance.
+ */
+export function getRelativeDateLabel(fromDate: string, toDate?: string): {
+  label: string
+  status: 'past' | 'ongoing' | 'upcoming-soon' | 'upcoming' | 'future'
+} {
+  if (!fromDate) return { label: '', status: 'future' }
+  try {
+    const now = new Date()
+    const from = new Date(fromDate)
+    const to = toDate ? new Date(toDate) : from
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const fromDay = new Date(from.getFullYear(), from.getMonth(), from.getDate())
+    const toDay = new Date(to.getFullYear(), to.getMonth(), to.getDate())
+    const diffDays = Math.round((fromDay.getTime() - today.getTime()) / 86400000)
+
+    if (toDay < today) return { label: 'Past event', status: 'past' }
+    if (fromDay <= today) return { label: 'Ongoing', status: 'ongoing' }
+    if (diffDays === 0) return { label: 'Starts today', status: 'upcoming-soon' }
+    if (diffDays === 1) return { label: 'Starts tomorrow', status: 'upcoming-soon' }
+    if (diffDays <= 7) return { label: `Starts in ${diffDays} days`, status: 'upcoming-soon' }
+    if (diffDays <= 30) {
+      const weeks = Math.floor(diffDays / 7)
+      return { label: `In ${weeks} week${weeks > 1 ? 's' : ''}`, status: 'upcoming' }
+    }
+    return { label: '', status: 'future' }
+  } catch {
+    return { label: '', status: 'future' }
+  }
+}
+
+/**
  * Date format options for different use cases
  */
 type DateFormat =
