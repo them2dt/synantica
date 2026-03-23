@@ -3,7 +3,6 @@
 import { formatEventDate } from '@/lib/utils/date-formatting'
 import { EventCard } from './event-card'
 import { Event, EventDirectory } from '@/types/event'
-import { CategoryWithIcon } from '@/types/category'
 import { Button } from '@/components/ui/button'
 import { ThemedText } from '@/components/ui/themed-text'
 import { InlineSpinner } from '@/components/ui/loading'
@@ -15,8 +14,6 @@ import { EmptyState } from '@/components/ui/empty-state'
  */
 interface EventsGridProps {
   events: Event[] | EventDirectory[]
-  selectedType: string
-  eventTypes: CategoryWithIcon[]
   onEventClick: (event: Event | EventDirectory) => void
   isListView?: boolean
   showLoadMore?: boolean
@@ -30,8 +27,6 @@ interface EventsGridProps {
  */
 export function EventsGrid({
   events,
-  selectedType,
-  eventTypes,
   onEventClick,
   isListView = false,
   showLoadMore = false,
@@ -39,8 +34,6 @@ export function EventsGrid({
   loadingMore = false,
   hasMore = true
 }: EventsGridProps) {
-  void selectedType;
-  void eventTypes;
 
   return (
     <div className="space-y-6">

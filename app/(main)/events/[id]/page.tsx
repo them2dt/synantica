@@ -16,6 +16,36 @@ import { EventResourcesSection } from '@/components/events/event-resources-secti
 import { EventFieldsSection } from '@/components/events/event-fields-section'
 import { EventActionsSection } from '@/components/events/event-actions-section'
 
+function EventJsonLd({ event }: { event: { name: string; description: string; fromDate: string; toDate: string; location: string; country: string; organizer: string } }) {
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Event',
+    name: event.name,
+    description: event.description,
+    startDate: event.fromDate,
+    endDate: event.toDate,
+    location: {
+      '@type': 'Place',
+      name: event.location,
+      address: {
+        '@type': 'PostalAddress',
+        addressCountry: event.country,
+      },
+    },
+    organizer: {
+      '@type': 'Organization',
+      name: event.organizer,
+    },
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  )
+}
+
 export default function EventDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const [eventId, setEventId] = useState<string>('')
 
@@ -32,7 +62,7 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
           <div className="mx-auto w-full max-w-[1100px] px-6 py-10">
             <div className="flex items-center justify-center py-12">
               <div className="text-center">
-                <div className="animate-spin rounded-none h-8 w-8 border-b-2 border-slate-950 dark:border-slate-50 mx-auto mb-4" />
+                <div className="animate-spin h-8 w-8 border-b-2 border-slate-950 dark:border-slate-50 mx-auto mb-4" />
                 <ThemedText color="muted">Loading event...</ThemedText>
               </div>
             </div>
@@ -77,11 +107,15 @@ export default function EventDetailPage({ params }: { params: Promise<{ id: stri
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col">
+      <EventJsonLd event={event} />
       <div className="flex-1">
         <div className="mx-auto w-full max-w-[1100px] border-x border-slate-200 dark:border-slate-800 px-4 sm:px-6 py-6 sm:py-10">
           <NavigationSpacer />
           <div className="mb-8">
-            <Link href="/dashboard" className="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-50 transition-colors">
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center text-sm text-slate-500 dark:text-slate-400 hover:text-slate-950 dark:hover:text-slate-50 transition-colors"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Dashboard
             </Link>
