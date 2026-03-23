@@ -125,6 +125,9 @@ function DashboardContent() {
   // Compute active filter chips for display
   const activeFilters = useMemo<ActiveFilter[]>(() => {
     const chips: ActiveFilter[] = []
+    if (debouncedSearchTerm) {
+      chips.push({ key: 'search', label: `"${debouncedSearchTerm}"` })
+    }
     if (selectedType !== 'all') {
       const found = eventTypes.find(t => t.value === selectedType)
       chips.push({ key: 'type', label: found?.label ?? selectedType })
@@ -146,9 +149,10 @@ function DashboardContent() {
       chips.push({ key: 'age', label: `Age: ${labels[selectedAge]}` })
     }
     return chips
-  }, [selectedType, selectedCountry, selectedDateRange, selectedAge, eventTypes])
+  }, [debouncedSearchTerm, selectedType, selectedCountry, selectedDateRange, selectedAge, eventTypes])
 
   const handleRemoveFilter = (key: string) => {
+    if (key === 'search') setSearchTerm('')
     if (key === 'type') setSelectedType('all')
     if (key === 'country') setSelectedCountry('all')
     if (key === 'dateRange') setSelectedDateRange('all')

@@ -9,7 +9,6 @@ import { EmptyState } from '@/components/ui/empty-state'
 import { useMyEvents } from '@/lib/hooks/use-events'
 import { deleteEventClient } from '@/lib/database/events-client'
 import { SubmitEventModal } from '@/components/dashboard/submit-event-modal'
-import { Event } from '@/types/event'
 import { EventWithDetails } from '@/lib/database/events-client'
 
 const STATUS_BADGE: Record<string, { label: string; className: string }> = {

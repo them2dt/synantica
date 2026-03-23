@@ -8,13 +8,22 @@ function formatICSDate(dateString: string): string {
   return `${year}${month}${day}`
 }
 
+function formatICSDateExclusive(dateString: string): string {
+  const date = new Date(dateString)
+  date.setDate(date.getDate() + 1)
+  const year = date.getFullYear()
+  const month = (date.getMonth() + 1).toString().padStart(2, '0')
+  const day = date.getDate().toString().padStart(2, '0')
+  return `${year}${month}${day}`
+}
+
 function escapeICS(str: string): string {
   return str.replace(/[\\;,]/g, '\\$&').replace(/\n/g, '\\n')
 }
 
 function generateICS(event: Event): string {
   const uid = `${event.id}@synantica.ch`
-  const now = new Date().toISOString().replace(/[-:.]/g, '').slice(0, 15) + 'Z'
+  const now = new Date().toISOString().replace(/[-:]/g, '').replace('.', '').slice(0, 15) + 'Z'
 
   return [
     'BEGIN:VCALENDAR',
@@ -26,7 +35,7 @@ function generateICS(event: Event): string {
     `UID:${uid}`,
     `DTSTAMP:${now}`,
     `DTSTART;VALUE=DATE:${formatICSDate(event.fromDate)}`,
-    `DTEND;VALUE=DATE:${formatICSDate(event.toDate)}`,
+    `DTEND;VALUE=DATE:${formatICSDateExclusive(event.toDate)}`,
     `SUMMARY:${escapeICS(event.name)}`,
     `DESCRIPTION:${escapeICS(event.description)}`,
     `LOCATION:${escapeICS([event.location, event.country].filter(Boolean).join(', '))}`,

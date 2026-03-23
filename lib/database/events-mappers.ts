@@ -84,6 +84,14 @@ export function mapEventRowToEventWithDetails(row: EventRow): EventWithDetails {
 export function applyEventFilters(rows: EventRow[], filters: EventFilters): EventRow[] {
   let filtered = rows
 
+  if (filters.type) {
+    filtered = filtered.filter((event) => event.type === filters.type)
+  }
+
+  if (filters.country) {
+    filtered = filtered.filter((event) => event.country === filters.country)
+  }
+
   if (filters.search) {
     const searchLower = filters.search.toLowerCase()
     filtered = filtered.filter((event) =>

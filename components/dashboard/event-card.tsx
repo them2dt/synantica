@@ -52,7 +52,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
             <div className="flex items-center justify-between mb-2 gap-2">
               <div className="flex items-center gap-2 flex-wrap">
                 <ThemedText variant="xs" color="muted" className="uppercase tracking-wide">{event.type}</ThemedText>
-                {event.fromAge && event.toAge && (
+                {event.fromAge != null && event.toAge != null && (
                   <>
                     <ThemedText variant="xs" color="muted">•</ThemedText>
                     <ThemedText variant="xs" color="muted">Age {event.fromAge}–{event.toAge}</ThemedText>
@@ -111,7 +111,7 @@ export function EventCard({ event, onLearnMore, variant = 'grid', loading = fals
         <div className="flex flex-col gap-1.5">
           <div className="flex items-center gap-2 uppercase tracking-wide flex-wrap">
             <ThemedText variant="xs" color="muted">{event.type}</ThemedText>
-            {event.fromAge && event.toAge && (
+            {event.fromAge != null && event.toAge != null && (
               <>
                 <ThemedText variant="xs" color="muted">•</ThemedText>
                 <ThemedText variant="xs" color="muted">Age {event.fromAge}–{event.toAge}</ThemedText>
